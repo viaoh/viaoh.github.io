@@ -1,0 +1,1858 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>java工具类 | 知行合一</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://viaoh.github.io/favicon.ico?v=1706791123866">
+<link rel="stylesheet" href="https://viaoh.github.io/styles/main.css">
+
+
+  
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
+  
+
+  
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="Excel导出工具类
+pom.xml
+&lt;!-- Excel导出 --&gt;
+&lt;dependency&gt;
+	&lt;groupId&gt;org.apache.poi&lt;/groupId&gt;
+	&lt;artifac..." />
+    <meta name="keywords" content="java" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://viaoh.github.io">
+        <img src="https://viaoh.github.io/images/avatar.png?v=1706791123866" class="site-logo">
+        <h1 class="site-title">知行合一</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+          <a class="social-link" href="https://github.com/viaoh" target="_blank">
+            <i class="fab fa-github"></i>
+          </a>
+        
+      
+        
+      
+        
+          <a class="social-link" href="https://weibo.com/u/6377680111" target="_blank">
+            <i class="fab fa-weibo"></i>
+          </a>
+        
+      
+        
+          <a class="social-link" href="https://www.zhihu.com/people/viaoh-" target="_blank">
+            <i class="fab fa-zhihu"></i>
+          </a>
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      年与时驰，意与日去，遂成枯落，多不接世
+    </div>
+    <div class="site-footer">
+      Powered by &nbsp;<a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://viaoh.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">java工具类</h2>
+            <div class="post-date">2023-05-20</div>
+            
+            <div class="post-content" v-pre>
+              <h3 id="excel导出工具类">Excel导出工具类</h3>
+<p>pom.xml</p>
+<pre><code class="language-xml">&lt;!-- Excel导出 --&gt;
+&lt;dependency&gt;
+	&lt;groupId&gt;org.apache.poi&lt;/groupId&gt;
+	&lt;artifactId&gt;poi&lt;/artifactId&gt;
+	&lt;version&gt;3.17&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<p>工具类</p>
+<pre><code>import org.apache.poi.hssf.usermodel.*;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.List;
+
+/**
+ * Excel工具类
+ */
+public class ExcelTool {
+
+    /**
+     * Excel表格导出
+     * @param response HttpServletResponse对象
+     * @param excelData Excel表格的数据，封装为List&lt;List&lt;String&gt;&gt;
+     * @param sheetName sheet的名字
+     * @param fileName 导出Excel的文件名
+     * @param columnWidth Excel表格的宽度，建议为15
+     * @throws IOException 抛IO异常
+     */
+    public static void exportExcel(HttpServletResponse response,
+                                   List&lt;List&lt;String&gt;&gt; excelData, 
+                                   String sheetName, 
+                                   String fileName, 
+                                   int columnWidth) throws IOException {
+
+        //声明一个工作簿
+        HSSFWorkbook workbook = new HSSFWorkbook();
+
+        //生成一个表格，设置表格名称
+        HSSFSheet sheet = workbook.createSheet(sheetName);
+
+        //设置表格列宽度
+        sheet.setDefaultColumnWidth(columnWidth);
+
+        //写入List&lt;List&lt;String&gt;&gt;中的数据
+        int rowIndex = 0;
+        for(List&lt;String&gt; data : excelData){
+            //创建一个row行，然后自增1
+            HSSFRow row = sheet.createRow(rowIndex++);
+
+            //遍历添加本行数据
+            for (int i = 0; i &lt; data.size(); i++) {
+                //创建一个单元格
+                HSSFCell cell = row.createCell(i);
+
+                //创建一个内容对象
+                HSSFRichTextString text = new HSSFRichTextString(data.get(i));
+
+                //将内容对象的文字内容写入到单元格中
+                cell.setCellValue(text);
+            }
+        }
+
+        //准备将Excel的输出流通过response输出到页面下载
+        //八进制输出流
+        response.setContentType(&quot;application/octet-stream&quot;);
+
+        //设置导出Excel的名称
+        response.setHeader(&quot;Content-disposition&quot;, &quot;attachment;filename=&quot; + fileName);
+
+        //刷新缓冲
+        response.flushBuffer();
+
+        //workbook将Excel写入到response的输出流中，供页面下载该Excel文件
+        workbook.write(response.getOutputStream());
+
+        //关闭workbook
+        workbook.close();
+    }
+
+}
+</code></pre>
+<p>导出方法</p>
+<pre><code class="language-java">public void excelExportData(HttpServletRequest request, HttpServletResponse response)
+			throws IOException, ParseException {
+		// 设置excel表头
+		List&lt;List&lt;String&gt;&gt; excelData = new ArrayList&lt;&gt;();
+		List&lt;String&gt; head = new ArrayList&lt;&gt;();
+		head.add(&quot;第一列&quot;);
+		head.add(&quot;第二列&quot;);
+		head.add(&quot;第三列&quot;);
+		excelData.add(head);
+		// 设置excel内容
+		List&lt;String&gt; data1 = new ArrayList&lt;&gt;();
+		data.add(&quot;第一列第一行内容&quot;);
+    	data.add(&quot;第二列第一行内容&quot;);
+    	data.add(&quot;第二列第一行内容&quot;);
+		List&lt;String&gt; data2 = new ArrayList&lt;&gt;();
+		data.add(&quot;第一列第二行内容&quot;);
+    	data.add(&quot;第二列第二行内容&quot;);
+    	data.add(&quot;第二列第二行内容&quot;);
+    	List&lt;String&gt; data3 = new ArrayList&lt;&gt;();
+		data.add(&quot;第一列第三行内容&quot;);
+    	data.add(&quot;第二列第三行内容&quot;);
+    	data.add(&quot;第二列第三行内容&quot;);
+		excelData.add(data1);
+    	excelData.add(data2);
+    	excelData.add(data3);
+		String sheetName = &quot;导出文件测试&quot;;
+		String fileName = &quot;导出文件测试.xls&quot;;
+		ExcelTool.exportExcel(response, excelData, sheetName, fileName, 15);
+	}
+</code></pre>
+<h3 id="http请求工具类">Http请求工具类</h3>
+<p>pom.xml</p>
+<pre><code class="language-xml">&lt;!-- http --&gt;
+&lt;dependency&gt;
+	&lt;groupId&gt;org.apache.httpcomponents&lt;/groupId&gt;
+	&lt;artifactId&gt;httpclient&lt;/artifactId&gt;
+	&lt;version&gt;4.5&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+	&lt;groupId&gt;org.apache.httpcomponents&lt;/groupId&gt;
+	&lt;artifactId&gt;httpmime&lt;/artifactId&gt;
+	&lt;version&gt;4.5&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+	&lt;groupId&gt;org.apache.httpcomponents&lt;/groupId&gt;
+	&lt;artifactId&gt;httpcore&lt;/artifactId&gt;
+	&lt;version&gt;4.4.5&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<p>工具类</p>
+<pre><code class="language-java">import java.io.IOException;
+import java.nio.charset.Charset;
+import java.security.KeyManagementException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+ 
+import javax.net.ssl.SSLContext;
+ 
+import com.alibaba.fastjson.JSONObject;
+import org.apache.http.HttpEntity;
+import org.apache.http.NameValuePair;
+import org.apache.http.ParseException;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.config.ConnectionConfig;
+import org.apache.http.config.Registry;
+import org.apache.http.config.RegistryBuilder;
+import org.apache.http.config.SocketConfig;
+import org.apache.http.conn.socket.ConnectionSocketFactory;
+import org.apache.http.conn.socket.LayeredConnectionSocketFactory;
+import org.apache.http.conn.socket.PlainConnectionSocketFactory;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.SSLContexts;
+import org.apache.http.conn.ssl.TrustStrategy;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.apache.http.message.BasicHeader;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
+ 
+/**
+ * &lt;p&gt;类名: HttpUtils&lt;/p&gt;
+ * &lt;p&gt;描述: http请求工具类&lt;/p&gt;
+ * &lt;p&gt;修改时间: 2019年04月30日 上午10:12:35&lt;/p&gt;
+ *
+ * @author lidongyang
+ */
+public class HttpTool {
+ 
+    public static String defaultEncoding = &quot;utf-8&quot;;
+ 
+    /**
+     * 发送http post请求，并返回响应实体
+     *
+     * @param url 请求地址
+     * @return url响应实体
+     */
+    public static String postRequest(String url) {
+        return postRequest(url, null, null);
+    }
+ 
+    /**
+     * &lt;p&gt;方法名: postRequest&lt;/p&gt;
+     * &lt;p&gt;描述: 发送httpPost请求&lt;/p&gt;
+     *
+     * @param url
+     * @param params
+     * @return
+     */
+    public static String postRequest(String url, Map&lt;String, Object&gt; params) {
+        return postRequest(url, null, params);
+    }
+ 
+    /**
+     * 发送http post请求，并返回响应实体
+     *
+     * @param url     访问的url
+     * @param headers 请求需要添加的请求头
+     * @param params  请求参数
+     * @return
+     */
+    public static String postRequest(String url, Map&lt;String, String&gt; headers,
+                                     Map&lt;String, Object&gt; params) {
+        String result = null;
+        CloseableHttpClient httpClient = buildHttpClient();
+        HttpPost httpPost = new HttpPost(url);
+ 
+        if (null != headers &amp;&amp; headers.size() &gt; 0) {
+            for (Entry&lt;String, String&gt; entry : headers.entrySet()) {
+                String key = entry.getKey();
+                String value = entry.getValue();
+                httpPost.addHeader(new BasicHeader(key, value));
+            }
+        }
+        if (null != params &amp;&amp; params.size() &gt; 0) {
+            List&lt;NameValuePair&gt; pairList = new ArrayList&lt;NameValuePair&gt;(params.size());
+            for (Map.Entry&lt;String, Object&gt; entry : params.entrySet()) {
+                NameValuePair pair = new BasicNameValuePair(entry.getKey(), entry.getValue().toString());
+                pairList.add(pair);
+            }
+            httpPost.setEntity(new UrlEncodedFormEntity(pairList, Charset.forName(defaultEncoding)));
+        }
+ 
+        try {
+            CloseableHttpResponse response = httpClient.execute(httpPost);
+            try {
+                HttpEntity entity = response.getEntity();
+                if (entity != null) {
+                    result = EntityUtils.toString(entity,
+                            Charset.forName(defaultEncoding));
+                }
+            } finally {
+                response.close();
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            try {
+                httpClient.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+ 
+        return result;
+    }
+ 
+    /**
+     * 发送http get请求
+     *
+     * @param url 请求url
+     * @return url返回内容
+     */
+    public static String getRequest(String url) {
+        return getRequest(url, null);
+    }
+ 
+ 
+    /**
+     * 发送http get请求
+     *
+     * @param url    请求的url
+     * @param params 请求的参数
+     * @return
+     */
+    public static String getRequest(String url, Map&lt;String, Object&gt; params) {
+        return getRequest(url, null, params);
+    }
+ 
+    /**
+     * 发送http get请求
+     *
+     * @param url        请求的url
+     * @param headersMap 请求头
+     * @param params     请求的参数
+     * @return
+     */
+    public static String getRequest(String url, Map&lt;String, String&gt; headersMap, Map&lt;String, Object&gt; params) {
+        String result = null;
+        CloseableHttpClient httpClient = buildHttpClient();
+        try {
+            String apiUrl = url;
+            if (null != params &amp;&amp; params.size() &gt; 0) {
+                StringBuffer param = new StringBuffer();
+                int i = 0;
+                for (String key : params.keySet()) {
+                    if (i == 0)
+                        param.append(&quot;?&quot;);
+                    else
+                        param.append(&quot;&amp;&quot;);
+                    param.append(key).append(&quot;=&quot;).append(params.get(key));
+                    i++;
+                }
+                apiUrl += param;
+            }
+ 
+            HttpGet httpGet = new HttpGet(apiUrl);
+            if (null != headersMap &amp;&amp; headersMap.size() &gt; 0) {
+                for (Entry&lt;String, String&gt; entry : headersMap.entrySet()) {
+                    String key = entry.getKey();
+                    String value = entry.getValue();
+                    httpGet.addHeader(new BasicHeader(key, value));
+                }
+            }
+            CloseableHttpResponse response = httpClient.execute(httpGet);
+            try {
+                HttpEntity entity = response.getEntity();
+                if (null != entity) {
+                    result = EntityUtils.toString(entity, defaultEncoding);
+                }
+            } finally {
+                response.close();
+            }
+        } catch (ClientProtocolException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                httpClient.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return result;
+    }
+ 
+    /**
+     * 创建httpclient
+     *
+     * @return
+     */
+    public static CloseableHttpClient buildHttpClient() {
+        try {
+            RegistryBuilder&lt;ConnectionSocketFactory&gt; builder = RegistryBuilder
+                    .create();
+            ConnectionSocketFactory factory = new PlainConnectionSocketFactory();
+            builder.register(&quot;http&quot;, factory);
+            KeyStore trustStore = KeyStore.getInstance(KeyStore
+                    .getDefaultType());
+            SSLContext context = SSLContexts.custom().useTLS()
+                    .loadTrustMaterial(trustStore, new TrustStrategy() {
+                        public boolean isTrusted(X509Certificate[] chain,
+                                                 String authType) throws CertificateException {
+                            return true;
+                        }
+                    }).build();
+            LayeredConnectionSocketFactory sslFactory = new SSLConnectionSocketFactory(
+                    context,
+                    SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+            builder.register(&quot;https&quot;, sslFactory);
+            Registry&lt;ConnectionSocketFactory&gt; registry = builder.build();
+            PoolingHttpClientConnectionManager manager = new PoolingHttpClientConnectionManager(
+                    registry);
+            ConnectionConfig connConfig = ConnectionConfig.custom()
+                    .setCharset(Charset.forName(defaultEncoding)).build();
+            SocketConfig socketConfig = SocketConfig.custom()
+                    .setSoTimeout(100000).build();
+            manager.setDefaultConnectionConfig(connConfig);
+            manager.setDefaultSocketConfig(socketConfig);
+            return HttpClientBuilder.create().setConnectionManager(manager)
+                    .build();
+        } catch (KeyStoreException e) {
+            e.printStackTrace();
+        } catch (KeyManagementException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+ 
+    public static void main(String[] args) {
+        String url = &quot;请求路径&quot;;
+        JSONObject params = new JSONObject();
+        params.put(&quot;参数key&quot;, &quot;参数value&quot;);
+        String result = HttpTool.getRequest(url, params);
+        System.out.println(&quot;请求时间&quot; + System.currentTimeMillis());
+        System.out.println(&quot;请求结果&quot; + result);
+    }
+ 
+ 
+}
+</code></pre>
+<h3 id="json对象遍历">JSON对象遍历</h3>
+<pre><code class="language-java">//fastjson JSONObject遍历
+private static String getDesc(String jsonStr, String key) {
+        JSONObject jsonObject = JSONObject.parseObject(jsonStr);
+        for (Map.Entry entry : jsonObject.entrySet()) {
+            if (key.equals(entry.getKey())) {
+                return entry.getValue().toString();
+            }
+        }
+		return null;
+}
+</code></pre>
+<h3 id="springboot自带加密方法">SpringBoot自带加密方法：</h3>
+<pre><code class="language-java">String encryptStr = DigestUtils.md5DigestAsHex(&quot;需要加密的字符串&quot;.getBytes());
+</code></pre>
+<h3 id="md5加密解密">MD5加密解密</h3>
+<pre><code class="language-java">import java.security.MessageDigest;
+ 
+/**
+ * 采用MD5加密解密
+ */
+public class MD5Tool {
+	/*String s = new String(&quot;tangfuqiang&quot;);
+	System.out.println(&quot;原始：&quot; + s);
+	System.out.println(&quot;MD5后：&quot; + md5Encryption(s));
+	System.out.println(&quot;加密的：&quot; + md5Decrypt(s));
+	System.out.println(&quot;解密的：&quot; + md5Decrypt(md5Decrypt(s)));*/
+	/***
+	 * MD5加码 生成32位md5码
+	 */
+	public static String md5Encryption(String inStr){
+		MessageDigest md5 = null;
+		try{
+			md5 = MessageDigest.getInstance(&quot;MD5&quot;);
+		}catch (Exception e){
+			System.out.println(e.toString());
+			e.printStackTrace();
+			return &quot;&quot;;
+		}
+		char[] charArray = inStr.toCharArray();
+		byte[] byteArray = new byte[charArray.length];
+ 
+		for (int i = 0; i &lt; charArray.length; i++)
+			byteArray[i] = (byte) charArray[i];
+		byte[] md5Bytes = md5.digest(byteArray);
+		StringBuffer hexValue = new StringBuffer();
+		for (int i = 0; i &lt; md5Bytes.length; i++){
+			int val = ((int) md5Bytes[i]) &amp; 0xff;
+			if (val &lt; 16)
+				hexValue.append(&quot;0&quot;);
+			hexValue.append(Integer.toHexString(val));
+		}
+		return hexValue.toString();
+	}
+ 
+	/**
+	 * 加密解密算法 执行一次加密，两次解密
+	 */ 
+	public static String md5Decrypt(String inStr){
+		char[] a = inStr.toCharArray();
+		for (int i = 0; i &lt; a.length; i++){
+			a[i] = (char) (a[i] ^ 't');
+		}
+		String s = new String(a);
+		return s;
+	}
+ 
+}
+</code></pre>
+<h3 id="钉钉推送工具类">钉钉推送工具类</h3>
+<p>pom.xml</p>
+<pre><code class="language-xml">&lt;!-- 钉钉sdk --&gt;
+&lt;dependency&gt;
+	&lt;groupId&gt;com.dingtalk&lt;/groupId&gt;
+	&lt;artifactId&gt;dingtalk-source&lt;/artifactId&gt;
+	&lt;version&gt;1.0.0&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+	&lt;groupId&gt;com.dingtalk&lt;/groupId&gt;
+	&lt;artifactId&gt;dingtalk&lt;/artifactId&gt;
+	&lt;version&gt;1.0.0&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<p>工具类</p>
+<pre><code class="language-java">import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.dingtalk.api.DefaultDingTalkClient;
+import com.dingtalk.api.DingTalkClient;
+import com.dingtalk.api.request.OapiDepartmentListIdsRequest;
+import com.dingtalk.api.request.OapiGettokenRequest;
+import com.dingtalk.api.request.OapiMessageCorpconversationAsyncsendV2Request;
+import com.dingtalk.api.request.OapiUserListbypageRequest;
+import com.dingtalk.api.response.OapiDepartmentListIdsResponse;
+import com.dingtalk.api.response.OapiGettokenResponse;
+import com.dingtalk.api.response.OapiMessageCorpconversationAsyncsendV2Response;
+import com.dingtalk.api.response.OapiUserListbypageResponse;
+import com.taobao.api.ApiException;
+
+public class DingTalkTool {
+	
+	/**
+	 * 根据Appkey和Appsecret获取AccessToken
+	 * @return
+	 */
+	public static String getAccessToken(){
+		String AccessToken = null;
+		DefaultDingTalkClient client = new DefaultDingTalkClient(&quot;https://oapi.dingtalk.com/gettoken&quot;);
+		OapiGettokenRequest request = new OapiGettokenRequest();
+		request.setAppkey(&quot;您的Appkey&quot;);
+		request.setAppsecret(&quot;您的Appsecret&quot;);
+		request.setHttpMethod(&quot;GET&quot;);
+		try {
+			OapiGettokenResponse response = client.execute(request);
+			JSONObject jsonObject = (JSONObject) JSON.parse(response.getBody());
+			if (jsonObject.getString(&quot;errmsg&quot;).equals(&quot;ok&quot;)) {
+				AccessToken = jsonObject.getString(&quot;access_token&quot;);
+			}
+		} catch (ApiException e) {
+			e.printStackTrace();
+		}
+		return AccessToken;
+	}
+	
+	/**
+	 * 获取所有的部门id
+	 * @param accessToken
+	 */
+	public static void getDepartmentIdList(String accessToken){
+		DingTalkClient client = new DefaultDingTalkClient(&quot;https://oapi.dingtalk.com/department/list_ids&quot;);
+		OapiDepartmentListIdsRequest request = new OapiDepartmentListIdsRequest();
+		request.setId(&quot;1&quot;);
+		request.setHttpMethod(&quot;GET&quot;);
+		try {
+			OapiDepartmentListIdsResponse response = client.execute(request, accessToken);
+			System.out.println(response.getBody());
+		} catch (ApiException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * 获取部门所有用户详细信息，遍历后根据手机号返回唯一的用户id
+	 * @param accessToken
+	 * @param userPhone
+	 * @return
+	 */
+	public static String getUserId(String accessToken,String userPhone) {
+		DingTalkClient client = new DefaultDingTalkClient(&quot;https://oapi.dingtalk.com/user/listbypage&quot;);
+		OapiUserListbypageRequest request = new OapiUserListbypageRequest();
+		request.setDepartmentId(18622967L);// 部门id
+		request.setOffset(0L);
+		request.setSize(10L);
+		request.setOrder(&quot;entry_desc&quot;);
+		request.setHttpMethod(&quot;GET&quot;);
+		try {
+			OapiUserListbypageResponse response = client.execute(request,accessToken);
+			JSONObject jsonObject = (JSONObject) JSON.parse(response.getBody());
+			JSONArray json = JSONArray.parseArray(jsonObject.getString(&quot;userlist&quot;)); // 首先把字符串转成 JSONArray  对象
+			if(json.size()&gt;0){
+			  for(int i=0;i&lt;json.size();i++){
+			    JSONObject job = json.getJSONObject(i); 
+			    if(job.get(&quot;mobile&quot;).equals(userPhone)){
+			    	return (String) job.get(&quot;userid&quot;);
+			    }
+			  }
+			}
+		} catch (ApiException e) {
+			e.printStackTrace();
+		}
+	    return &quot;error&quot;;
+	}
+	
+	/**
+	 * 根据用户id推送消息到个人
+	 * @param accessToken
+	 * @param UserId
+	 */
+	public static void pushMessage(String accessToken,String UserId,String content){
+		
+		DingTalkClient client = new DefaultDingTalkClient(&quot;https://oapi.dingtalk.com/topapi/message/corpconversation/asyncsend_v2&quot;);
+		OapiMessageCorpconversationAsyncsendV2Request request = new OapiMessageCorpconversationAsyncsendV2Request();
+		request.setUseridList(UserId);
+		request.setAgentId(260932923L);
+		request.setToAllUser(false);
+		OapiMessageCorpconversationAsyncsendV2Request.Msg msg = new OapiMessageCorpconversationAsyncsendV2Request.Msg();
+		msg.setMsgtype(&quot;text&quot;);
+		msg.setText(new OapiMessageCorpconversationAsyncsendV2Request.Text());
+		msg.getText().setContent(content);
+		request.setMsg(msg);
+		try {
+			OapiMessageCorpconversationAsyncsendV2Response response = client.execute(request,accessToken);
+		    System.out.println(response.getBody());
+		} catch (ApiException e) {
+			e.printStackTrace();
+		}
+	}
+	
+}
+
+</code></pre>
+<h3 id="根据链接生成二维码">根据链接生成二维码</h3>
+<p>pom.xml</p>
+<pre><code class="language-xml">&lt;!-- 二维码生成 --&gt;
+&lt;dependency&gt;
+	&lt;groupId&gt;com.google.zxing&lt;/groupId&gt;
+	&lt;artifactId&gt;core&lt;/artifactId&gt;
+	&lt;version&gt;3.3.0&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<p>工具类</p>
+<pre><code class="language-java">import com.google.zxing.BarcodeFormat;
+import com.google.zxing.EncodeHintType;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.common.BitMatrix;
+ 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.HashMap;
+import java.util.Map;
+ 
+public class QrCode {
+	
+    public static String createQrCode(String url, String path, String fileName) {
+        try {
+            Map&lt;EncodeHintType, String&gt; hints = new HashMap&lt;&gt;();
+            hints.put(EncodeHintType.CHARACTER_SET, &quot;UTF-8&quot;);
+            BitMatrix bitMatrix = new MultiFormatWriter().encode(url, BarcodeFormat.QR_CODE, 400, 400, hints);
+            File file = new File(path, fileName);
+            if (file.exists() || ((file.getParentFile().exists() || file.getParentFile().mkdirs()) &amp;&amp; file.createNewFile())) {
+                writeToFile(bitMatrix, &quot;jpg&quot;, file);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+ 
+    static void writeToFile(BitMatrix matrix, String format, File file) throws IOException {
+        BufferedImage image = toBufferedImage(matrix);
+        if (!ImageIO.write(image, format, file)) {
+            throw new IOException(&quot;Could not write an image of format &quot; + format + &quot; to &quot; + file);
+        }
+    }
+ 
+    static void writeToStream(BitMatrix matrix, String format, OutputStream stream) throws IOException {
+        BufferedImage image = toBufferedImage(matrix);
+        if (!ImageIO.write(image, format, stream)) {
+            throw new IOException(&quot;Could not write an image of format &quot; + format);
+        }
+    }
+ 
+    private static final int BLACK = 0xFF000000;
+    private static final int WHITE = 0xFFFFFFFF;
+ 
+    private static BufferedImage toBufferedImage(BitMatrix matrix) {
+        int width = matrix.getWidth();
+        int height = matrix.getHeight();
+        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        for (int x = 0; x &lt; width; x++) {
+            for (int y = 0; y &lt; height; y++) {
+                image.setRGB(x, y, matrix.get(x, y) ? BLACK : WHITE);
+            }
+        }
+        return image;
+    }
+}
+</code></pre>
+<h3 id="获取ip地址">获取IP地址</h3>
+<pre><code class="language-java">import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
+
+import javax.servlet.http.HttpServletRequest;
+
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+
+public class IPTool {
+	/**
+	 * 获取登录用户的IP地址
+	 *
+	 * @param request
+	 * @return
+	 */
+	public static String getIpAddress(HttpServletRequest request) {
+		String ip = request.getHeader(&quot;x-forwarded-for&quot;);
+		if (ip == null || ip.length() == 0 || &quot;unknown&quot;.equalsIgnoreCase(ip)) {
+			ip = request.getHeader(&quot;Proxy-Client-IP&quot;);
+		}
+		if (ip == null || ip.length() == 0 || &quot;unknown&quot;.equalsIgnoreCase(ip)) {
+			ip = request.getHeader(&quot;WL-Proxy-Client-IP&quot;);
+		}
+		if (ip == null || ip.length() == 0 || &quot;unknown&quot;.equalsIgnoreCase(ip)) {
+			ip = request.getRemoteAddr();
+		}
+		if (&quot;0:0:0:0:0:0:0:1&quot;.equals(ip)) {
+			ip = &quot;127.0.0.1&quot;;
+		}
+		if (ip.split(&quot;,&quot;).length &gt; 1) {
+			ip = ip.split(&quot;,&quot;)[0];
+		}
+		return ip;
+	}
+
+}
+</code></pre>
+<h3 id="时间工具类">时间工具类</h3>
+<pre><code class="language-java">import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Random;
+
+public class DateTool {
+
+	/**
+	 * 获取当前时间
+	 * 
+	 * @param format
+	 * @return
+	 * @throws ParseException
+	 */
+	public static Date getCurrentDate(String format) throws ParseException {
+		SimpleDateFormat sdf = new SimpleDateFormat(format);
+		SimpleDateFormat sdfDateTime = new SimpleDateFormat(format);
+		return sdfDateTime.parse(sdf.format(new Date()));
+	}
+
+	/**
+	 * 时间转字符串
+	 * 
+	 * @param date
+	 * @return
+	 * @throws ParseException
+	 */
+	public static String dateToString(Date date, String format) throws ParseException {
+		SimpleDateFormat sdf = new SimpleDateFormat(format);
+		return sdf.format(date);
+	}
+
+	/**
+	 * 字符串转时间
+	 * @param dateString
+	 * @param format
+	 * @return
+	 * @throws ParseException
+	 */
+	public static Date stringToDate(String dateString, String format) throws ParseException {
+		SimpleDateFormat sdf = new SimpleDateFormat(format);
+		Date date = null;
+		try {
+			date = sdf.parse(dateString);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return date;
+	}
+
+	/**
+	 * 当前时间+8位随机数，用于生成流水号
+	 * 
+	 * @return
+	 */
+	public static String getNumberCode() {
+		SimpleDateFormat sdf = new SimpleDateFormat(&quot;yyyyMMddHHmmss&quot;);
+		String nowDate = sdf.format(new Date());
+		String result = &quot;&quot;;
+		Random random = new Random();
+		for (int i = 0; i &lt; 8; i++) {
+			result += random.nextInt(10);
+		}
+		return nowDate + result;
+	}
+
+	/* 
+     * 将时间转换为时间戳
+     */    
+    public static String dateToStamp(String dateString) throws ParseException{
+        String res;
+        SimpleDateFormat sdf = new SimpleDateFormat(&quot;yyyy-MM-dd HH:mm:ss&quot;);
+        Date date = sdf.parse(dateString);
+        long ts = date.getTime();
+        res = String.valueOf(ts);
+        return res;
+    }
+
+	/* 
+     * 将时间戳转换为时间
+     */
+    public static String stampToDate(String dateString){
+        String res;
+        SimpleDateFormat sdf = new SimpleDateFormat(&quot;yyyy-MM-dd HH:mm:ss&quot;);
+        long lt = new Long(dateString);
+        Date date = new Date(lt);
+        res = sdf.format(date);
+        return res;
+    }
+}
+</code></pre>
+<h3 id="手机号码归属地查询">手机号码归属地查询</h3>
+<p>pom.xml</p>
+<pre><code class="language-xml">&lt;!-- 手机号归属地查询 --&gt;
+&lt;dependency&gt;
+&lt;groupId&gt;com.googlecode.libphonenumber&lt;/groupId&gt;
+			&lt;artifactId&gt;libphonenumber&lt;/artifactId&gt;
+			&lt;version&gt;8.7.1&lt;/version&gt;
+		&lt;/dependency&gt;
+		&lt;dependency&gt;
+			&lt;groupId&gt;com.googlecode.libphonenumber&lt;/groupId&gt;
+&lt;artifactId&gt;geocoder&lt;/artifactId&gt;
+			&lt;version&gt;2.76&lt;/version&gt;
+		&lt;/dependency&gt;
+		&lt;dependency&gt;
+			&lt;groupId&gt;com.googlecode.libphonenumber&lt;/groupId&gt;
+			&lt;artifactId&gt;carrier&lt;/artifactId&gt;
+			&lt;version&gt;1.66&lt;/version&gt;
+		&lt;/dependency&gt;
+</code></pre>
+<p>工具类</p>
+<pre><code class="language-java">package com.abjy.tool;
+
+import com.google.i18n.phonenumbers.PhoneNumberToCarrierMapper;
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import com.google.i18n.phonenumbers.Phonenumber;
+import com.google.i18n.phonenumbers.geocoding.PhoneNumberOfflineGeocoder;
+
+import java.util.Locale;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+public class PhoneUtil {
+	private static PhoneNumberUtil phoneNumberUtil = PhoneNumberUtil.getInstance();
+	private static PhoneNumberToCarrierMapper carrierMapper = PhoneNumberToCarrierMapper.getInstance();
+	private static PhoneNumberOfflineGeocoder geocoder = PhoneNumberOfflineGeocoder.getInstance();
+
+	/**
+	 * 根据国家代码和手机号 判断手机号是否有效
+	 * 
+	 * @param phoneNumber
+	 * @param countryCode
+	 * @return
+	 */
+	public static boolean checkPhoneNumber(String phoneNumber, String countryCode) {
+		int ccode = Integer.valueOf(countryCode);
+		long phone = Long.valueOf(phoneNumber);
+		Phonenumber.PhoneNumber pn = new Phonenumber.PhoneNumber();
+		pn.setCountryCode(ccode);
+		pn.setNationalNumber(phone);
+		return phoneNumberUtil.isValidNumber(pn);
+	}
+
+	/**
+	 * 根据国家代码和手机号 判断手机运营商  谷歌接口部分手机号无法识别，使用最下边的方法
+	 * 
+	 * @param phoneNumber
+	 * @param countryCode
+	 * @return
+	 */
+	public static String getCarrier(String phoneNumber, String countryCode) {
+		int ccode = Integer.valueOf(countryCode);
+		long phone = Long.valueOf(phoneNumber);
+		Phonenumber.PhoneNumber pn = new Phonenumber.PhoneNumber();
+		pn.setCountryCode(ccode);
+		pn.setNationalNumber(phone);
+		// 返回结果只有英文，自己转成成中文
+		String carrierEn = carrierMapper.getNameForNumber(pn, Locale.ENGLISH);
+		String carrierZh = &quot;&quot;;
+		carrierZh += geocoder.getDescriptionForNumber(pn, Locale.CHINESE);
+		switch (carrierEn) {
+		case &quot;China Mobile&quot;:
+			carrierZh += &quot;移动&quot;;
+			break;
+		case &quot;China Unicom&quot;:
+			carrierZh += &quot;联通&quot;;
+			break;
+		case &quot;China Telecom&quot;:
+			carrierZh += &quot;电信&quot;;
+			break;
+		default:
+			break;
+		}
+		return carrierZh;
+	}
+
+	/**
+	 *
+	 * @Description: 根据国家代码和手机号 手机归属地 @date 2015-7-13 上午11:33:18 @param @param
+	 *               phoneNumber @param @param countryCode @param @return
+	 *               参数 @throws
+	 */
+	public static String getAdd(String phoneNumber, String countryCode) {
+		int ccode = Integer.valueOf(countryCode);
+		long phone = Long.valueOf(phoneNumber);
+		Phonenumber.PhoneNumber pn = new Phonenumber.PhoneNumber();
+		pn.setCountryCode(ccode);
+		pn.setNationalNumber(phone);
+		return geocoder.getDescriptionForNumber(pn, Locale.CHINA);
+	}
+
+	/**
+	 * 获取手机号码归属地，省份+电信/联通/移动
+	 * 
+	 * @param phone
+	 * @return
+	 */
+	public static String getPhoneInfo(String phone) {
+		String result = &quot;&quot;;
+		try {
+			String uri = &quot;https://www.baifubao.com/callback?cmd=1059&amp;callback=phone&amp;phone=&quot; + phone;
+			URL url = new URL(uri);
+			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+			connection.setDoOutput(true); // 设置该连接是可以输出的
+			connection.setRequestMethod(&quot;GET&quot;); // 设置请求方式
+			connection.setRequestProperty(&quot;Content-Type&quot;, &quot;application/x-www-form-urlencoded; charset=UTF-8&quot;);
+			BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream(), &quot;utf-8&quot;));
+			String line = null;
+			StringBuilder resultString = new StringBuilder();
+			while ((line = br.readLine()) != null) { // 读取数据
+				resultString.append(line + &quot;\n&quot;);
+			}
+			connection.disconnect();
+			result = resultString.toString().split(&quot;area_operator\&quot;:\&quot;&quot;)[1];
+			result = result.split(&quot;\&quot;,&quot;)[0];
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+    // main方法
+	public static void main(String[] args) {
+	System.out.println(PhoneUtil.getCarrier(&quot;手机号&quot;, &quot;+86&quot;));
+	System.err.println(getPhoneInfo(&quot;手机号&quot;));
+	}
+
+}
+</code></pre>
+<h3 id="文件工具类">文件工具类</h3>
+<p>pom.xml</p>
+<pre><code class="language-xml">&lt;!-- 图片压缩 --&gt;
+&lt;dependency&gt;
+	&lt;groupId&gt;net.coobird&lt;/groupId&gt;
+	&lt;artifactId&gt;thumbnailator&lt;/artifactId&gt;
+	&lt;version&gt;0.4.8&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<p>工具类</p>
+<pre><code class="language-java">import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
+
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.web.multipart.MultipartFile;
+
+import net.coobird.thumbnailator.Thumbnails;
+
+public class FileTool {
+
+	/**
+	 * 获取文件大小
+	 * 
+	 * @param fileSrc
+	 * @return
+	 */
+	public static long getFileSize(String fileSrc) {
+		File file = new File(fileSrc);
+		if (!file.exists() || !file.isFile()) {
+			return -1;
+		}
+		return file.length();
+	}
+
+	/**
+	 * 获取上传文件的后缀名
+	 * 
+	 * @param file
+	 * @return
+	 */
+	public static String getFileSuffixName(MultipartFile file) {
+		String fileSuffixName = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf(&quot;.&quot;));
+		return fileSuffixName;
+	}
+    
+    	/**
+	 * 获取文件夹下文件列表
+	 * 
+	 * @param strPath
+	 * @return
+	 */
+	public static List&lt;File&gt; getFileList(String strPath) {
+		List&lt;File&gt; filelist = new ArrayList&lt;&gt;();
+		File dir = new File(strPath);
+		File[] files = dir.listFiles(); // 该文件目录下文件全部放入数组
+		if (files != null) {
+			for (int i = 0; i &lt; files.length; i++) {
+				String fileName = files[i].getName();
+				if (files[i].isDirectory()) {
+					getFileList(files[i].getAbsolutePath()); // 遍历子文件夹里面的东西
+				} else if (fileName.endsWith(&quot;exe&quot;)) { // 以***结尾的文件
+					String strFileName = files[i].getAbsolutePath();
+					filelist.add(files[i]);
+				} else {
+					filelist.add(files[i]);
+					continue;
+				}
+			}
+		}
+		return filelist;
+	}
+
+	/**
+	 * 将文件压缩至指定大小
+	 * 
+	 * @param fileSrc
+	 *            文件路径
+	 * @param fileSize
+	 *            压缩后最大值
+	 * @return
+	 * @throws IOException
+	 */
+	public static Boolean FileCompress(String fileSrc, long fileSize) throws IOException {
+		Thumbnails.of(fileSrc).scale(1). // 缩放大小
+				outputQuality(0.8). // 图片压缩80%质量
+				toFile(fileSrc);
+		long FileCompressSize = getFileSize(fileSrc);
+		if (FileCompressSize / 1024 &gt; fileSize) {
+			FileCompress(fileSrc, fileSize);
+		}
+		return true;
+	}
+
+	/**
+	 * 下载硬盘上的文件
+	 * 
+	 * @param response
+	 * @param DiskPath
+	 *            文件硬盘路径
+	 * @param FileName
+	 *            下载后的名称
+	 */
+	public static void downLoadDisk(HttpServletResponse response, String DiskPath, String FileName) {
+		// 1.设置文件ContentType类型，这样设置，会自动判断下载文件类型
+		response.setContentType(&quot;multipart/form-data&quot;);
+		// 2.设置文件头：最后一个参数是设置下载文件名
+		response.setHeader(&quot;Content-Disposition&quot;, &quot;attachment;fileName=&quot; + FileName);
+		// 通过文件路径获得File对象
+		File file = new File(DiskPath);
+		ServletOutputStream out = null;
+		FileInputStream inputStream = null;
+		try {
+			inputStream = new FileInputStream(file);
+			// 3.通过response获取ServletOutputStream对象(out)
+			out = response.getOutputStream();
+			int b = 0;
+			byte[] buffer = new byte[512];
+			while (b != -1) {
+				b = inputStream.read(buffer);
+				if (b != -1) {
+					out.write(buffer, 0, b);// 4.写到输出流(out)中
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (inputStream != null) {
+					inputStream.close();
+				}
+				if (out != null) {
+					out.close();
+					out.flush();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+		}
+	}
+
+	/**
+	 * @param srcDir
+	 *            压缩文件夹路径
+	 * @param out
+	 *            压缩文件输出流
+	 * @param KeepDirStructure
+	 *            是否保留原来的目录结构,true:保留目录结构;false:所有文件跑到压缩包根目录下(注意：不保留目录结构可能会出现同名文件,会压缩失败)
+	 * @throws RuntimeException
+	 *             压缩失败会抛出运行时异常
+	 */
+	public static void fileToZip(String srcDir, OutputStream out, boolean KeepDirStructure) throws RuntimeException {
+		long start = System.currentTimeMillis();
+		ZipOutputStream zos = null;
+		try {
+			zos = new ZipOutputStream(out);
+			File sourceFile = new File(srcDir);
+			compressZip(sourceFile, zos, sourceFile.getName(), KeepDirStructure);
+			long end = System.currentTimeMillis();
+			System.out.println(&quot;压缩完成，耗时：&quot; + (end - start) + &quot; ms&quot;);
+		} catch (Exception e) {
+			throw new RuntimeException(&quot;zip error from ZipUtils&quot;, e);
+		} finally {
+			if (zos != null) {
+				try {
+					zos.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+
+	/**
+	 * 
+	 * 压缩成ZIP 方法2
+	 * 
+	 * @param srcFiles
+	 *            需要压缩的文件列表
+	 * 
+	 * @param out
+	 *            压缩文件输出流
+	 * 
+	 * @throws RuntimeException
+	 *             压缩失败会抛出运行时异常
+	 * 
+	 */
+	public static void fileListToZip(List&lt;File&gt; srcFiles, OutputStream out) throws RuntimeException {
+		long start = System.currentTimeMillis();
+		ZipOutputStream zos = null;
+		try {
+			zos = new ZipOutputStream(out);
+			for (File srcFile : srcFiles) {
+				byte[] buf = new byte[BUFFER_SIZE];
+				zos.putNextEntry(new ZipEntry(srcFile.getName()));
+				int len;
+				FileInputStream in = new FileInputStream(srcFile);
+				while ((len = in.read(buf)) != -1) {
+					zos.write(buf, 0, len);
+				}
+				zos.closeEntry();
+				in.close();
+			}
+			long end = System.currentTimeMillis();
+			System.out.println(&quot;压缩完成，耗时：&quot; + (end - start) + &quot; ms&quot;);
+		} catch (Exception e) {
+			throw new RuntimeException(&quot;zip error from ZipUtils&quot;, e);
+		} finally {
+			if (zos != null) {
+				try {
+					zos.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+
+	/**
+	 * 递归压缩方法
+	 * 
+	 * @param sourceFile
+	 *            源文件
+	 * @param zos
+	 *            zip输出流
+	 * @param name
+	 *            压缩后的名称
+	 * @param KeepDirStructure
+	 *            是否保留原来的目录结构,true:保留目录结构;false:所有文件跑到压缩包根目录下(注意：不保留目录结构可能会出现同名文件,会压缩失败)
+	 * @throws Exception
+	 */
+	private static final int BUFFER_SIZE = 2 * 1024;
+
+	private static void compressZip(File sourceFile, ZipOutputStream zos, String name, boolean KeepDirStructure)
+			throws Exception {
+		byte[] buf = new byte[BUFFER_SIZE];
+		if (sourceFile.isFile()) {
+			// 向zip输出流中添加一个zip实体，构造器中name为zip实体的文件的名字
+			zos.putNextEntry(new ZipEntry(name));
+			// copy文件到zip输出流中
+			int len;
+			FileInputStream in = new FileInputStream(sourceFile);
+			while ((len = in.read(buf)) != -1) {
+				zos.write(buf, 0, len);
+			}
+			// Complete the entry
+			zos.closeEntry();
+			in.close();
+		} else {
+			File[] listFiles = sourceFile.listFiles();
+			if (listFiles == null || listFiles.length == 0) {
+				// 需要保留原来的文件结构时,需要对空文件夹进行处理
+				if (KeepDirStructure) {
+					// 空文件夹的处理
+					zos.putNextEntry(new ZipEntry(name + &quot;/&quot;));
+					// 没有文件，不需要文件的copy
+					zos.closeEntry();
+				}
+			} else {
+				for (File file : listFiles) {
+					// 判断是否需要保留原来的文件结构
+					if (KeepDirStructure) {
+						// 注意：file.getName()前面需要带上父文件夹的名字加一斜杠,
+						// 不然最后压缩包中就不能保留原来的文件结构,即：所有文件都跑到压缩包根目录下了
+						compressZip(file, zos, name + &quot;/&quot; + file.getName(), KeepDirStructure);
+					} else {
+						compressZip(file, zos, file.getName(), KeepDirStructure);
+					}
+				}
+			}
+		}
+	}
+    
+}
+</code></pre>
+<p>压缩方法测试</p>
+<pre><code class="language-java">//测试压缩方法1
+FileOutputStream fos1 = new FileOutputStream(new File(&quot;c:/mytest01.zip&quot;));
+FileTool.fileToZip(&quot;D:/log&quot;, fos1,true);
+//测试压缩方法2
+List&lt;File&gt; fileList = new ArrayList&lt;&gt;();
+fileList.add(new File(&quot;D:/Java/jdk1.7.0_45_64bit/bin/jar.exe&quot;));
+fileList.add(new File(&quot;D:/Java/jdk1.7.0_45_64bit/bin/java.exe&quot;));
+FileOutputStream fos2 = new FileOutputStream(new File(&quot;c:/mytest02.zip&quot;));
+FileTool.fileListToZip(fileList, fos2);
+</code></pre>
+<h3 id="小程序模板通知">小程序模板通知</h3>
+<pre><code class="language-java">import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
+
+import com.google.gson.Gson;
+import com.wowmake.aftersale.model.Bill;
+import com.wowmake.aftersale.model.wechat.WeChatTemplateData;
+import com.wowmake.aftersale.model.wechat.WeChatTemplateMsg;
+import com.wowmake.aftersale.model.wechat.WechatAccessToken;
+
+public class WeChatPush {
+
+	/*
+	 * 微信小程序推送单个用户
+	 */
+	public static void pushOneUser(RestTemplate restTemplate,String openid,String formId,Bill bill) {
+		// 获取access_token
+		String access_token = getAccess_token(&quot;xxxxxxx&quot;, &quot;xxxxxx&quot;,restTemplate);
+		String url = &quot;https://api.weixin.qq.com/cgi-bin/message/wxopen/template/send&quot; + &quot;?access_token=&quot; + access_token;
+		Integer billState = bill.getBillState();
+		WeChatTemplateMsg wxTemplateMsg = new WeChatTemplateMsg();
+		wxTemplateMsg.setTouser(openid);// 要推送用户的openid
+		wxTemplateMsg.setForm_id(formId);// 要推送用户的formid
+		if (billState == 1) {
+			wxTemplateMsg.setTemplate_id(&quot;xxxxxxxxxxxxxxxxxxxxx&quot;);// 模版id
+			Map&lt;String, WeChatTemplateData&gt; m = new HashMap&lt;&gt;();
+			// 拼接推送的模版
+			WeChatTemplateData keyword1 = new WeChatTemplateData();
+			keyword1.setValue(bill.getBillNumber());
+			m.put(&quot;keyword1&quot;, keyword1);
+
+			WeChatTemplateData keyword2 = new WeChatTemplateData();
+			keyword2.setValue(bill.getMachineInfo().getMachineNumber());
+			m.put(&quot;keyword2&quot;, keyword2);
+			wxTemplateMsg.setData(m);
+
+			WeChatTemplateData keyword3 = new WeChatTemplateData();
+			keyword3.setValue(bill.getBillArea()+bill.getBillAddress());
+			m.put(&quot;keyword3&quot;, keyword3);
+			wxTemplateMsg.setData(m);
+
+			WeChatTemplateData keyword4 = new WeChatTemplateData();
+			keyword4.setValue(bill.getCustomerInfo().getUserNickName());
+			m.put(&quot;keyword4&quot;, keyword4);
+			wxTemplateMsg.setData(m);
+
+			WeChatTemplateData keyword5 = new WeChatTemplateData();
+			SimpleDateFormat sdf = new SimpleDateFormat(&quot;yyyy-MM-dd HH:mm:ss&quot;);
+			keyword5.setValue(sdf.format(bill.getBillSubmitDate()));
+			m.put(&quot;keyword5&quot;, keyword5);
+			wxTemplateMsg.setData(m);
+			
+			WeChatTemplateData keyword6 = new WeChatTemplateData();
+			keyword6.setValue(bill.getServiceInfo().getUserNickName());
+			m.put(&quot;keyword6&quot;, keyword6);
+			wxTemplateMsg.setData(m);
+			
+			WeChatTemplateData keyword7 = new WeChatTemplateData();
+			keyword7.setValue(bill.getServiceInfo().getUserPhone());
+			m.put(&quot;keyword7&quot;, keyword7);
+			wxTemplateMsg.setData(m);
+			
+			WeChatTemplateData keyword8 = new WeChatTemplateData();
+			keyword8.setValue(&quot;待处理&quot;);
+			m.put(&quot;keyword8&quot;, keyword8);
+			wxTemplateMsg.setData(m);
+		} else if(billState == 2){
+			wxTemplateMsg.setTemplate_id(&quot;xxxxxxxxxx&quot;);// 模版id
+			Map&lt;String, WeChatTemplateData&gt; m = new HashMap&lt;&gt;();
+			// 拼接推送的模版
+			WeChatTemplateData keyword1 = new WeChatTemplateData();
+			keyword1.setValue(bill.getBillNumber());
+			m.put(&quot;keyword1&quot;, keyword1);
+
+			WeChatTemplateData keyword2 = new WeChatTemplateData();
+			keyword2.setValue(bill.getServiceInfo().getUserNickName());
+			m.put(&quot;keyword2&quot;, keyword2);
+			wxTemplateMsg.setData(m);
+			
+			WeChatTemplateData keyword3 = new WeChatTemplateData();
+			keyword3.setValue(bill.getServiceInfo().getUserPhone());
+			m.put(&quot;keyword3&quot;, keyword3);
+			wxTemplateMsg.setData(m);
+			
+			WeChatTemplateData keyword4 = new WeChatTemplateData();
+			keyword4.setValue(&quot;已处理，期待您的评价&quot;);
+			m.put(&quot;keyword4&quot;, keyword4);
+			wxTemplateMsg.setData(m);
+		}
+		ResponseEntity&lt;String&gt; responseEntity = restTemplate.postForEntity(url, wxTemplateMsg, String.class);
+		System.out.printf(&quot;小程序推送结果：&quot;);
+		System.out.println(responseEntity.getBody());
+	}
+
+	/*
+	 * 获取access_token appid和appsecret到小程序后台获取，当然也可以让小程序开发人员给你传过来
+	 */
+	public static String getAccess_token(String appid, String appsecret,RestTemplate restTemplate) {
+		// 获取access_token
+		String url = &quot;https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&quot; + &quot;&amp;appid=&quot; + appid
+				+ &quot;&amp;secret=&quot; + appsecret;
+		String json = restTemplate.getForObject(url, String.class);
+		WechatAccessToken accessToken = new Gson().fromJson(json, WechatAccessToken.class);
+		return accessToken.getAccess_token();
+	}
+
+}
+</code></pre>
+<h3 id="邮箱发送工具类">邮箱发送工具类</h3>
+<p>pom.xml</p>
+<pre><code class="language-xml">&lt;!-- 邮箱配置 --&gt;
+&lt;dependency&gt;
+	&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+	&lt;artifactId&gt;spring-boot-starter-mail&lt;/artifactId&gt;
+&lt;/dependency&gt;
+</code></pre>
+<p>工具类1</p>
+<pre><code class="language-java">import java.io.UnsupportedEncodingException;
+import java.security.Security;
+import java.util.Date;
+import java.util.Properties;
+
+import javax.activation.DataHandler;
+import javax.activation.FileDataSource;
+import javax.mail.Authenticator;
+import javax.mail.BodyPart;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Multipart;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+import javax.mail.internet.MimeUtility;
+
+/**
+ * 邮件处理类
+ * 
+ * @author jiafuwei
+ * 
+ */
+public class sendMail {
+
+    private static final String FROM_MAIL_SMTP = &quot;邮箱服务器，例如smtp.163.com&quot;;
+    private static final String FROM_MAIL_NAME = &quot;您的邮箱&quot;;
+    private static final String FROM_MAIL_PASS = &quot;您的授权码&quot;;
+
+    
+    /**
+     * 发送邮件(灵活度高，通用版)
+     * @param from 发件人
+     * @param to 收件人, 多个Email以英文逗号分隔
+     * @param cc 抄送, 多个Email以英文逗号分隔
+     * @param subject 主题
+     * @param content 内容
+     * @param fileList 附件列表
+     * @return
+     */
+    public static boolean sendMail(String to, String cc, String subject, String content, String[] fileList){
+         try {
+             Security.addProvider(new com.sun.net.ssl.internal.ssl.Provider());
+             final String SSL_FACTORY = &quot;javax.net.ssl.SSLSocketFactory&quot;;
+             final Properties p = System.getProperties() ;
+             p.setProperty(&quot;mail.smtp.host&quot;, FROM_MAIL_SMTP);
+             p.setProperty(&quot;mail.smtp.auth&quot;, &quot;true&quot;);
+             p.setProperty(&quot;mail.smtp.user&quot;, FROM_MAIL_NAME);
+             p.setProperty(&quot;mail.smtp.pass&quot;, FROM_MAIL_PASS);
+             
+             p.setProperty(&quot;mail.smtp.socketFactory.class&quot;, SSL_FACTORY);
+             p.setProperty(&quot;mail.smtp.socketFactory.fallback&quot;, &quot;false&quot;);
+             //邮箱发送服务器端口,这里设置为465端口
+             p.setProperty(&quot;mail.smtp.port&quot;, &quot;465&quot;);
+             p.setProperty(&quot;mail.smtp.socketFactory.port&quot;, &quot;465&quot;);
+    
+            // 根据邮件会话属性和密码验证器构造一个发送邮件的session
+            Session session = Session.getInstance(p, new Authenticator(){
+                protected PasswordAuthentication getPasswordAuthentication() {
+                    return new PasswordAuthentication(p.getProperty(&quot;mail.smtp.user&quot;),p.getProperty(&quot;mail.smtp.pass&quot;));
+                }
+            });
+            session.setDebug(true);
+            Message message = new MimeMessage(session);
+            //消息发送的主题
+            message.setSubject(subject);
+            //接受消息的人
+            message.setReplyTo(InternetAddress.parse(FROM_MAIL_NAME));
+            //消息的发送者
+            message.setFrom(new InternetAddress(p.getProperty(&quot;mail.smtp.user&quot;),&quot;您的邮箱&quot;));
+            // 创建邮件的接收者地址，并设置到邮件消息中
+            String[] split = to.split(&quot;,&quot;);
+            InternetAddress []tos = new InternetAddress[split.length];
+            for (int i = 0; i &lt; split.length; i++) {
+                tos[i]=new InternetAddress(split[i]);
+            }
+            // 设置抄送人
+//            if (cc != null &amp;&amp; cc.length() &gt; 0) {
+//                message.setRecipients(Message.RecipientType.CC, InternetAddress.parse(cc)); 
+//            }
+            message.setRecipients(Message.RecipientType.TO, tos);
+            // 消息发送的时间
+            message.setSentDate(new Date());
+            Multipart mainPart = new MimeMultipart();
+            // 创建一个包含HTML内容的MimeBodyPart
+            BodyPart html = new MimeBodyPart();
+            // 设置HTML内容
+            html.setContent(content, &quot;text/html; charset=utf-8&quot;);
+            mainPart.addBodyPart(html);
+            // 将MiniMultipart对象设置为邮件内容
+            message.setContent(mainPart);
+            // 设置附件
+            if (fileList != null &amp;&amp; fileList.length &gt; 0) {
+                for (int i = 0; i &lt; fileList.length; i++) {
+                    html = new MimeBodyPart();
+                    FileDataSource fds = new FileDataSource(fileList[i]); 
+                    html.setDataHandler(new DataHandler(fds)); 
+                    html.setFileName(MimeUtility.encodeText(fds.getName(), &quot;UTF-8&quot;, &quot;B&quot;));
+                    mainPart.addBodyPart(html); 
+                }
+            }
+            message.setContent(mainPart); 
+            message.saveChanges(); 
+            Transport.send(message);
+         } catch (MessagingException e) {
+             e.printStackTrace();
+             return false;
+         } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 测试Mian方法
+     * 
+     * @param args
+     */
+    public static void main(String[] args) {
+        String content = &quot;&lt;html&gt;&lt;head&gt;&lt;style type='text/css'&gt;p{padding-left:50px;font-family:'楷体';font-size:20px;}table{padding-left:50px;border:0;font-family:'楷体';font-size:30px;}&lt;/style&gt;&lt;/head&gt;&lt;body&gt;验证码：&lt;br/&gt;&lt;p&gt;123456&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;&quot;;
+//        String[] fileList = new String[1];
+//        fileList[0] = &quot;d:/pac.txt&quot;;
+        System.out.println(sendMail(&quot;发送者邮箱&quot;, null, &quot;测试测试&quot;, content,null));
+    }
+}
+
+</code></pre>
+<p>工具类2</p>
+<pre><code class="language-java">import java.util.Objects;
+
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
+
+public class sendMail {
+	public static JavaMailSenderImpl JavaMailSender() {
+        JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+        mailSender.setHost(&quot;邮箱服务器，例如smtp.163.com&quot;);
+        mailSender.setUsername(&quot;您的邮箱&quot;);
+        mailSender.setPassword(&quot;您的授权码&quot;);
+        return mailSender;
+    }
+    //一个简单的邮件,只有text信息
+    /**
+     * @Description:
+     * @Param: [subject:标题, text:内容, email:接收人的邮件地址]
+     * @return: void
+     * @Author: liuyang
+     * @Date: 2020/2/27
+     */
+    public static void SendSimpleEmail(String subject, String text, String email) {
+        JavaMailSenderImpl javaMailSender = JavaMailSender();
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setSubject(subject); //邮件的主题
+        mailMessage.setText(text);
+        mailMessage.setTo(email); //发送给谁
+        mailMessage.setFrom(Objects.requireNonNull(javaMailSender.getUsername())); //谁发送的
+        javaMailSender.send(mailMessage);
+    }
+    
+    public static void main(String[] args) {
+    	SendMail.SendSimpleEmail(&quot;邮件主题&quot;, &quot;邮件内容&quot;, &quot;收件人邮箱&quot;);
+	}
+
+}
+</code></pre>
+<h3 id="云通信短信验证码">云通信短信验证码</h3>
+<p>pom.xml</p>
+<pre><code class="language-xml">&lt;!-- 阿里云云通信短信通知接口 旧版--&gt;
+&lt;dependency&gt;
+	&lt;groupId&gt;com.aliyun&lt;/groupId&gt;
+	&lt;artifactId&gt;aliyun-java-sdk-core&lt;/artifactId&gt;
+	&lt;version&gt;4.1.0&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;!-- 阿里云云通信短信通知接口 新版--&gt;
+&lt;dependency&gt;
+	&lt;groupId&gt;com.aliyun&lt;/groupId&gt;
+	&lt;artifactId&gt;dysmsapi20170525&lt;/artifactId&gt;
+	&lt;version&gt;2.0.4&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<p>旧版工具类</p>
+<pre><code class="language-java">import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
+
+import com.aliyuncs.CommonRequest;
+import com.aliyuncs.CommonResponse;
+import com.aliyuncs.DefaultAcsClient;
+import com.aliyuncs.IAcsClient;
+import com.aliyuncs.exceptions.ClientException;
+import com.aliyuncs.exceptions.ServerException;
+import com.aliyuncs.http.MethodType;
+import com.aliyuncs.profile.DefaultProfile;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
+public class SendSmsTool {
+	
+	public static Map&lt;String, Object&gt; SendSMS(String phone) {
+		Map&lt;String, Object&gt; map = new HashMap&lt;&gt;();
+		String code = String.valueOf(new Random().nextInt(899999) + 100000);//生成短信验证码
+        DefaultProfile profile = DefaultProfile.getProfile(&quot;default&quot;, &quot;您的AccessKey ID&quot;, &quot;您的AccessKey Secret&quot;);
+        IAcsClient client = new DefaultAcsClient(profile);
+        CommonRequest request = new CommonRequest();
+        //request.setProtocol(ProtocolType.HTTPS);
+        request.setMethod(MethodType.POST);
+        request.setDomain(&quot;dysmsapi.aliyuncs.com&quot;);
+        request.setVersion(&quot;2017-05-25&quot;);
+        request.setAction(&quot;SendSms&quot;);
+        request.putQueryParameter(&quot;PhoneNumbers&quot;, phone);
+        request.putQueryParameter(&quot;SignName&quot;, &quot;您的签名&quot;);
+        request.putQueryParameter(&quot;TemplateCode&quot;, &quot;您的模板编号&quot;);
+        request.putQueryParameter(&quot;TemplateParam&quot;, &quot;{\&quot;code\&quot;:&quot;+ code +&quot;}&quot;);
+        try {
+            CommonResponse response = client.getCommonResponse(request);
+            JsonParser jp = new JsonParser();
+    		//将json字符串转化成json对象
+            JsonObject jo = jp.parse(response.getData()).getAsJsonObject();
+            //获取message对应的值
+            String message = jo.get(&quot;Message&quot;).getAsString();
+            if (message.equals(&quot;OK&quot;)) {
+            	map.put(&quot;message&quot;, message);
+            	map.put(&quot;return_code&quot;, code);
+			}else{
+				map.put(&quot;message&quot;, message);
+			}
+        } catch (ServerException e) {
+            e.printStackTrace();
+        } catch (ClientException e) {
+            e.printStackTrace();
+        }
+		return map;
+    }
+}
+</code></pre>
+<p>新版工具类</p>
+<pre><code class="language-java">import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
+
+import com.aliyun.dysmsapi20170525.models.*;
+import com.aliyun.teaopenapi.models.*;
+
+public class SendSmsTool {
+
+	/**
+	 * 使用AK&amp;SK初始化账号Client
+	 * 
+	 * @param accessKeyId
+	 * @param accessKeySecret
+	 * @return Client
+	 * @throws Exception
+	 */
+	public static com.aliyun.dysmsapi20170525.Client createClient(String accessKeyId, String accessKeySecret)
+			throws Exception {
+		Config config = new Config()
+				// 您的AccessKey ID
+				.setAccessKeyId(accessKeyId)
+				// 您的AccessKey Secret
+				.setAccessKeySecret(accessKeySecret);
+		// 访问的域名
+		config.endpoint = &quot;dysmsapi.aliyuncs.com&quot;;
+		return new com.aliyun.dysmsapi20170525.Client(config);
+	}
+
+	public static Map&lt;String, String&gt; SendSMS(String phone) throws Exception {
+		Map&lt;String, String&gt; map = new HashMap&lt;&gt;();
+		String AccessKeyID = &quot;XXXXX&quot;;
+		String AccessKeySecret = &quot;XXXXX&quot;;
+		String SignName = &quot;XXXXX&quot;;
+		String TemplateCode = &quot;SMS_148XXXXXX&quot;;
+		String code = String.valueOf(new Random().nextInt(899999) + 100000);// 生成短信验证码
+		com.aliyun.dysmsapi20170525.Client client = SendSmsTool.createClient(AccessKeyID,
+				AccessKeySecret);
+		SendSmsRequest sendSmsRequest = new SendSmsRequest().setPhoneNumbers(phone).setSignName(SignName)
+				.setTemplateCode(TemplateCode).setTemplateParam(&quot;{\&quot;code\&quot;:&quot; + code + &quot;}&quot;);
+		// 复制代码运行请自行打印 API 的返回值
+		SendSmsResponse response = client.sendSms(sendSmsRequest);
+		System.out.println(response.getBody().message);
+		if (response.getBody().message.equals(&quot;OK&quot;)) {
+			map.put(&quot;msg&quot;, &quot;success&quot;);
+			map.put(&quot;code&quot;, code);
+			map.put(&quot;returnTeacherPhone&quot;, phone);
+		} else {
+			map.put(&quot;msg&quot;, &quot;fail&quot;);
+		}
+		return map;
+	}
+}
+</code></pre>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://viaoh.github.io/tag/pJtOg0Zsv/" class="tag">
+                    java
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://viaoh.github.io/post/about/">
+                  <h3 class="post-title">
+                    关于
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+              
+                <div id="gitalk-container" data-aos="fade-in"></div>
+              
+
+              
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+  
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+
+      var gitalk = new Gitalk({
+        clientID: '4970b3e2cb2b185b5af7',
+        clientSecret: 'a413a9c025c85c8c7d510b5b5cbe613c47e76bdc',
+        repo: 'viaoh.github.io',
+        owner: 'viaoh',
+        admin: ['viaoh'],
+        id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+        distractionFreeMode: false  // Facebook-like distraction free mode
+      })
+
+      gitalk.render('gitalk-container')
+
+    </script>
+  
+
+  
+
+
+
+
+  </body>
+</html>

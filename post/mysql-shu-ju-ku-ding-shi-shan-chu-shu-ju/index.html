@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>MySQL数据库定时删除数据 | 知行合一</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://viaoh.github.io/favicon.ico?v=1706791123866">
+<link rel="stylesheet" href="https://viaoh.github.io/styles/main.css">
+
+
+  
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
+  
+
+  
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="1、开启事件调度器
+确认是否开启
+SHOW VARIABLES LIKE 'event_scheduler';
+
+开启命令
+SET GLOBAL event_scheduler = ON;
+
+2、创建事件&lt;创建后默认开启&gt;
+CR..." />
+    <meta name="keywords" content="database" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://viaoh.github.io">
+        <img src="https://viaoh.github.io/images/avatar.png?v=1706791123866" class="site-logo">
+        <h1 class="site-title">知行合一</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+          <a class="social-link" href="https://github.com/viaoh" target="_blank">
+            <i class="fab fa-github"></i>
+          </a>
+        
+      
+        
+      
+        
+          <a class="social-link" href="https://weibo.com/u/6377680111" target="_blank">
+            <i class="fab fa-weibo"></i>
+          </a>
+        
+      
+        
+          <a class="social-link" href="https://www.zhihu.com/people/viaoh-" target="_blank">
+            <i class="fab fa-zhihu"></i>
+          </a>
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      年与时驰，意与日去，遂成枯落，多不接世
+    </div>
+    <div class="site-footer">
+      Powered by &nbsp;<a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://viaoh.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">MySQL数据库定时删除数据</h2>
+            <div class="post-date">2023-05-20</div>
+            
+            <div class="post-content" v-pre>
+              <h3 id="1-开启事件调度器">1、开启事件调度器</h3>
+<p>确认是否开启</p>
+<pre><code class="language-sql">SHOW VARIABLES LIKE 'event_scheduler';
+</code></pre>
+<p>开启命令</p>
+<pre><code class="language-sql">SET GLOBAL event_scheduler = ON;
+</code></pre>
+<h3 id="2-创建事件创建后默认开启">2、创建事件&lt;创建后默认开启&gt;</h3>
+<pre><code class="language-bash">CREATE EVENT [IF NOT EXISTS] event_name ON SCHEDULE schedule
+ [ON COMPLETION [NOT] PRESERVE] [ENABLE | DISABLE] [COMMENT 'comment']
+ DO sql_statement;
+</code></pre>
+<p>例如：每分钟(60S)清空一次记录表</p>
+<pre><code class="language-sql">use database_name;
+create event table_truncate on schedule every 60 second do truncate table operator_record_log;
+</code></pre>
+<p>&lt;2021.12.27&gt;补充：每30天(2592000S)清空30天前的所有记录，仅保留近30天数据</p>
+<pre><code class="language-sql">use database_name;
+create event table_truncate on schedule every 2592000 second do delete from operator_record_log where create_date &lt; DATE_SUB(CURDATE(),INTERVAL 30 DAY);
+</code></pre>
+<p>例如：指定时间将表清空</p>
+<pre><code class="language-sql">use database_name;
+create event table_truncate on schedule at timestamp '2022-01-01 00:00:00' do truncate table operator_record_log;
+</code></pre>
+<p>例如：每天定时清空</p>
+<pre><code class="language-sql">use database_name;
+create event table_truncate on schedule every 1 day starts '2022-01-01 00:00:00' do truncate table operator_record_log;
+</code></pre>
+<h3 id="3-关闭事件">3、关闭事件</h3>
+<pre><code class="language-sql">alter event event_name disable;
+</code></pre>
+<h3 id="4-开启事件">4、开启事件</h3>
+<pre><code class="language-sql">alter event event_name enable;
+</code></pre>
+<h3 id="5-删除事件">5、删除事件</h3>
+<pre><code class="language-sql">drop event if exists event_name;
+</code></pre>
+<h3 id="6-查看事件">6、查看事件</h3>
+<pre><code class="language-sql">show events;
+</code></pre>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://viaoh.github.io/tag/PmmwkGswE/" class="tag">
+                    database
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://viaoh.github.io/post/linux-xi-tong-li-yong-crontab-ding-shi-bei-fen-mysql-shu-ju-ku-fang-fa/">
+                  <h3 class="post-title">
+                    Linux系统利用crontab定时备份Mysql数据库方法
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+              
+                <div id="gitalk-container" data-aos="fade-in"></div>
+              
+
+              
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+  
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+
+      var gitalk = new Gitalk({
+        clientID: '4970b3e2cb2b185b5af7',
+        clientSecret: 'a413a9c025c85c8c7d510b5b5cbe613c47e76bdc',
+        repo: 'viaoh.github.io',
+        owner: 'viaoh',
+        admin: ['viaoh'],
+        id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+        distractionFreeMode: false  // Facebook-like distraction free mode
+      })
+
+      gitalk.render('gitalk-container')
+
+    </script>
+  
+
+  
+
+
+
+
+  </body>
+</html>

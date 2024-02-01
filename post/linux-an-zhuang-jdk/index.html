@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>Linux安装JDK | 知行合一</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://viaoh.github.io/favicon.ico?v=1706791123866">
+<link rel="stylesheet" href="https://viaoh.github.io/styles/main.css">
+
+
+  
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
+  
+
+  
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="方式一：yum方式下载安装
+1、查找java相关的列表
+yum -y list java*
+或者
+yum search jdk
+
+2、安装jdk
+yum install java-1.8.0-openjdk.x86_64
+
+3、完成安装后验..." />
+    <meta name="keywords" content="linux" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://viaoh.github.io">
+        <img src="https://viaoh.github.io/images/avatar.png?v=1706791123866" class="site-logo">
+        <h1 class="site-title">知行合一</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+          <a class="social-link" href="https://github.com/viaoh" target="_blank">
+            <i class="fab fa-github"></i>
+          </a>
+        
+      
+        
+      
+        
+          <a class="social-link" href="https://weibo.com/u/6377680111" target="_blank">
+            <i class="fab fa-weibo"></i>
+          </a>
+        
+      
+        
+          <a class="social-link" href="https://www.zhihu.com/people/viaoh-" target="_blank">
+            <i class="fab fa-zhihu"></i>
+          </a>
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      年与时驰，意与日去，遂成枯落，多不接世
+    </div>
+    <div class="site-footer">
+      Powered by &nbsp;<a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://viaoh.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">Linux安装JDK</h2>
+            <div class="post-date">2023-05-20</div>
+            
+            <div class="post-content" v-pre>
+              <h4 id="方式一yum方式下载安装">方式一：yum方式下载安装</h4>
+<p>1、查找java相关的列表</p>
+<pre><code>yum -y list java*
+或者
+yum search jdk
+</code></pre>
+<p>2、安装jdk</p>
+<pre><code>yum install java-1.8.0-openjdk.x86_64
+</code></pre>
+<p>3、完成安装后验证</p>
+<pre><code>java -version
+</code></pre>
+<p>4、通过yum安装的默认路径为：/usr/lib/jvm</p>
+<p>5、将jdk的安装路径加入到JAVA_HOME</p>
+<pre><code>vi /etc/profile
+
+在文件最后加入：
+#set java environment
+JAVA_HOME=/usr/lib/jvm/jre-1.6.0-openjdk.x86_64
+PATH=$PATH:$JAVA_HOME/bin
+CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar
+export JAVA_HOME CLASSPATH PATH
+
+修改/etc/profile之后让其生效
+. /etc/profile （注意 . 之后应有一个空格）
+</code></pre>
+<h4 id="方式二官网下载jdkftp上传服务器解压安装">方式二：官网下载jdk，ftp上传服务器解压安装</h4>
+<p>1、进入 Oracle 官方网站 下载合适的 JDK 版本，准备安装。</p>
+<pre><code>注意：这里需要下载 Linux 版本。这里以jdk-8u151-linux-x64.tar.gz为例，你下载的文件可能不是这个版本，这没关系，只要后缀(.tar.gz)一致即可。
+</code></pre>
+<p>2、创建目录</p>
+<pre><code>在/usr/目录下创建java目录，
+mkdir /usr/local/java
+cd /usr/local/java
+把下载的文件 jdk-8u151-linux-x64.tar.gz 放在/usr/local/java/目录下。
+</code></pre>
+<p>3、解压 JDK</p>
+<pre><code>tar -zxvf jdk-8u151-linux-x64.tar.gz
+</code></pre>
+<p>4、设置环境变量</p>
+<pre><code>修改 vi /etc/profile
+在 profile 文件中添加如下内容并保存：
+set java environment
+JAVA_HOME=/usr/local/java/jdk1.8.0_151        
+JRE_HOME=/usr/local/java/jdk1.8.0_151/jre     
+CLASS_PATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar:$JRE_HOME/lib
+PATH=$PATH:$JAVA_HOME/bin:$JRE_HOME/bin
+export JAVA_HOME JRE_HOME CLASS_PATH PATH
+ 
+注意：其中 JAVA_HOME， JRE_HOME 请根据自己的实际安装路径及 JDK 版本配置。
+
+让修改生效：
+source /etc/profile
+</code></pre>
+<h4 id="测试和运行">测试和运行</h4>
+<p>1、测试是否安装成功</p>
+<pre><code>java -version
+显示 java 版本信息，则说明 JDK 安装成功
+</code></pre>
+<p>2、运行jar项目</p>
+<pre><code>运行jar包通常我们都会以下面的方式运行:
+java -jar babyshark-0.0.1-SNAPSHOT.jar
+
+这样运行的话会有一个问题，就是我们一关闭当前窗口就会停止运行项目，要想解决这个问题，就需要在后台运行。
+nohup java -jar shop-0.0.1-SNAPSHOT.jar &gt; log.file  2&gt;&amp;1 &amp;
+上面的2 和 1 的意思如下:
+0    标准输入（一般是键盘）
+1    标准输出（一般是显示屏，是用户终端控制台）
+2    标准错误（错误信息输出）
+
+将运行的jar 错误日志信息输出到log.file文件中，然后（&gt;&amp;1）就是继续输出到标准输出(前面加的&amp;，是为了让系统识别是标准输出)，最后一个&amp;,表示在后台运行。
+nohup java -jar shop-0.0.1-SNAPSHOT.jar &gt; log.file  2&gt;&amp;1 &amp;
+
+查找运行的pid
+netstat -anp
+
+查找java进程运行的pid
+ps -ef|grep java
+
+杀死进程
+kill -9 pid
+</code></pre>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://viaoh.github.io/tag/TC_INGJ3R/" class="tag">
+                    linux
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://viaoh.github.io/post/spring-boot-pei-zhi-wen-jian/">
+                  <h3 class="post-title">
+                    Spring Boot配置文件
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+              
+                <div id="gitalk-container" data-aos="fade-in"></div>
+              
+
+              
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+  
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+
+      var gitalk = new Gitalk({
+        clientID: '4970b3e2cb2b185b5af7',
+        clientSecret: 'a413a9c025c85c8c7d510b5b5cbe613c47e76bdc',
+        repo: 'viaoh.github.io',
+        owner: 'viaoh',
+        admin: ['viaoh'],
+        id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+        distractionFreeMode: false  // Facebook-like distraction free mode
+      })
+
+      gitalk.render('gitalk-container')
+
+    </script>
+  
+
+  
+
+
+
+
+  </body>
+</html>

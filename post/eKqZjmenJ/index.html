@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>黑群晖6.1.7 物理机安装 | 知行合一</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://viaoh.github.io/favicon.ico?v=1706791123866">
+<link rel="stylesheet" href="https://viaoh.github.io/styles/main.css">
+
+
+  
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
+  
+
+  
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="黑群晖6.1.7 物理机安装详细教程
+群晖简介
+
+准备资源
+（所有软件资源已打包免费下载，下载地址）
+https://www.123pan.com/s/bdB8Vv-LopH.html
+1.U盘一枚，注意改U盘需要永久插电脑上作为引导,1G..." />
+    <meta name="keywords" content="其它" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://viaoh.github.io">
+        <img src="https://viaoh.github.io/images/avatar.png?v=1706791123866" class="site-logo">
+        <h1 class="site-title">知行合一</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+          <a class="social-link" href="https://github.com/viaoh" target="_blank">
+            <i class="fab fa-github"></i>
+          </a>
+        
+      
+        
+      
+        
+          <a class="social-link" href="https://weibo.com/u/6377680111" target="_blank">
+            <i class="fab fa-weibo"></i>
+          </a>
+        
+      
+        
+          <a class="social-link" href="https://www.zhihu.com/people/viaoh-" target="_blank">
+            <i class="fab fa-zhihu"></i>
+          </a>
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      年与时驰，意与日去，遂成枯落，多不接世
+    </div>
+    <div class="site-footer">
+      Powered by &nbsp;<a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://viaoh.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">黑群晖6.1.7 物理机安装</h2>
+            <div class="post-date">2023-08-15</div>
+            
+            <div class="post-content" v-pre>
+              <h2 id="黑群晖617-物理机安装详细教程">黑群晖6.1.7 物理机安装详细教程</h2>
+<h3 id="群晖简介">群晖简介</h3>
+<figure data-type="image" tabindex="1"><img src="https://s3.bmp.ovh/imgs/2023/08/15/19071908cb2ab877.png" alt="" loading="lazy"></figure>
+<h3 id="准备资源">准备资源</h3>
+<p>（所有软件资源已打包免费下载，<strong>下载地址</strong>）</p>
+<p>https://www.123pan.com/s/bdB8Vv-LopH.html</p>
+<p>1.U盘一枚，注意改U盘需要永久插电脑上作为引导,1G+足以;</p>
+<p>2.引导文件下载</p>
+<p>3.系统资源下载</p>
+<p>DS3617xs版本6.1.7-15284 pat文件?</p>
+<p>https://cndl.synology.cn/download/DSM/release/6.1.7/15284/DSM_RS3617xs_15284.pat</p>
+<p>DS3615xs版本6.1.7-15284 pat文件</p>
+<p>https://cndl.synology.cn/download/DSM/release/6.1.7/15284/DSM_DS3615xs_15284.pat</p>
+<p>4.适合运行NAS的设备 如HP的 MicroServer Gen8 Gen10 等等</p>
+<h3 id="u盘制作">U盘制作</h3>
+<h5 id="1-步骤摘要">1、步骤摘要</h5>
+<p>1.芯片无忧/芯片精灵?用于获取U盘VID、PID</p>
+<p>2.OSFMount?用于修改引导映像synoboot.img 内的启动盘VID、PID以及网卡MAC地址</p>
+<p>3.Win32DiskImager?用于把修改好的引导映像synoboot.img 写入到U盘中</p>
+<p>插入U盘，开启'芯片无忧'或者芯片精灵软件（Windows10中该软件运行速度较慢请等待 不要操作，如操作了会提示停止运行）</p>
+<figure data-type="image" tabindex="2"><img src="https://s3.bmp.ovh/imgs/2023/08/15/3249eb0bfdabc77e.png" alt="" loading="lazy"></figure>
+<p><strong>保存记录下VID PID</strong></p>
+<h5 id="2-打开osfmount">2、打开OSFMount</h5>
+<p>确保你已经准备好synoboot.img引导映像；（OSFMount本站提供是安装版请确保已安装）</p>
+<figure data-type="image" tabindex="3"><img src="https://s3.bmp.ovh/imgs/2023/08/15/77081c05b5d25a52.png" alt="" loading="lazy"></figure>
+<h5 id="点击mountnew">点击Mountnew</h5>
+<figure data-type="image" tabindex="4"><img src="https://s3.bmp.ovh/imgs/2023/08/15/3ab86e1a3797bf2f.png" alt="" loading="lazy"></figure>
+<h5 id="3-参照设置">3、参照设置</h5>
+<p>特别注意 Read-only drvie(只读模式不能打勾)</p>
+<figure data-type="image" tabindex="5"><img src="https://s3.bmp.ovh/imgs/2023/08/15/058bf621bc4d8df7.png" alt="" loading="lazy"></figure>
+<p>确认无误 点击OK<br>
+这时候多出一个虚拟驱动器</p>
+<figure data-type="image" tabindex="6"><img src="https://s3.bmp.ovh/imgs/2023/08/15/74028a592085fc8b.png" alt="" loading="lazy"></figure>
+<h5 id="4-虚拟驱动器">4、虚拟驱动器</h5>
+<p>进入驱动器目录 /grub/ 找到grub.cfg文件</p>
+<figure data-type="image" tabindex="7"><img src="https://s3.bmp.ovh/imgs/2023/08/15/922dbe561566a692.png" alt="" loading="lazy"></figure>
+<p>使用Notepad++（推荐） 或者记事本打开grub.cfg文件 使用Notepad++</p>
+<figure data-type="image" tabindex="8"><img src="https://s3.bmp.ovh/imgs/2023/08/15/70f6368c45df0348.png" alt="" loading="lazy"></figure>
+<p>代码如下</p>
+<pre><code>    set vid=0x0DD8     //修改 0DD8 为你U盘的VID 保留前面的0x
+    set pid=0x0C00     //修改 0C00 为你U盘的PID 保留前面的0x
+    set sn=C7LWN09761    //此处为序列号 如你有的洗白需求的话可修改
+    set mac1=00113207DCBD //此处为网卡MAC修改为和你NAS一致的MAC 洗白的话需要001132开头 需要该硬件MAC
+</code></pre>
+<p>提示：初步安装仅仅需要PID和VID设置对就ok，SN/MAC是用来洗白用的，的有对应的号，如果没有则不管</p>
+<p>洗白群晖就配合SN和MAC的组合</p>
+<figure data-type="image" tabindex="9"><img src="https://s3.bmp.ovh/imgs/2023/08/15/bca620453a12cd4e.png" alt="" loading="lazy"></figure>
+<p>修改完成点击保存！修改完成点击保存！返回到OSFMount软件</p>
+<h5 id="5-点击dismount-all-exit">5、点击Dismount all&amp; Exit</h5>
+<figure data-type="image" tabindex="10"><img src="https://s3.bmp.ovh/imgs/2023/08/15/7011334317a1a79b.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="11"><img src="https://s3.bmp.ovh/imgs/2023/08/15/92a5f2c3ea67ee70.png" alt="" loading="lazy"></figure>
+<p>点击“是” 确认这里synoboot.img映像已经修改完成，这时候需要把synoboot.img映像写入到U盘中</p>
+<h5 id="6-打开win32diskimager软件">6、打开Win32DiskImager软件</h5>
+<p><img src="https://s3.bmp.ovh/imgs/2023/08/15/94ea59cf09bb0053.png" alt="" loading="lazy"><br>
+<strong>等待写入完成引导U盘就制作好了</strong></p>
+<h3 id="开始安装">开始安装</h3>
+<p>安装需要用到软件：群晖助手(Synology Assistant)点击下载windows版?MAC版自行官网下载</p>
+<p>把制作好引导的U盘插入NAS机器 为更好的保护硬盘，先不连接硬盘?只插入引导U盘</p>
+<p>如BIOS没有设置USB设备优先引导的 请前往设置</p>
+<p>和你操作的电脑同一局域网 插好网线 开机！</p>
+<p>开机稍等一会儿 没什么问题应该到了以下界面<br>
+<img src="https://s3.bmp.ovh/imgs/2023/08/15/04bc1de6891434ac.png" alt="" loading="lazy"></p>
+<p><strong>开机</strong></p>
+<p><strong>并不是卡了 是已经好了！注意</strong>！</p>
+<h5 id="1-打开群晖助手synology-assistant">1、打开群晖助手(Synology Assistant)</h5>
+<p>点击搜索 看到了如下结果！</p>
+<p><img src="https://s3.bmp.ovh/imgs/2023/08/15/123cbf97c7881ff7.png" alt="" loading="lazy"><br>
+到此 说明引导正常！那么就先关机 因为无法操作软关机 且无硬盘 可以直接长按开关关机，<strong>然后把硬盘装好 再开机,继续！</strong></p>
+<h5 id="2-再次开机">2、再次开机</h5>
+<p>双击该服务器，浏览器自动弹出</p>
+<figure data-type="image" tabindex="12"><img src="https://s3.bmp.ovh/imgs/2023/08/15/b80c023060ec540b.png" alt="" loading="lazy"></figure>
+<h5 id="3-系统安装">3、系统安装</h5>
+<p>稍等片刻、点击设置</p>
+<figure data-type="image" tabindex="13"><img src="https://pic.imgdb.cn/item/64db296a1ddac507cc415def.png" alt="" loading="lazy"></figure>
+<p>注意：如果这里的设置为灰色，请尝试直接用群晖助手安装系统。</p>
+<p>点击手动安装</p>
+<figure data-type="image" tabindex="14"><img src="https://pic.imgdb.cn/item/64db29861ddac507cc41a5fa.png" alt="" loading="lazy"></figure>
+<p><strong>该引导实测 不支持6.2版本，请勿更新6.2；实测更新后 提示引导正常 但无法搜到服务器</strong></p>
+<p>自行下载安装文件 选择浏览 选择pat文件 点击立即安装</p>
+<figure data-type="image" tabindex="15"><img src="https://pic.imgdb.cn/item/64db29a91ddac507cc41ff71.png" alt="" loading="lazy"></figure>
+<p>弹出提示 作为安装盘的磁盘 将被清除所有数据 选勾并确认</p>
+<figure data-type="image" tabindex="16"><img src="https://pic.imgdb.cn/item/64db29e41ddac507cc42a814.png" alt="" loading="lazy"></figure>
+<p>这时候 便开始从互联网上下载官方最新的DSM系统了</p>
+<p>开始从互联网上下载官方最新的DSM系统了约50秒提示开始安装，约1分钟提示完成开始重启</p>
+<figure data-type="image" tabindex="17"><img src="https://pic.imgdb.cn/item/64db2a0e1ddac507cc431c7b.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="18"><img src="https://pic.imgdb.cn/item/64db2a481ddac507cc43b642.png" alt="" loading="lazy"></figure>
+<p>重启重启过程大概3分钟 浏览器自动刷新 <strong>开始做最后的设置</strong></p>
+<h5 id="4-最后的设置">4、最后的设置</h5>
+<p>设置服务器名称 管理员账号密码</p>
+<figure data-type="image" tabindex="19"><img src="https://pic.imgdb.cn/item/64db2a631ddac507cc43ff62.png" alt="" loading="lazy"></figure>
+<p>更新选项一般选择下载DSM更新 并手动安装</p>
+<figure data-type="image" tabindex="20"><img src="https://pic.imgdb.cn/item/64db2a8e1ddac507cc447006.png" alt="" loading="lazy"></figure>
+<p>QuickConnect选项 上面提到 黑群晖无法使用QuickConnect服务 所以点击跳过即可QuickConnect服务</p>
+<figure data-type="image" tabindex="21"><img src="https://pic.imgdb.cn/item/64db2ac91ddac507cc450133.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="22"><img src="https://pic.imgdb.cn/item/64db2aee1ddac507cc455f10.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="23"><img src="https://pic.imgdb.cn/item/64db2b0a1ddac507cc45a2a1.png" alt="" loading="lazy"></figure>
+<h3 id="已知问题">已知问题</h3>
+<p>HP ProLiant MicroServer N54L 在该DSM6.1.x下 正常引导了 但群晖助手无法搜索到 需要关闭Bios中CPU的C1选项</p>
+<p>该引导实测?不支持6.2版本，请勿更新6.2；</p>
+<h2 id="利用cpolar工具外网访问群晖nas">利用cpolar工具外网访问群晖NAS</h2>
+<p>群晖NAS被作为私有云盘，给我们带来了很多的方便，如何在外网访问家里的群晖NAS？今天我们就来讨论一下操作步骤。</p>
+<h3 id="一-注册并下载cpolar客户端">一、注册并下载cpolar客户端</h3>
+<h4 id="11-访问cpolar官网注册一个帐号">1.1 访问cpolar官网注册一个帐号</h4>
+<p>访问cpolar官网地址?www.cpolar.com?免费注册一个帐号</p>
+<figure data-type="image" tabindex="24"><img src="https://pic.imgdb.cn/item/64db31541ddac507cc55b1ef.png" alt="" loading="lazy"></figure>
+<h4 id="12-登录cpolar后台下载linux-amd64位版本客户端">1.2 登录cpolar后台，下载Linux amd64位版本客户端</h4>
+<figure data-type="image" tabindex="25"><img src="https://pic.imgdb.cn/item/64db31731ddac507cc56033c.png" alt="" loading="lazy"></figure>
+<h4 id="13-在本地计算机中先将cpolar客户端解压缩备用因为群晖中没有unzip工具所以要在传入群晖之前解压缩">1.3 在本地计算机中先将cpolar客户端，解压缩，备用（因为群晖中没有unzip工具，所以要在传入群晖之前解压缩）。</h4>
+<h3 id="二-将cpolar客户端传输到群晖nas中">二、将cpolar客户端传输到群晖NAS中</h3>
+<h4 id="21-确认群晖是否开启ssh服务">2.1 确认群晖是否开启ssh服务</h4>
+<figure data-type="image" tabindex="26"><img src="https://pic.imgdb.cn/item/64db31901ddac507cc564efb.png" alt="" loading="lazy"></figure>
+<h4 id="22-用群晖管理员帐号ssh登录群晖nas">2.2 用群晖管理员帐号ssh登录群晖NAS</h4>
+<p>使用您最喜欢的SSH客户端软件登录到群晖，我这里是MAC,使用的是命令行shell登录，其它客户端一样。本例中，群晖NAS的内网IP：192.168.2.204，管理员帐号:admin<br>
+ssh admin@192.168.2.204<br>
+注：如果您使用的是WINDOWS的SSH客户端XShell或其它，直接使用图形界面传输cpolar文件到/tmp目录就可以。</p>
+<h3 id="三-从群晖管理员帐号提升权限到root">三、从群晖管理员帐号提升权限到root</h3>
+<pre><code>sudo -i
+</code></pre>
+<h4 id="31-跳转到tmp临时目录">3.1 跳转到/tmp临时目录</h4>
+<pre><code>cd /tmp
+</code></pre>
+<h4 id="32-下载cpolar客户端">3.2 下载cpolar客户端</h4>
+<pre><code>wget https://www.cpolar.com/static/downloads/cpolar-stable-linux-amd64.tar.gz
+</code></pre>
+<h4 id="33-解压缩">3.3 解压缩</h4>
+<pre><code>tar zxvf cpolar-stable-linux-amd64.tar.gz
+</code></pre>
+<h3 id="四-在群晖nas中创建cpolar目录并配置cpolar的token认证">四、在群晖NAS中，创建cpolar目录，并配置cpolar的token认证</h3>
+<h4 id="41-创建cpolar目录">4.1 创建cpolar目录</h4>
+<pre><code>mkdir /root/cpolar
+</code></pre>
+<h4 id="42-移动cpolar文件到rootcpolar目录">4.2 移动cpolar文件到/root/cpolar目录</h4>
+<pre><code>mv /tmp/cpolar /root/cpolar/
+</code></pre>
+<h4 id="43-验证cpolar命令是否正常工作">4.3 验证cpolar命令是否正常工作</h4>
+<p>跳转到cpolar目录</p>
+<pre><code>cd /root/cpolar
+</code></pre>
+<p>查看cpolar版本号</p>
+<pre><code>./cpolar version
+</code></pre>
+<p>如果出现版本信息，证明cpolar客户端部署成功</p>
+<h3 id="五-配置cpolar认证token">五、配置cpolar认证token</h3>
+<h4 id="51-登录cpolar后台复制token串">5.1 登录cpolar后台，复制token串</h4>
+<figure data-type="image" tabindex="27"><img src="https://pic.imgdb.cn/item/64db31b21ddac507cc56a23c.png" alt="" loading="lazy"></figure>
+<h4 id="52-命令行输入token">5.2 命令行输入token</h4>
+<pre><code>./cpolar authtoken xxxxxxxxx（你的token串）
+</code></pre>
+<h4 id="53-命令行输入映射http协议映射内网5000端口到公网">5.3 命令行输入映射http协议，映射内网5000端口到公网</h4>
+<pre><code>./cpolar http 5000
+</code></pre>
+<p>结果如图：</p>
+<figure data-type="image" tabindex="28"><img src="https://pic.imgdb.cn/item/64db31d91ddac507cc5707a2.png" alt="" loading="lazy"></figure>
+<h4 id="54-在浏览器中访问公网随机域名">5.4 在浏览器中访问公网随机域名</h4>
+<figure data-type="image" tabindex="29"><img src="https://pic.imgdb.cn/item/64db31ee1ddac507cc573dd0.png" alt="" loading="lazy"></figure>
+<h3 id="六-后台运行">六、后台运行</h3>
+<p>刚刚只是在前台终端运行cpolar，如果要运行在后台，需要使用如下操作： 按ctrl+C先结束掉之前的cpolar进程<br>
+我们使用nohup命令将cpolar运行在后台</p>
+<pre><code>nohup /root/cpolar/cpolar http -config=/root/.cpolar/cpolar.yml  -log=stdout 5000 &amp;
+</code></pre>
+<p>说明： -config=/root/.cpolar/cpolar.yml 是指定cpolar的配置文件路径，里面保存了用户的token信息及隧道等信息。 -log=stdout 是指输出日志到标准输出。 &amp; 指进程运行在后台<br>
+此时运行后，查看进程信息</p>
+<pre><code>ps -ef | grep cpolar
+</code></pre>
+<p>如图显示，则后台cpolar进程运行在后台</p>
+<figure data-type="image" tabindex="30"><img src="https://pic.imgdb.cn/item/64db32091ddac507cc5782ca.png" alt="" loading="lazy"></figure>
+<h3 id="七-查看当前隧道列表">七、查看当前隧道列表</h3>
+<p>但是此时查看不到随地的域名，可以通过cpolar后台查看到当前隧道的随机域名。</p>
+<figure data-type="image" tabindex="31"><img src="https://pic.imgdb.cn/item/64db32231ddac507cc57c168.png" alt="" loading="lazy"></figure>
+<h2 id="群晖nas-cpolar开机自启动">群晖NAS cpolar开机自启动</h2>
+<h3 id="一-在cpolar配置文件中添加隧道">一、在cpolar配置文件中添加隧道</h3>
+<h4 id="11-编辑配置文件在配置文件中添加两个隧道">1.1 编辑配置文件，在配置文件中，添加两个隧道</h4>
+<p>编辑默认的cpolar配置文件</p>
+<pre><code>vim /root/.cpolar/cpolar.yml
+</code></pre>
+<p>配置文件样例内容：</p>
+<pre><code>authtoken: YzNmYmUzOTctODMxNyxxxxxxxxxxxxxxxxxTZkNjczOGM3
+
+tunnels:
+  nas_web:
+    addr: 5000
+    proto: http
+    region: cn
+  nas_driver:
+    addr: 6690
+    proto: tcp
+    region: cn
+</code></pre>
+<p>上例是在在配置文件中，创建了两个隧道，隧道名称分别是nas_web和nas_driver,隧道名称可以自定义，但不能相同。<br>
+配置文件中的参数简单说明：<br>
+authtoken: xxxxxxxxx 您的token认证串tunnels: #多隧道配置  nas_web: #隧道名称，web管理隧道    addr: 5000 #本地映射的端口号，这里是NAS的5000端口号    proto: http #隧道的协议是http协议    region: cn #地区，cn是指中国区，如果不填写，默认为us美国区  nas_driver: #隧道名称，网盘隧道    addr: 6690 #默认端口为本地的6690端口    proto: tcp #协议为TCP注：这里的配置文件是yaml格式，每一级的参数前面，会缩进两个空格，一定不能使用TAB键，不能使用TAB键，不能使用TAB键。</p>
+<h4 id="12-测试配置文件是否创建成功">1.2 测试配置文件是否创建成功</h4>
+<pre><code>cd /root/cpolar/
+
+./cpolar start-all
+</code></pre>
+<figure data-type="image" tabindex="32"><img src="https://pic.imgdb.cn/item/64db34041ddac507cc5cb3eb.png" alt="" loading="lazy"></figure>
+<p>如图，可以看到已经启动了web隧道(http和https)指向5000端口，还有一个tcp隧道指向6690端口<br>
+参数说明： start-all 启动所有隧道。 它会启动默认配置文件中所有的隧道，本例中，启动了nas_web和nas_driver两个隧道。<br>
+如果希望单独启动一个隧道，可以使用如下命令：<br>
+./cpolar start nas_web</p>
+<h3 id="二-使用nohup命令让cpolar进程运行在后台">二、使用nohup命令,让cpolar进程运行在后台</h3>
+<h4 id="21-命令行执行">2.1 命令行执行</h4>
+<pre><code>nohup /root/cpolar/cpolar start-all -config=/root/.cpolar/cpolar.yml -log=stdout &amp;
+</code></pre>
+<h4 id="22-验证是否后台启动成功">2.2 验证是否后台启动成功</h4>
+<pre><code>ps -aux | grep cpolar | grep -v grep
+</code></pre>
+<p>若有消息输出则正常运行，若没有输出这已经退出。</p>
+<h3 id="三-创建cpolar脚本文件">三、创建cpolar脚本文件</h3>
+<h4 id="31-创建脚本文件">3.1 创建脚本文件</h4>
+<pre><code>vim /usr/syno/etc.defaults/rc.sysv/cpolar.sh
+</code></pre>
+<h4 id="32-编辑脚本文件内容">3.2 编辑脚本文件内容</h4>
+<pre><code>cd /root/cpolar
+nohup /root/cpolar/cpolar start-all -config=/root/.cpolar/cpolar.yml -log=stdout &amp;
+</code></pre>
+<p>保存文件</p>
+<h4 id="33-为脚本配置可执行权限">3.3 为脚本配置可执行权限</h4>
+<pre><code>cd /usr/syno/etc.defaults/rc.sysv/
+
+chmod +x cpolar.sh
+</code></pre>
+<h3 id="四-将cpolar脚本加入开机自启脚本中">四、将cpolar脚本加入开机自启脚本中</h3>
+<p>编辑自启动rc脚本<br>
+vim /etc/rc<br>
+在文件的倒数第二行（exit 0前面）添加脚本文件，可使用 😒 跳转到最后一行<br>
+/usr/syno/etc.defaults/rc.sysv/cpolar.sh<br>
+如图：</p>
+<figure data-type="image" tabindex="33"><img src="https://pic.imgdb.cn/item/64db34261ddac507cc5d05e9.png" alt="" loading="lazy"></figure>
+<h3 id="五-重新启动">五、重新启动</h3>
+<pre><code>reboot
+</code></pre>
+<p>查看是否启动成功</p>
+<pre><code>ps -aux | grep cpolar | grep -v grep
+</code></pre>
+<p>若有消息输出则正常运行，若没有输出这已经退出。</p>
+<h3 id="六-查看在线的隧道">六、查看在线的隧道</h3>
+<p>访问cpolar后台的状态页面:http://dashboard.cpolar.com/status?如图：</p>
+<figure data-type="image" tabindex="34"><img src="https://pic.imgdb.cn/item/64db34401ddac507cc5d4841.png" alt="" loading="lazy"></figure>
+<h3 id="七-总结">七、总结：</h3>
+<p>创建启动脚本文件的目录可随意，本文存放在 /usr/syno/etc.defaults/rc.sysv 目录中，用户可根据自己的实际情况自行选择目录。<br>
+配置完成后可重启群晖系统一次，判断脚本文件是否启动成功。</p>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://viaoh.github.io/tag/aDo9-TH1B/" class="tag">
+                    其它
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://viaoh.github.io/post/t9S2mcHNC/">
+                  <h3 class="post-title">
+                    Redmi路由器AC2100之Padavan刷机、设置优化
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+              
+                <div id="gitalk-container" data-aos="fade-in"></div>
+              
+
+              
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+  
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+
+      var gitalk = new Gitalk({
+        clientID: '4970b3e2cb2b185b5af7',
+        clientSecret: 'a413a9c025c85c8c7d510b5b5cbe613c47e76bdc',
+        repo: 'viaoh.github.io',
+        owner: 'viaoh',
+        admin: ['viaoh'],
+        id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+        distractionFreeMode: false  // Facebook-like distraction free mode
+      })
+
+      gitalk.render('gitalk-container')
+
+    </script>
+  
+
+  
+
+
+
+
+  </body>
+</html>

@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>数据表的清空的三种方式 | 知行合一</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://viaoh.github.io/favicon.ico?v=1706791123866">
+<link rel="stylesheet" href="https://viaoh.github.io/styles/main.css">
+
+
+  
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
+  
+
+  
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="1.delete------ 是逐行删除速度极慢，不适合大量数据删除。
+
+Delete from tablename where 1=1
+
+
+
+2.truncate---- 删除所有数据，保留表结构，不能撤消还原。
+
+TRUNCATE TA..." />
+    <meta name="keywords" content="database" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://viaoh.github.io">
+        <img src="https://viaoh.github.io/images/avatar.png?v=1706791123866" class="site-logo">
+        <h1 class="site-title">知行合一</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+          <a class="social-link" href="https://github.com/viaoh" target="_blank">
+            <i class="fab fa-github"></i>
+          </a>
+        
+      
+        
+      
+        
+          <a class="social-link" href="https://weibo.com/u/6377680111" target="_blank">
+            <i class="fab fa-weibo"></i>
+          </a>
+        
+      
+        
+          <a class="social-link" href="https://www.zhihu.com/people/viaoh-" target="_blank">
+            <i class="fab fa-zhihu"></i>
+          </a>
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      年与时驰，意与日去，遂成枯落，多不接世
+    </div>
+    <div class="site-footer">
+      Powered by &nbsp;<a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://viaoh.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">数据表的清空的三种方式</h2>
+            <div class="post-date">2023-05-28</div>
+            
+            <div class="post-content" v-pre>
+              <pre><code class="language-sql">1.delete------ 是逐行删除速度极慢，不适合大量数据删除。
+
+Delete from tablename where 1=1
+
+
+
+2.truncate---- 删除所有数据，保留表结构，不能撤消还原。
+
+TRUNCATE TABLE tablename
+
+
+
+3.drop-------- 删除表，数据和表结构一起删除，快速。
+
+SET FOREIGN_KEY_CHECKS=0;
+
+-- ----------------------------
+
+-- Table structure for docker2
+
+-- ----------------------------
+
+DROP TABLE IF EXISTS `docker2`;
+
+CREATE TABLE `docker2` (
+
+  `name` varchar(255) NOT NULL,
+
+  `path` varchar(500) DEFAULT NULL,
+
+  `docker1_name` varchar(255) NOT NULL,
+
+  `tag1` varchar(255) DEFAULT NULL,
+
+  `tag2` varchar(255) DEFAULT NULL,
+
+  `tag3` varchar(255) DEFAULT NULL,
+
+  `tag4` varchar(255) DEFAULT NULL,
+
+  `tag5` varchar(255) DEFAULT NULL,
+
+  `tag6` varchar(255) DEFAULT NULL,
+
+  `tag7` varchar(255) DEFAULT NULL,
+
+  `tag8` varchar(255) DEFAULT NULL,
+
+  `tag9` varchar(255) DEFAULT NULL,
+
+  PRIMARY KEY (`docker1_name`,`name`)
+
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+注意：
+
+1，2这两种方法在处理大量数据的时候都比较慢，往往要等待许久才能清空完成。
+3种方式是首先对原先表进行删除，然后再重建，已达到清楚表数据的效果，要比前两种方式快很多。
+</code></pre>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://viaoh.github.io/tag/PmmwkGswE/" class="tag">
+                    database
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://viaoh.github.io/post/mysql55-an-zhuang-jiao-cheng/">
+                  <h3 class="post-title">
+                    MySQL5.5安装教程
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+              
+                <div id="gitalk-container" data-aos="fade-in"></div>
+              
+
+              
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+  
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+
+      var gitalk = new Gitalk({
+        clientID: '4970b3e2cb2b185b5af7',
+        clientSecret: 'a413a9c025c85c8c7d510b5b5cbe613c47e76bdc',
+        repo: 'viaoh.github.io',
+        owner: 'viaoh',
+        admin: ['viaoh'],
+        id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+        distractionFreeMode: false  // Facebook-like distraction free mode
+      })
+
+      gitalk.render('gitalk-container')
+
+    </script>
+  
+
+  
+
+
+
+
+  </body>
+</html>

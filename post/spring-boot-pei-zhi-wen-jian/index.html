@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>Spring Boot配置文件 | 知行合一</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://viaoh.github.io/favicon.ico?v=1706791123866">
+<link rel="stylesheet" href="https://viaoh.github.io/styles/main.css">
+
+
+  
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
+  
+
+  
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="1、项目配置
+# 数据源配置
+server.port=3000
+spring.datasource.url=jdbc:mysql://127.0.0.1:3306/xxxx?useUnicode=true&amp;characterEnco..." />
+    <meta name="keywords" content="java" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://viaoh.github.io">
+        <img src="https://viaoh.github.io/images/avatar.png?v=1706791123866" class="site-logo">
+        <h1 class="site-title">知行合一</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+          <a class="social-link" href="https://github.com/viaoh" target="_blank">
+            <i class="fab fa-github"></i>
+          </a>
+        
+      
+        
+      
+        
+          <a class="social-link" href="https://weibo.com/u/6377680111" target="_blank">
+            <i class="fab fa-weibo"></i>
+          </a>
+        
+      
+        
+          <a class="social-link" href="https://www.zhihu.com/people/viaoh-" target="_blank">
+            <i class="fab fa-zhihu"></i>
+          </a>
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      年与时驰，意与日去，遂成枯落，多不接世
+    </div>
+    <div class="site-footer">
+      Powered by &nbsp;<a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://viaoh.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">Spring Boot配置文件</h2>
+            <div class="post-date">2023-05-20</div>
+            
+            <div class="post-content" v-pre>
+              <h4 id="1-项目配置">1、项目配置</h4>
+<pre><code class="language-java"># 数据源配置
+server.port=3000
+spring.datasource.url=jdbc:mysql://127.0.0.1:3306/xxxx?useUnicode=true&amp;characterEncoding=UTF-8&amp;useSSL=false
+spring.datasource.username=root
+spring.datasource.password=root
+spring.datasource.driver-class-name=com.mysql.jdbc.Driver
+spring.devtools.restart.enabled=true
+
+# 日期格式转换
+spring.jackson.date-format=yyyy-MM-dd HH:mm:ss
+spring.jackson.time-zone=GMT+8
+
+# 实体类映射
+mybatis-plus.type-aliases-package=com.xxxx.xxxx.model
+
+# 打印SQL
+logging.level.com.abjy.studentmanage.mapper=debug
+
+# mybatis-plus配置
+mybatis-plus.global-config.id-type=5
+mybatis-plus.global-config.field-strategy=0
+mybatis-plus.global-config.db-column-underline=true
+mybatis-plus.global-config.refresh-mapper=true
+mybatis-plus.global-config.capital-mode=true
+mybatis-plus.global-config.logic-delete-value=0
+mybatis-plus.global-config.logic-not-delete-value=1
+mybatis-plus.configuration.map-underscore-to-camel-case=true
+mybatis-plus.configuration.cache-enabled=false
+mybatis-plus.global-config.sql-injector=com.baomidou.mybatisplus.mapper.LogicSqlInjector
+
+#redis配置
+spring.redis.database=0
+spring.redis.host=127.0.0.1
+spring.redis.port=6379
+spring.redis.password=&quot;&quot;
+spring.redis.jedis.pool.max-active=8
+spring.redis.jedis.pool.max-wait=-1
+spring.redis.jedis.pool.max-idle=8
+spring.redis.jedis.pool.min-idle=0
+spring.redis.timeout=5000
+
+# 文件上传配置
+spring.servlet.multipart.max-request-size=5MB
+spring.servlet.multipart.max-file-size=1MB
+
+# 公用参数配置
+student.file.diskPath: /home/statics/students/
+# 使用
+# @Value(&quot;${student.file.diskPath}&quot;)
+# private String diskPath;
+</code></pre>
+<h4 id=""></h4>
+<h4 id="2-mybatis-plus分页配置">2、mybatis-plus分页配置</h4>
+<p>配置类</p>
+<pre><code class="language-java">import com.baomidou.mybatisplus.plugins.PaginationInterceptor;
+import org.mybatis.spring.annotation.MapperScan;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+ 
+/**
+ * @author liuyang
+ * @date 2018/3/14
+ */
+@EnableTransactionManagement
+@Configuration
+@MapperScan(&quot;com.xxxx.mapper&quot;) //修改为mapper包路径
+public class MybatisPlusConfig {
+ 
+    /**
+     * mybatis-plus分页插件&lt;br&gt;
+     * 文档：http://mp.baomidou.com&lt;br&gt;
+     */
+    @Bean
+    public PaginationInterceptor paginationInterceptor() {
+        PaginationInterceptor paginationInterceptor = new PaginationInterceptor();
+        return paginationInterceptor;
+    }
+ 
+}
+</code></pre>
+<p>mapper接口</p>
+<pre><code class="language-java">List&lt;Model&gt; getList(@Param(&quot;page&quot;) Pagination page, Model model);
+</code></pre>
+<p>service类</p>
+<pre><code class="language-java">Map&lt;String, Object&gt; getList(HashMap&lt;String, String&gt; mapParam);
+</code></pre>
+<p>serviceImpl实现类</p>
+<pre><code class="language-java">	@Override
+	public Map&lt;String, Object&gt; getList(HashMap&lt;String, String&gt; mapParam){
+		Map&lt;String, Object&gt; mapResult = new HashMap&lt;&gt;();
+		// 分页变量
+		Integer currentPage = Integer.parseInt(mapParam.get(&quot;currentPage&quot;));
+		Integer pageSize = Integer.parseInt(mapParam.get(&quot;pageSize&quot;));
+		Page page = new Page&lt;&gt;(currentPage, pageSize);
+        // 实体类，用于模糊查询
+        Model model = new Model();
+		Integer allCount = mapper.getListCount(model); // 查询总数量的SQL
+		Integer pageNumber = (int) Math.ceil((double) allCount / pageSize);
+		mapResult.put(&quot;list&quot;, mapper.getList(page, model));
+		mapResult.put(&quot;allCount&quot;, allCount);
+		mapResult.put(&quot;pageNumber&quot;, pageNumber);
+		return mapResult;
+	}
+</code></pre>
+<h4 id="3-静态资源访问路径">3、静态资源访问路径</h4>
+<pre><code class="language-java">import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+/**
+ * 配置静态资源访问路径
+ * @author Administrator
+ *
+ */
+@Configuration
+public class ResourceConfig implements WebMvcConfigurer{
+	
+	    @Override
+	    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+	        registry.addResourceHandler(&quot;/static/**&quot;).addResourceLocations(&quot;classpath:/images/&quot;);
+	    }
+	    
+	    @Bean
+	    public RestTemplate restTemplate() {
+	        return new RestTemplate();
+	    }
+}
+</code></pre>
+<h4 id="4-拦截器配置">4、拦截器配置</h4>
+<h5 id="1旧版本会出现警告信息">（1）旧版本会出现警告信息</h5>
+<p>SessionInterceptor.java</p>
+<pre><code class="language-java">import java.util.concurrent.TimeUnit;
+
+import javax.annotation.PostConstruct;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.servlet.ModelAndView;
+
+@Component
+public class SessionInterceptor implements HandlerInterceptor{
+	
+	/**
+     * 进入controller层之前拦截请求
+     * @param httpServletRequest
+     * @param httpServletResponse
+     * @param o
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
+    	System.out.println(&quot;------------进入拦截器之前-------------&quot;);
+    }
+
+    @Override
+    public void postHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, ModelAndView modelAndView) throws Exception {
+		System.out.println(&quot;------------视图渲染完毕后-------------&quot;);
+    }
+
+    @Override 
+    public void afterCompletion(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, Exception e) throws Exception {
+		System.out.println(&quot;------------进入拦截器之后-------------&quot;);
+    } 
+}
+</code></pre>
+<p>InterceptorConfig.java</p>
+<pre><code class="language-java">import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+
+import com.wowmake.aftersale.tools.SessionInterceptor;
+
+/**
+ * 拦截器配置
+ * @author Administrator
+ *
+ */
+@Configuration
+public class InterceptorConfig extends WebMvcConfigurerAdapter{
+	
+    @Override
+    public void addInterceptors(InterceptorRegistry registry){
+        registry.addInterceptor(new SessionInterceptor())
+		//拦截的路径
+        .addPathPatterns(&quot;/**&quot;)
+        //设置不拦截的路径
+        .excludePathPatterns(&quot;/user/login/**&quot;)
+        // 静态资源不拦截
+        .excludePathPatterns(&quot;/images/**&quot;);
+        super.addInterceptors(registry);
+    }
+}
+</code></pre>
+<h5 id="2新版本拦截器更改">（2）新版本拦截器更改</h5>
+<p>SessionInterceptor.java</p>
+<pre><code class="language-java">import java.util.concurrent.TimeUnit;
+
+import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.servlet.ModelAndView;
+
+@Component
+public class SessionInterceptor implements HandlerInterceptor {
+
+	@Autowired
+	private StringRedisTemplate redis;
+
+	public static SessionInterceptor sessionInterceptor;
+
+	@PostConstruct
+	public void init() {
+		sessionInterceptor = this;
+		sessionInterceptor.redis = this.redis;
+	}
+
+	/**
+	 * 进入controller层之前拦截请求
+	 * 
+	 * @param httpServletRequest
+	 * @param httpServletResponse
+	 * @param o
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o)
+			throws Exception {
+        System.out.println(&quot;------------进入拦截器之前-------------&quot;);
+		String sessionId = httpServletRequest.getHeader(&quot;sessionId&quot;);
+		try {
+			Boolean flag = sessionInterceptor.redis.hasKey(sessionId);
+			if (flag) {
+				sessionInterceptor.redis.expire(sessionId, 60 * 60 * 24 * 7,
+						TimeUnit.SECONDS);
+				return true;
+			} else {
+				httpServletResponse.setContentType(&quot;text/html; charset=utf-8&quot;);
+				httpServletResponse.setStatus(403);
+				return false;
+			}
+		} catch (Exception e) {
+			httpServletResponse.setContentType(&quot;text/html; charset=utf-8&quot;);
+			httpServletResponse.setStatus(403);
+			return false;
+		}
+
+	}
+
+	@Override
+	public void postHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o,
+			ModelAndView modelAndView) throws Exception {
+        System.out.println(&quot;------------视图渲染完毕后-------------&quot;);
+	}
+
+	@Override
+	public void afterCompletion(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
+			Object o, Exception e) throws Exception {
+        System.out.println(&quot;------------进入拦截器之后-------------&quot;);
+	}
+}
+</code></pre>
+<p>InterceptorConfig.java</p>
+<pre><code class="language-java">import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
+
+/**
+ * 拦截器配置
+ * @author Administrator
+ *
+ */
+@Configuration
+public class InterceptorConfig extends WebMvcConfigurationSupport {
+
+    @Override
+    public void configurePathMatch(PathMatchConfigurer configurer) {
+        super.configurePathMatch(configurer);
+        configurer.setUseSuffixPatternMatch(false);
+    }
+	
+    @Override
+    public void addInterceptors(InterceptorRegistry registry){
+        registry.addInterceptor(new SessionInterceptor())
+        //拦截的路径
+        .addPathPatterns(&quot;/**&quot;)
+        //设置不拦截的路径
+        .excludePathPatterns(&quot;/user/login/**&quot;)
+        // 静态资源不拦截
+        .excludePathPatterns(&quot;/images/**&quot;);
+        super.addInterceptors(registry);
+    }
+}
+</code></pre>
+<h4 id="5-代码生成模板引擎">5、代码生成模板引擎</h4>
+<p>pom.xml</p>
+<pre><code class="language-xml">&lt;!-- mybatis-plus代码生成器模板引擎 --&gt;
+&lt;dependency&gt;
+	&lt;groupId&gt;org.apache.velocity&lt;/groupId&gt;
+	&lt;artifactId&gt;velocity-engine-core&lt;/artifactId&gt;
+	&lt;version&gt;2.0&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<p>工具类</p>
+<pre><code class="language-java">import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.baomidou.mybatisplus.generator.AutoGenerator;
+import com.baomidou.mybatisplus.generator.InjectionConfig;
+import com.baomidou.mybatisplus.generator.config.DataSourceConfig;
+import com.baomidou.mybatisplus.generator.config.FileOutConfig;
+import com.baomidou.mybatisplus.generator.config.GlobalConfig;
+import com.baomidou.mybatisplus.generator.config.PackageConfig;
+import com.baomidou.mybatisplus.generator.config.StrategyConfig;
+import com.baomidou.mybatisplus.generator.config.TemplateConfig;
+import com.baomidou.mybatisplus.generator.config.converts.MySqlTypeConvert;
+import com.baomidou.mybatisplus.generator.config.po.TableInfo;
+import com.baomidou.mybatisplus.generator.config.rules.DbType;
+import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
+
+/**
+ * Created by Yangcq on 2018/08/16.
+ */
+public class Generator {
+	
+	//项目路径
+	private static String canonicalPath = &quot;&quot;;
+
+    //基本包名
+    private static String basePackage = &quot;com.liu.wechat&quot;;
+    //作者
+    private static String authorName = &quot;liuyang&quot;;
+    //要生成的表名
+    private static String[] tables = {&quot;table1&quot;,&quot;table2&quot;,&quot;table3&quot;};
+    //table前缀
+    private static String prefix = &quot;&quot;;
+    //数据库类型
+    private static DbType dbType = DbType.MYSQL;
+    //数据库配置四要素
+    private static String driverName = &quot;com.mysql.jdbc.Driver&quot;;
+    private static String url = &quot;jdbc:mysql://localhost:3306/database?useUnicode=true&amp;characterEncoding=UTF-8&amp;useSSL=false&quot;;
+    private static String username = &quot;root&quot;;
+    private static String password = &quot;root&quot;;
+
+    public static void main(String[] args) {
+
+        AutoGenerator gen = new AutoGenerator();
+        
+        /**
+         * 获取项目路径
+         */
+		try {
+			canonicalPath = new File(&quot;&quot;).getCanonicalPath();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+        /**
+         * 数据库配置
+         */
+        gen.setDataSource(new DataSourceConfig()
+                .setDbType(dbType)
+                .setDriverName(driverName)
+                .setUrl(url)
+                .setUsername(username)
+                .setPassword(password)
+                .setTypeConvert(new MySqlTypeConvert() {
+                    // 自定义数据库表字段类型转换【可选】
+                    //@Override
+                    //public DbColumnType processTypeConvert(String fieldType) {
+                        //System.out.println(&quot;转换类型：&quot; + fieldType);
+                        // if ( fieldType.toLowerCase().contains( &quot;tinyint&quot; ) ) {
+                        //    return DbColumnType.BOOLEAN;
+                        // }
+                        //return super.processTypeConvert(fieldType);
+                    //}
+                }));
+
+        /**
+         * 全局配置
+         */
+        gen.setGlobalConfig(new GlobalConfig()
+                .setOutputDir( canonicalPath + &quot;/src/main/java&quot;)//输出目录
+                .setFileOverride(true)// 是否覆盖文件
+                .setActiveRecord(true)// 开启 activeRecord 模式
+                .setEnableCache(false)// XML 二级缓存
+                .setBaseResultMap(true)// XML ResultMap
+                .setBaseColumnList(true)// XML columList
+                .setOpen(false)//生成后打开文件夹
+                .setAuthor(authorName)
+                // 自定义文件命名，注意 %s 会自动填充表实体属性！
+                .setMapperName(&quot;%sMapper&quot;)
+                .setXmlName(&quot;%sMapper&quot;)
+                .setServiceName(&quot;%sService&quot;)
+                .setServiceImplName(&quot;%sServiceImpl&quot;)
+                .setControllerName(&quot;%sController&quot;)
+        );
+
+        /**
+         * 策略配置
+         */
+        gen.setStrategy(new StrategyConfig()
+                // .setCapitalMode(true)// 全局大写命名
+                //.setDbColumnUnderline(true)//全局下划线命名
+                .setTablePrefix(new String[]{prefix})// 此处可以修改为您的表前缀
+                .setNaming(NamingStrategy.underline_to_camel)// 表名生成策略
+                .setInclude(tables) // 需要生成的表
+                .setRestControllerStyle(true)
+                //.setExclude(new String[]{&quot;test&quot;}) // 排除生成的表
+                // 自定义实体父类
+                // .setSuperEntityClass(&quot;com.baomidou.demo.TestEntity&quot;)
+                // 自定义实体，公共字段
+                //.setSuperEntityColumns(new String[]{&quot;test_id&quot;})
+                //.setTableFillList(tableFillList)
+                // 自定义 mapper 父类 默认BaseMapper
+                //.setSuperMapperClass(&quot;com.baomidou.mybatisplus.mapper.BaseMapper&quot;)
+                // 自定义 service 父类 默认IService
+                // .setSuperServiceClass(&quot;com.baomidou.demo.TestService&quot;)
+                // 自定义 service 实现类父类 默认ServiceImpl
+                // .setSuperServiceImplClass(&quot;com.baomidou.demo.TestServiceImpl&quot;)
+                // 自定义 controller 父类
+                //.setSuperControllerClass(&quot;com.kichun.&quot;+packageName+&quot;.controller.AbstractController&quot;)
+                // 【实体】是否生成字段常量（默认 false）
+                // public static final String ID = &quot;test_id&quot;;
+                // .setEntityColumnConstant(true)
+                // 【实体】是否为构建者模型（默认 false）
+                // public User setName(String name) {this.name = name; return this;}
+                // .setEntityBuilderModel(true)
+                // 【实体】是否为lombok模型（默认 false）&lt;a href=&quot;https://projectlombok.org/&quot;&gt;document&lt;/a&gt;
+                .setEntityLombokModel(true)
+                // Boolean类型字段是否移除is前缀处理
+                // .setEntityBooleanColumnRemoveIsPrefix(true)
+                // .setRestControllerStyle(true)
+                // .setControllerMappingHyphenStyle(true)
+        );
+
+        /**
+         * 包配置
+         */
+        gen.setPackageInfo(new PackageConfig()
+                        //.setModuleName(&quot;User&quot;)
+                        .setParent(basePackage)// 自定义包路径
+                        .setController(&quot;controller&quot;)// 这里是控制器包名，默认 web
+                        .setEntity(&quot;model&quot;) // 设置Entity包名，默认entity
+                        .setMapper(&quot;mapper&quot;) // 设置Mapper包名，默认mapper
+                        .setService(&quot;service&quot;) // 设置Service包名，默认service
+                        .setServiceImpl(&quot;service.impl&quot;) // 设置Service Impl包名，默认service.impl
+                        .setXml(&quot;mapper&quot;) // 设置Mapper XML包名，默认mapper.xml
+                        );
+
+        /**
+         * 注入自定义配置
+         */
+        // 注入自定义配置，可以在 VM 中使用 cfg.abc 设置的值
+        InjectionConfig abc = new InjectionConfig() {
+            @Override
+            public void initMap() {
+                Map&lt;String, Object&gt; map = new HashMap&lt;String, Object&gt;();
+                map.put(&quot;abc&quot;, this.getConfig().getGlobalConfig().getAuthor() + &quot;-mp&quot;);
+                this.setMap(map);
+            }
+        };
+        //自定义文件输出位置（非必须）
+        List&lt;FileOutConfig&gt; fileOutList = new ArrayList&lt;FileOutConfig&gt;();
+        fileOutList.add(new FileOutConfig(&quot;/templates/mapper.xml.vm&quot;) {
+            @Override
+            public String outputFile(TableInfo tableInfo) {
+                return canonicalPath + &quot;/src/main/java/com/liu/wechat/mapper/&quot; + tableInfo.getEntityName() + &quot;Mapper.xml&quot;;
+            }
+        });
+        abc.setFileOutConfigList(fileOutList);
+        gen.setCfg(abc);
+
+        /**
+         * 指定模板引擎 默认是VelocityTemplateEngine ，需要引入相关引擎依赖
+         */
+        //gen.setTemplateEngine(new FreemarkerTemplateEngine());
+
+        /**
+         * 模板配置
+         */
+        gen.setTemplate(
+                // 关闭默认 xml 生成，调整生成 至 根目录
+                new TemplateConfig().setXml(null)
+                // 自定义模板配置，模板可以参考源码 /mybatis-plus/src/main/resources/template 使用 copy
+                // 至您项目 src/main/resources/template 目录下，模板名称也可自定义如下配置：
+                // .setController(&quot;...&quot;);
+                // .setEntity(&quot;...&quot;);
+                // .setMapper(&quot;...&quot;);
+                // .setXml(&quot;...&quot;);
+                // .setService(&quot;...&quot;);
+                // .setServiceImpl(&quot;...&quot;);
+        );
+
+        // 执行生成
+        gen.execute();
+    }
+}
+</code></pre>
+<h4 id="6-pomxml全部配置">6、pom.xml全部配置</h4>
+<p>配置文件</p>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+	xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
+	&lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+	&lt;parent&gt;
+		&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+		&lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;
+		&lt;version&gt;2.0.5.RELEASE&lt;/version&gt;
+		&lt;relativePath /&gt; &lt;!-- lookup parent from repository --&gt;
+	&lt;/parent&gt;
+	&lt;groupId&gt;com.xxxx&lt;/groupId&gt;
+	&lt;artifactId&gt;xxxx&lt;/artifactId&gt;
+	&lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
+	&lt;name&gt;xxxx&lt;/name&gt;
+	&lt;description&gt;Demo project for Spring Boot&lt;/description&gt;
+
+	&lt;properties&gt;
+		&lt;java.version&gt;1.8&lt;/java.version&gt;
+	&lt;/properties&gt;
+
+	&lt;dependencies&gt;
+		&lt;!--SpringBoot核心jar包 --&gt;
+		&lt;dependency&gt;
+			&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+			&lt;artifactId&gt;spring-boot-starter&lt;/artifactId&gt;
+		&lt;/dependency&gt;
+		&lt;dependency&gt;
+			&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+			&lt;artifactId&gt;spring-boot-starter-test&lt;/artifactId&gt;
+			&lt;scope&gt;test&lt;/scope&gt;
+		&lt;/dependency&gt;
+		&lt;!--mybatis plus核心库 --&gt;
+		&lt;dependency&gt;
+			&lt;groupId&gt;com.baomidou&lt;/groupId&gt;
+			&lt;artifactId&gt;mybatis-plus&lt;/artifactId&gt;
+			&lt;version&gt;2.3&lt;/version&gt;
+		&lt;/dependency&gt;
+		&lt;!-- mybatis plus与springboot整合 --&gt;
+		&lt;dependency&gt;
+			&lt;groupId&gt;com.baomidou&lt;/groupId&gt;
+			&lt;artifactId&gt;mybatis-plus-boot-starter&lt;/artifactId&gt;
+			&lt;version&gt;2.3&lt;/version&gt;
+		&lt;/dependency&gt;
+		&lt;!-- Web --&gt;
+		&lt;dependency&gt;
+			&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+			&lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;
+		&lt;/dependency&gt;
+		&lt;!-- tomcat --&gt;
+		&lt;dependency&gt;
+			&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+			&lt;artifactId&gt;spring-boot-starter-tomcat&lt;/artifactId&gt;
+			&lt;scope&gt;provided&lt;/scope&gt;
+		&lt;/dependency&gt;
+		&lt;!--MySql --&gt;
+		&lt;dependency&gt;
+			&lt;groupId&gt;mysql&lt;/groupId&gt;
+			&lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt;
+		&lt;/dependency&gt;
+		&lt;!-- redis --&gt;
+		&lt;dependency&gt;
+			&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+			&lt;artifactId&gt;spring-boot-starter-data-redis&lt;/artifactId&gt;
+		&lt;/dependency&gt;
+		&lt;!-- fastJson --&gt;
+		&lt;dependency&gt;
+			&lt;groupId&gt;com.alibaba&lt;/groupId&gt;
+			&lt;artifactId&gt;fastjson&lt;/artifactId&gt;
+			&lt;version&gt;1.2.47&lt;/version&gt;
+		&lt;/dependency&gt;
+		&lt;!-- 邮箱配置 --&gt;
+		&lt;dependency&gt;
+			&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+			&lt;artifactId&gt;spring-boot-starter-mail&lt;/artifactId&gt;
+		&lt;/dependency&gt;
+		&lt;!-- 云通信短信通知接口 --&gt;
+		&lt;dependency&gt;
+			&lt;groupId&gt;com.aliyun&lt;/groupId&gt;
+			&lt;artifactId&gt;dysmsapi20170525&lt;/artifactId&gt;
+			&lt;version&gt;2.0.4&lt;/version&gt;
+		&lt;/dependency&gt;
+		&lt;!-- 文件上传 --&gt;
+		&lt;dependency&gt;
+			&lt;groupId&gt;commons-fileupload&lt;/groupId&gt;
+			&lt;artifactId&gt;commons-fileupload&lt;/artifactId&gt;
+			&lt;version&gt;1.3.3&lt;/version&gt;
+		&lt;/dependency&gt;
+		&lt;!-- 支付宝支付 --&gt;
+		&lt;dependency&gt;
+			&lt;groupId&gt;com.alipay.sdk&lt;/groupId&gt;
+			&lt;artifactId&gt;alipay-sdk-java&lt;/artifactId&gt;
+			&lt;version&gt;3.0.0&lt;/version&gt;
+		&lt;/dependency&gt;
+		&lt;!-- http --&gt;
+		&lt;dependency&gt;
+			&lt;groupId&gt;org.apache.httpcomponents&lt;/groupId&gt;
+			&lt;artifactId&gt;httpclient&lt;/artifactId&gt;
+			&lt;version&gt;4.5&lt;/version&gt;
+		&lt;/dependency&gt;
+		&lt;dependency&gt;
+			&lt;groupId&gt;org.apache.httpcomponents&lt;/groupId&gt;
+			&lt;artifactId&gt;httpmime&lt;/artifactId&gt;
+			&lt;version&gt;4.5&lt;/version&gt;
+		&lt;/dependency&gt;
+		&lt;dependency&gt;
+			&lt;groupId&gt;org.apache.httpcomponents&lt;/groupId&gt;
+			&lt;artifactId&gt;httpcore&lt;/artifactId&gt;
+			&lt;version&gt;4.4.5&lt;/version&gt;
+		&lt;/dependency&gt;
+		&lt;!-- 图片压缩 --&gt;
+		&lt;dependency&gt;
+			&lt;groupId&gt;net.coobird&lt;/groupId&gt;
+			&lt;artifactId&gt;thumbnailator&lt;/artifactId&gt;
+			&lt;version&gt;0.4.8&lt;/version&gt;
+		&lt;/dependency&gt;
+		&lt;!-- Excel导出 --&gt;
+		&lt;dependency&gt;
+			&lt;groupId&gt;org.apache.poi&lt;/groupId&gt;
+			&lt;artifactId&gt;poi&lt;/artifactId&gt;
+			&lt;version&gt;3.17&lt;/version&gt;
+		&lt;/dependency&gt;
+		&lt;!-- springboot热部署 --&gt;
+		&lt;dependency&gt;
+			&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+			&lt;artifactId&gt;spring-boot-devtools&lt;/artifactId&gt;
+			&lt;optional&gt;true&lt;/optional&gt;
+		&lt;/dependency&gt;
+		&lt;!-- junit --&gt;
+		&lt;dependency&gt;
+			&lt;groupId&gt;junit&lt;/groupId&gt;
+			&lt;artifactId&gt;junit&lt;/artifactId&gt;
+		&lt;/dependency&gt;
+	&lt;/dependencies&gt;
+
+	&lt;build&gt;
+		&lt;plugins&gt;
+			&lt;!-- springboot热部署 --&gt;
+			&lt;plugin&gt;
+				&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+				&lt;artifactId&gt;spring-boot-maven-plugin&lt;/artifactId&gt;
+				&lt;configuration&gt;
+					&lt;fork&gt;true&lt;/fork&gt;
+				&lt;/configuration&gt;
+			&lt;/plugin&gt;
+			&lt;!-- assembly（maven打包插件） --&gt;
+			&lt;plugin&gt;
+				&lt;artifactId&gt;maven-assembly-plugin&lt;/artifactId&gt;
+				&lt;version&gt;2.2&lt;/version&gt;
+				&lt;configuration&gt;
+					&lt;archive&gt;
+						&lt;manifest&gt;
+							&lt;mainClass&gt;com.abjy.studentmanage.StudentManageApplication&lt;/mainClass&gt;
+						&lt;/manifest&gt;
+					&lt;/archive&gt;
+					&lt;descriptorRefs&gt;
+						&lt;descriptorRef&gt;
+							jar-with-dependencies
+						&lt;/descriptorRef&gt;
+					&lt;/descriptorRefs&gt;
+				&lt;/configuration&gt;
+			&lt;/plugin&gt;
+		&lt;/plugins&gt;
+	&lt;/build&gt;
+
+&lt;/project&gt;
+</code></pre>
+<p>打包命令</p>
+<p>Maven项目打包成可执行Jar文件<br>
+在使用Maven完成项目以后，如果是需要打包成可执行的Jar文件，我们通过eclipse的导出很麻烦，还得指定入口文件的位置，还得说明依赖的jar包，既然都使用Maven了，很重要的一个目的就是让这些繁琐的操作简单。我们可以通过插件完成这项工作，使用assembly插件。具体使用方式如下：</p>
+<p>在项目中<strong>加入插件的依赖</strong>：</p>
+<pre><code class="language-xml">&lt;plugin&gt;  
+    &lt;artifactId&gt;maven-assembly-plugin&lt;/artifactId&gt;  
+    &lt;version&gt;2.2&lt;/version&gt;  
+    &lt;configuration&gt;  
+        &lt;archive&gt;  
+            &lt;manifest&gt;  
+                &lt;mainClass&gt;com.xxx.Main&lt;/mainClass&gt;  
+            &lt;/manifest&gt;  
+        &lt;/archive&gt;  
+        &lt;descriptorRefs&gt;  
+            &lt;descriptorRef&gt;  
+                jar-with-dependencies  
+            &lt;/descriptorRef&gt;  
+        &lt;/descriptorRefs&gt;  
+    &lt;/configuration&gt;  
+&lt;/plugin&gt;  
+</code></pre>
+<p>注意插件中要写明main方法文件入口位置。<br>
+2、通过命令行到工作空间的项目路径下，比如：D:\workspace\test（工作空间是workspace，项目是test），然后执行以下命令：<br>
+<strong>mvn assembly:assembly</strong><br>
+注意：在执行这个命令之前，必须先配置Maven的环境变量，检查是否配置可通过命令：mvn -version<br>
+3、如果上面的命令成功执行，那么在项目路径的target文件下就会有两个jar文件，一个是有jar包依赖的，一个是没jar包依赖的。<br>
+4、<strong>执行jar包，通过命令：java -jar xxx.jar执行</strong>。</p>
+<p>注意：如果是在Eclipse中通过Maven插件，可以直接运行assembly:assembly,然后在项目的target中就能看见.jar文件。</p>
+<h4 id="7-支付宝支付配置">7、支付宝支付配置</h4>
+<h5 id="1沙箱测试参数">（1）沙箱测试参数</h5>
+<p>APPID    应用公钥    应用私钥    支付宝公钥</p>
+<pre><code>2016XXXXXXXX
+.................
+</code></pre>
+<h5 id="2配置文件">（2）配置文件</h5>
+<pre><code class="language-java">public class AlipayConfig {
+	
+	// 应用ID,您的APPID，收款账号既是您的APPID对应支付宝账号,开发时使用沙箱提供的APPID，生产环境改成自己的APPID
+    public static String app_id = &quot;您的APPID&quot;;
+
+    // 商户私钥，您的PKCS8格式RSA2私钥
+    public static String merchant_private_key = &quot;商户私钥&quot;;
+    
+    // 支付宝公钥,查看地址：https://openhome.alipay.com/platform/keyManage.htm 对应APPID下的支付宝公钥。
+    public static String alipay_public_key = &quot;支付宝公钥&quot;;
+    
+    // 服务器异步通知页面路径  需http://格式的完整路径，不能加?id=123这类自定义参数，必须外网可以正常访问
+    public static String notify_url = &quot;https://71df657.cpolar.io/pay/alipayNotifyUrl&quot;;
+
+    // 页面跳转同步通知页面路径 需http://格式的完整路径，不能加?id=123这类自定义参数，必须外网可以正常访问(其实就是支付成功后返回的页面)
+    public static String return_url = &quot;http://182.92.113.175:3000/pay/alipayReturnUrl&quot;;
+    //public static String return_url = &quot;http://127.0.0.1:3000/pay/alipayReturnUrl&quot;;
+
+    // 签名方式
+    public static String sign_type = &quot;RSA2&quot;;
+
+    // 字符编码格式
+    public static String charset = &quot;utf-8&quot;;
+
+    // 支付宝网关，这是沙箱的网关
+    public static String gatewayUrl = &quot;https://openapi.alipaydev.com/gateway.do&quot;;
+
+    public static String log_path = &quot;C://&quot;;
+
+}
+</code></pre>
+<h5 id="3业务处理">（3）业务处理</h5>
+<pre><code class="language-java">import java.io.IOException;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.xxxx.xxxx.config.AlipayConfig;
+
+import com.abjy.tool.DateTool;
+import com.alibaba.fastjson.JSON;
+import com.alipay.api.AlipayApiException;
+import com.alipay.api.AlipayClient;
+import com.alipay.api.DefaultAlipayClient;
+import com.alipay.api.internal.util.AlipaySignature;
+import com.alipay.api.request.AlipayTradePagePayRequest;
+import com.alipay.api.request.AlipayTradeQueryRequest;
+import com.alipay.api.request.AlipayTradeWapPayRequest;
+import com.alipay.api.response.AlipayTradeQueryResponse;
+
+@Controller
+@RequestMapping(&quot;/pay&quot;)
+public class PayController {
+
+	/**
+	 * 支付宝支付请求
+	 * 
+	 * @param mapParam
+	 * @return
+	 * @throws AlipayApiException
+	 * @throws UnsupportedEncodingException
+	 */
+	@ResponseBody
+	@RequestMapping(value = &quot;/alipay&quot;, method = RequestMethod.POST, produces = &quot;application/json; charset=UTF-8&quot;)
+	public Map&lt;String, Object&gt; alipay(@RequestBody HashMap&lt;String, String&gt; mapParam)
+			throws AlipayApiException, UnsupportedEncodingException {
+		Map&lt;String, Object&gt; mapResult = new HashMap&lt;&gt;();
+		// 获得初始化的AlipayClient
+		AlipayClient alipayClient = new DefaultAlipayClient(AlipayConfig.gatewayUrl, AlipayConfig.app_id,
+				AlipayConfig.merchant_private_key, &quot;json&quot;, AlipayConfig.charset, AlipayConfig.alipay_public_key,
+				AlipayConfig.sign_type);
+		// 商户订单号，商户网站订单系统中唯一订单号，必填
+		String out_trade_no = mapParam.get(&quot;paymentOrderCode&quot;);
+		// 付款金额，必填
+		String total_amount = mapParam.get(&quot;total_amount&quot;);
+		// 订单名称，必填
+		String subject = mapParam.get(&quot;subject&quot;);
+		// 支付类型
+		// 1.电脑网站支付产品alipay.trade.page.pay接口中，product_code为：FAST_INSTANT_TRADE_PAY
+		// 2.手机网站支付产品alipay.trade.wap.pay接口中，product_code为：QUICK_WAP_WAY
+		// 3.当面付条码支付产品alipay.trade.pay接口中，product_code为：FACE_TO_FACE_PAYMENT
+		// 4.APP支付产品alipay.trade.app.pay接口中，product_code为：QUICK_MSECURITY_PAY
+		String alipayProductCode = mapParam.get(&quot;alipayProductCode&quot;);
+		if (alipayProductCode.equals(&quot;FAST_INSTANT_TRADE_PAY&quot;)) {
+			// 设置请求参数
+			AlipayTradePagePayRequest alipayWebPay = new AlipayTradePagePayRequest();
+			alipayWebPay.setReturnUrl(AlipayConfig.return_url);
+			alipayWebPay.setNotifyUrl(AlipayConfig.notify_url);
+			alipayWebPay.setBizContent(&quot;{\&quot;out_trade_no\&quot;:\&quot;&quot; + out_trade_no + &quot;\&quot;,&quot; + &quot;\&quot;total_amount\&quot;:\&quot;&quot;
+					+ total_amount + &quot;\&quot;,&quot; + &quot;\&quot;subject\&quot;:\&quot;&quot; + subject + &quot;\&quot;,&quot; + &quot;\&quot;product_code\&quot;:\&quot;&quot;
+					+ alipayProductCode + &quot;\&quot;,&quot; + &quot;\&quot;payment_order_code\&quot;:\&quot;&quot; + out_trade_no + &quot;\&quot;}&quot;);
+			// 请求
+			String result = alipayClient.pageExecute(alipayWebPay).getBody();
+			// 输出
+			mapResult.put(&quot;msg&quot;, &quot;success&quot;);
+			mapResult.put(&quot;alipayForm&quot;, result);
+		} else if (alipayProductCode.equals(&quot;QUICK_WAP_WAY&quot;)) {
+			AlipayTradeWapPayRequest alipayWapPay = new AlipayTradeWapPayRequest();
+			alipayWapPay.setReturnUrl(AlipayConfig.return_url);
+			alipayWapPay.setNotifyUrl(AlipayConfig.notify_url);
+			alipayWapPay.setBizContent(&quot;{\&quot;out_trade_no\&quot;:\&quot;&quot; + out_trade_no + &quot;\&quot;,&quot; + &quot;\&quot;total_amount\&quot;:\&quot;&quot;
+					+ total_amount + &quot;\&quot;,&quot; + &quot;\&quot;subject\&quot;:\&quot;&quot; + subject + &quot;\&quot;,&quot; + &quot;\&quot;product_code\&quot;:\&quot;&quot;
+					+ alipayProductCode + &quot;\&quot;,&quot; + &quot;\&quot;payment_order_code\&quot;:\&quot;&quot; + out_trade_no + &quot;\&quot;}&quot;);
+			// 请求
+			String result = alipayClient.pageExecute(alipayWapPay).getBody();
+			// 输出
+			mapResult.put(&quot;msg&quot;, &quot;success&quot;);
+			mapResult.put(&quot;alipayForm&quot;, result);
+		} else {
+			mapResult.put(&quot;msg&quot;, &quot;fail&quot;);
+		}
+		return mapResult;
+	}
+
+	/**
+	 * 支付宝同步跳转
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws AlipayApiException
+	 * @throws IOException
+	 * @throws ParseException
+	 */
+	@RequestMapping(value = &quot;/alipayReturnUrl&quot;, method = RequestMethod.GET)
+	public ModelAndView alipayReturnUrl(HttpServletRequest request, HttpServletResponse response)
+			throws AlipayApiException, IOException, ParseException {
+		// 获取支付宝GET过来反馈信息
+		Map&lt;String, String&gt; params = new HashMap&lt;String, String&gt;();
+		Map&lt;String, String[]&gt; requestParams = request.getParameterMap();
+		for (Iterator&lt;String&gt; iter = requestParams.keySet().iterator(); iter.hasNext();) {
+			String name = (String) iter.next();
+			String[] values = (String[]) requestParams.get(name);
+			String valueStr = &quot;&quot;;
+			for (int i = 0; i &lt; values.length; i++) {
+				valueStr = (i == values.length - 1) ? valueStr + values[i] : valueStr + values[i] + &quot;,&quot;;
+			}
+			// 乱码解决，这段代码在出现乱码时使用
+			valueStr = new String(valueStr.getBytes(&quot;ISO-8859-1&quot;), &quot;utf-8&quot;);
+			params.put(name, valueStr);
+		}
+		boolean signVerified = AlipaySignature.rsaCheckV1(params, AlipayConfig.alipay_public_key, AlipayConfig.charset,
+				AlipayConfig.sign_type); // 调用SDK验证签名
+		if (signVerified) {
+			response.sendRedirect(&quot;http://127.0.0.1:8080/#/paystate.html/&quot; + request.getParameter(&quot;out_trade_no&quot;));
+		} else {
+			return null;
+		}
+		return null;
+	}
+
+	/**
+	 * 支付宝异步通知
+	 * 
+	 * @param request
+	 * @param response
+	 * @return
+	 * @throws UnsupportedEncodingException
+	 * @throws AlipayApiException
+	 * @throws ParseException
+	 */
+	@RequestMapping(value = &quot;/alipayNotifyUrl&quot;, method = RequestMethod.POST)
+	public String alipayNotifyUrl(HttpServletRequest request, HttpServletResponse response)
+			throws UnsupportedEncodingException, AlipayApiException, ParseException {
+		// 获取支付宝POST过来反馈信息
+		Map&lt;String, String&gt; params = new HashMap&lt;String, String&gt;();
+		Map&lt;String, String[]&gt; requestParams = request.getParameterMap();
+		for (Iterator&lt;String&gt; iter = requestParams.keySet().iterator(); iter.hasNext();) {
+			String name = (String) iter.next();
+			String[] values = (String[]) requestParams.get(name);
+			String valueStr = &quot;&quot;;
+			for (int i = 0; i &lt; values.length; i++) {
+				valueStr = (i == values.length - 1) ? valueStr + values[i] : valueStr + values[i] + &quot;,&quot;;
+			}
+			// 乱码解决，这段代码在出现乱码时使用
+			// valueStr = new String(valueStr.getBytes(&quot;ISO-8859-1&quot;), &quot;utf-8&quot;);
+			params.put(name, valueStr);
+		}
+		// 调用SDK验证签名
+		boolean signVerified = AlipaySignature.rsaCheckV1(params, AlipayConfig.alipay_public_key, AlipayConfig.charset,
+				AlipayConfig.sign_type); // 调用SDK验证签名
+		if (signVerified) {// 验证成功
+		    // 异步通知返回的参数
+			// 商户订单号
+			String out_trade_no = request.getParameter(&quot;out_trade_no&quot;);
+			// 支付宝交易号
+			String trade_no = request.getParameter(&quot;trade_no&quot;);
+			// 交易状态
+			String trade_status = request.getParameter(&quot;trade_status&quot;);
+			if (trade_status.equals(&quot;TRADE_FINISHED&quot;)) {
+				// 做过处理不再执行
+				return &quot;success&quot;;
+			} else if (trade_status.equals(&quot;TRADE_SUCCESS&quot;)) {
+				// 处理您的业务逻辑
+				return &quot;success&quot;;
+			} else {
+				return &quot;fail&quot;;
+			}
+		} else {
+			// 验证失败
+			return &quot;fail&quot;;
+		}
+
+	}
+
+	/*
+	 * 统一收单线下交易查询
+	 */
+	@RequestMapping(value = &quot;/alipayQuery/{paymentReturnCode}&quot;, method = RequestMethod.POST)
+	@ResponseBody
+	public Map&lt;String, String&gt; AlipayQuery(@PathVariable String paymentReturnCode)
+			throws AlipayApiException, ParseException {
+		Map&lt;String, String&gt; mapResult = new HashMap&lt;&gt;();
+		AlipayClient alipayClient = new DefaultAlipayClient(AlipayConfig.gatewayUrl, AlipayConfig.app_id,
+				AlipayConfig.merchant_private_key, &quot;json&quot;, AlipayConfig.charset, AlipayConfig.alipay_public_key,
+				AlipayConfig.sign_type);
+		AlipayTradeQueryRequest alipayRequest = new AlipayTradeQueryRequest();
+		;// 创建API对应的request
+
+		// 回调函数
+		alipayRequest.setReturnUrl(AlipayConfig.return_url);
+		alipayRequest.setNotifyUrl(AlipayConfig.notify_url);
+
+		Map&lt;String, Object&gt; map = new HashMap&lt;String, Object&gt;();
+		map.put(&quot;trade_no&quot;, paymentReturnCode);// 测试用时生成的支付宝订单号
+		String param = JSON.toJSONString(map);
+		alipayRequest.setBizContent(param);
+		AlipayTradeQueryResponse response = alipayClient.execute(alipayRequest);
+		String msg = response.getMsg();
+		if (msg.equals(&quot;Success&quot;)) {
+			String buyerLogonId = response.getBuyerLogonId();
+			String sendPayDate = DateTool.dateToString(response.getSendPayDate(), &quot;yyyy-MM-dd HH:mm:ss&quot;);
+			String buyerPayAmount = response.getBuyerPayAmount();
+			String receiptAmount = response.getReceiptAmount();
+			mapResult.put(&quot;msg&quot;, &quot;success&quot;);
+			mapResult.put(&quot;content&quot;, &quot;（支付宝账号：&quot; + buyerLogonId + &quot;）于 &quot; + sendPayDate + &quot; 付款 &quot; + buyerPayAmount
+					+ &quot; 元，账户实收 &quot; + receiptAmount + &quot; 元，请注意查收！&quot;);
+			return mapResult;
+		} else {
+			mapResult.put(&quot;msg&quot;, &quot;fail&quot;);
+			mapResult.put(&quot;content&quot;, &quot;没有查询到交易记录，请核对订单编号（&quot; + paymentReturnCode + &quot;)&quot;);
+			return mapResult;
+		}
+	}
+
+}
+</code></pre>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://viaoh.github.io/tag/pJtOg0Zsv/" class="tag">
+                    java
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://viaoh.github.io/post/jdk-he-maven-pei-zhi/">
+                  <h3 class="post-title">
+                    JDK和Maven配置
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+              
+                <div id="gitalk-container" data-aos="fade-in"></div>
+              
+
+              
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+  
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+
+      var gitalk = new Gitalk({
+        clientID: '4970b3e2cb2b185b5af7',
+        clientSecret: 'a413a9c025c85c8c7d510b5b5cbe613c47e76bdc',
+        repo: 'viaoh.github.io',
+        owner: 'viaoh',
+        admin: ['viaoh'],
+        id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+        distractionFreeMode: false  // Facebook-like distraction free mode
+      })
+
+      gitalk.render('gitalk-container')
+
+    </script>
+  
+
+  
+
+
+
+
+  </body>
+</html>

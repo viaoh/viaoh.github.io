@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>Linux系统利用crontab定时备份Mysql数据库方法 | 知行合一</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://viaoh.github.io/favicon.ico?v=1706791123866">
+<link rel="stylesheet" href="https://viaoh.github.io/styles/main.css">
+
+
+  
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
+  
+
+  
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="程序可能出现崩溃级的bug，但这种bug可能十天半月才出现一次。修改起来比较困难，验证也非常耗时。这时候为了保证程序持续稳定运行，就需要一个监控程序了。
+功能：监控进程 demo-admin.jar 是否存在，如果不存在就启动它。
+实现方式..." />
+    <meta name="keywords" content="linux" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://viaoh.github.io">
+        <img src="https://viaoh.github.io/images/avatar.png?v=1706791123866" class="site-logo">
+        <h1 class="site-title">知行合一</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+          <a class="social-link" href="https://github.com/viaoh" target="_blank">
+            <i class="fab fa-github"></i>
+          </a>
+        
+      
+        
+      
+        
+          <a class="social-link" href="https://weibo.com/u/6377680111" target="_blank">
+            <i class="fab fa-weibo"></i>
+          </a>
+        
+      
+        
+          <a class="social-link" href="https://www.zhihu.com/people/viaoh-" target="_blank">
+            <i class="fab fa-zhihu"></i>
+          </a>
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      年与时驰，意与日去，遂成枯落，多不接世
+    </div>
+    <div class="site-footer">
+      Powered by &nbsp;<a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://viaoh.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">Linux系统利用crontab定时备份Mysql数据库方法</h2>
+            <div class="post-date">2023-05-20</div>
+            
+            <div class="post-content" v-pre>
+              <p>程序可能出现崩溃级的bug，但这种bug可能十天半月才出现一次。修改起来比较困难，验证也非常耗时。这时候为了保证程序持续稳定运行，就需要一个监控程序了。</p>
+<p><strong>功能</strong>：监控进程 demo-admin.jar 是否存在，如果不存在就启动它。</p>
+<p><strong>实现方式</strong>：使用<a href="https://so.csdn.net/so/search?q=crontab&amp;spm=1001.2101.3001.7020">crontab</a> -e 添加定时任务, 每分钟都执行脚本文件 demo_startup.sh</p>
+<p><strong>脚本</strong>：demo_startup.sh： 判断进程demo-admin.jar是否存在，不存在就执行 nohup java -jar demo-admin.jar &amp; ，如果存在就忽略。</p>
+<p><strong>1、在linux shell中输入 crontab -e ， 在打开的文件中填入以下信息并保存，设置的定时任务就生效了。</strong></p>
+<pre><code>*/1 * * * * sh /work/demo_startup.sh
+</code></pre>
+<p><strong>2、查看设置的定时任务信息</strong></p>
+<pre><code>crontab -l
+*/1 * * * * sh /work/demo_startup.sh
+0 23 * * 6   每周六晚上11点
+</code></pre>
+<p>**3、demo_startup.sh的中具体内容</p>
+<h1 id="示例">示例：</h1>
+<pre><code>\#!/bin/sh
+source /etc/profile
+ps -fe | grep demo-admin | grep -v grep
+if [ $? -ne 0 ]
+then
+cd /work
+nohup java -jar demo-admin.jar &amp;
+echo &quot;running runing.....&quot;
+else
+echo &quot;runing.....&quot;
+fi
+</code></pre>
+<p>备份MySQL的demo_startup.sh</p>
+<pre><code>/usr/local/mysql/bin/mysqldump --defaults-extra-file=/etc/my.cnf studentmanage &gt; /home/dbback/studentmanage_$(date +%Y%m%d_%H%M%S).sql
+</code></pre>
+<p><strong>4、如何查看定时任务日志文件</strong></p>
+<p>/var/log/cron.log</p>
+<p><strong>5、定时任务日志格式说明</strong></p>
+<p>crontab文件的含义：</p>
+<p>用户建立的crontab文件中，每一行代表一项任务，每行的每个字段代表一项设置。它的格式共分为六个字段，前五段是时间设定段，第六段是要执行的命令段，格式如下：</p>
+<p>minute hour day month week command</p>
+<p>其中：</p>
+<p>minute： 表示分钟，可以是从0到59之间的任何整数。</p>
+<p>hour：表示小时，可以是从0到23之间的任何整数。</p>
+<p>day：表示日期，可以是从1到31之间的任何整数。</p>
+<p>month：表示月份，可以是从1到12之间的任何整数。</p>
+<p>week：表示星期几，可以是从0到7之间的任何整数，这里的0或7代表星期日。</p>
+<p>command：要执行的命令，可以是系统命令，也可以是自己编写的脚本文件。</p>
+<p><strong>在以上各个字段中，还可以使用以下特殊字符：</strong></p>
+<p>星号（*）：代表所有可能的值，例如month字段如果是星号，则表示在满足其它字段的制约条件后每月都执行该命令操作。</p>
+<p>逗号（,）：可以用逗号隔开的值指定一个列表范围，例如，“1,2,5,7,8,9”</p>
+<p>中杠（-）：可以用整数之间的中杠表示一个整数范围，例如“2-6”表示“2,3,4,5,6”</p>
+<p>正斜线（/）：可以用正斜线指定时间的间隔频率，例如“0-23/2”表示每两小时执行一次。同时正斜线可以和星号一起使用，例如*/10，如果用在minute字段，表示每十分钟执行一次。</p>
+<p>grep -v grep 是去掉包含grep的行</p>
+<blockquote>
+<p># ps -ef | grep demo | grep -v grep<br>
+root 11996 1 0 12:08 ? 00:00:38 java -jar demo-admin.jar -Dspring.profiles.active=prod</p>
+</blockquote>
+<p><strong>6、配置定时任务</strong></p>
+<p>cron有两个配置文件，一个是一个全局配置文件（/etc/crontab），是针对系统任务的；一组是crontab命令生成的配置文件（/var/spool/cron下的文件）</p>
+<p>查看用户下的定时任务:crontab -l或cat /var/spool/cron/用户名</p>
+<p>实例1：每1分钟执行一次command</p>
+<p>命令：* * * * * command</p>
+<p>实例2：每小时的第3和第15分钟执行</p>
+<p>命令：3,15 * * * * command</p>
+<p>实例3：在上午8点到11点的第3和第15分钟执行</p>
+<p>命令：3,15 8-11 * * * command</p>
+<p>实例4：每隔两天的上午8点到11点的第3和第15分钟执行</p>
+<p>命令：3,15 8-11 */2 * * command</p>
+<p>实例5：每个星期一的上午8点到11点的第3和第15分钟执行</p>
+<p>命令：3,15 8-11 * * 1 command</p>
+<p><strong>7、crond服务启动/关闭/重启</strong></p>
+<p>service crond status //查看服务器状态</p>
+<p>service crond start //启动服务</p>
+<p>service crond stop //关闭服务</p>
+<p>service crond restart //重启服务</p>
+<p>service crond reload //重新载入配置</p>
+<p><strong>8、与cron相关的目录和文件</strong></p>
+<p>/etc/crontab：系统定时任务，只能root用户使用，格式与crontab也不一样。</p>
+<p>/var/spool/cron 目录 ：通过crontab命令添加的定时任务会以添加的账号命名放在此目录下</p>
+<p>/etc/cron.d：这个目录里包含不同的用户的定时任务</p>
+<p>/etc/cron.deny：禁止使用cron的用户列表文件</p>
+<p>/etc/cron.allow：允许使用cron的用户列表文件</p>
+<p>/etc/cron.daily：存放每天执行一次的脚本</p>
+<p>/etc/cron.hourly：存放每个小时执行一个的脚本</p>
+<p>/etc/cron.monthly：存放每个月执行一次的脚本</p>
+<p>/etc/cron.weekly：存放每个星期执行一个的脚本</p>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://viaoh.github.io/tag/TC_INGJ3R/" class="tag">
+                    linux
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://viaoh.github.io/post/linux-an-zhuang-redis/">
+                  <h3 class="post-title">
+                    Linux安装Redis
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+              
+                <div id="gitalk-container" data-aos="fade-in"></div>
+              
+
+              
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+  
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+
+      var gitalk = new Gitalk({
+        clientID: '4970b3e2cb2b185b5af7',
+        clientSecret: 'a413a9c025c85c8c7d510b5b5cbe613c47e76bdc',
+        repo: 'viaoh.github.io',
+        owner: 'viaoh',
+        admin: ['viaoh'],
+        id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+        distractionFreeMode: false  // Facebook-like distraction free mode
+      })
+
+      gitalk.render('gitalk-container')
+
+    </script>
+  
+
+  
+
+
+
+
+  </body>
+</html>

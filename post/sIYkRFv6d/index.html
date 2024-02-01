@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>使用Auto.js进行钉钉打卡 | 知行合一</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://viaoh.github.io/favicon.ico?v=1706791123866">
+<link rel="stylesheet" href="https://viaoh.github.io/styles/main.css">
+
+
+  
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
+  
+
+  
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="数字密码解锁，手机型号：小米10S
+// 判断是否唤醒
+if (!device.isScreenOn()) {
+    device.wakeUpIfNeeded(); // 设备未唤醒，进行唤醒
+    device.keepScreen..." />
+    <meta name="keywords" content="其它" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://viaoh.github.io">
+        <img src="https://viaoh.github.io/images/avatar.png?v=1706791123866" class="site-logo">
+        <h1 class="site-title">知行合一</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="/post/about" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+          <a class="social-link" href="https://github.com/viaoh" target="_blank">
+            <i class="fab fa-github"></i>
+          </a>
+        
+      
+        
+      
+        
+          <a class="social-link" href="https://weibo.com/u/6377680111" target="_blank">
+            <i class="fab fa-weibo"></i>
+          </a>
+        
+      
+        
+          <a class="social-link" href="https://www.zhihu.com/people/viaoh-" target="_blank">
+            <i class="fab fa-zhihu"></i>
+          </a>
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      年与时驰，意与日去，遂成枯落，多不接世
+    </div>
+    <div class="site-footer">
+      Powered by &nbsp;<a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://viaoh.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">使用Auto.js进行钉钉打卡</h2>
+            <div class="post-date">2023-09-13</div>
+            
+            <div class="post-content" v-pre>
+              <h3 id="数字密码解锁手机型号小米10s">数字密码解锁，手机型号：小米10S</h3>
+<pre><code class="language-js">// 判断是否唤醒
+if (!device.isScreenOn()) {
+    device.wakeUpIfNeeded(); // 设备未唤醒，进行唤醒
+    device.keepScreenOn(); //保持亮屏
+    sleep(2000);
+    // 上滑打开锁屏界面
+    swipe(500, 1200, 500, 500, 500)
+    sleep(800);
+    // 输入锁屏密码
+    // 第一种：数字密码形式
+    desc(1).findOne().click();
+    sleep(500);
+    desc(2).findOne().click();
+    sleep(500);
+    desc(3).findOne().click();
+    sleep(500);
+    desc(4).findOne().click();
+    sleep(500);
+    // 第二种：图案形式
+    // 坐标位置
+    // 1 4 7
+    // 2 5 8
+    // 3 6 9
+    //function pwd(number) {
+        //var arr = Array(null, [220, 1100], [220, 1400], [220, 1700], [520, 1100], [520, 1400], [520, 1700], [820, 1100], [820, 1400], [820, 1700]);
+        //return arr[number];
+    //}
+    //根据需要来改动位置，下方为Z字型的手势示范
+    //gesture(1000, pwd(1), pwd(4), pwd(7), pwd(5), pwd(3), pwd(6), pwd(9));
+}
+// 获取当前时间，非工作日不启动
+var curr_time = new Date();
+var now_Hours = curr_time.getHours();
+var now_Minutes = curr_time.getMinutes();
+var now_Day = curr_time.getDay();
+if (now_Day != 0) {
+    while (true) {
+        var autoJsApp = desc(&quot;Auto.js&quot;).findOnce();
+        if (autoJsApp == null) {
+            // 点击home键
+            click(520, 2300)
+            sleep(3000);
+            // 滑动桌面，直到找到auto.js
+            // swipe(800, 500, 200, 500, 100)
+        } else {
+            autoJsApp.click();
+            sleep(1000);
+            // 打开钉钉
+            var DingTalkPackageName = getPackageName(&quot;钉钉&quot;); //获取应用包名称
+            launch(DingTalkPackageName); //根据应用包名启动某个应用
+            device.cancelKeepingAwake(); //取消屏幕常亮。
+            engines.myEngine().forceStop(); //停止当前脚本
+            break;
+        }
+    }
+} else {
+    toast(&quot;今天无需打卡&quot;);
+}
+</code></pre>
+<h3 id="图案密码解锁手机型号小米10s">图案密码解锁，手机型号：小米10S</h3>
+<pre><code class="language-js"> // 判断是否唤醒
+if (!device.isScreenOn()) {
+    device.wakeUpIfNeeded(); // 设备未唤醒，进行唤醒
+    device.keepScreenOn(); //保持亮屏
+    sleep(2000);
+    // 上滑打开锁屏界面
+    swipe(500, 1200, 500, 500, 500)
+    sleep(800);
+    // 输入锁屏密码
+    // 第二种：图案形式
+    // 坐标位置
+    // 1 4 7
+    // 2 5 8
+    // 3 6 9
+    function pwd(number) {
+        var arr = Array(null, [220, 1100], [220, 1400], [220, 1700], [520, 1100], [520, 1400], [520, 1700], [820, 1100], [820, 1400], [820, 1700]);
+        return arr[number];
+    }
+    //根据需要来改动位置，下方为Z字型手势示范
+    gesture(1000, pwd(1), pwd(4), pwd(7), pwd(5), pwd(3), pwd(6), pwd(9));
+}
+// 获取当前时间，非工作日不启动
+var curr_time = new Date();
+var now_Hours = curr_time.getHours();
+var now_Minutes = curr_time.getMinutes();
+var now_Day = curr_time.getDay();
+if (now_Day != 0) {
+    while (true) {
+        var autoJsApp = desc(&quot;Auto.js&quot;).findOnce();
+        if (autoJsApp == null) {
+            // 点击home键
+            //click(520, 2300)
+            //sleep(3000);
+            // 滑动桌面，直到找到auto.js
+            swipe(520, 2320, 520, 2100, 75);
+            sleep(3000);
+        } else {
+            autoJsApp.click();
+            sleep(1000);
+            // 打开钉钉
+            var DingTalkPackageName = getPackageName(&quot;钉钉&quot;); //获取应用包名称
+            launch(DingTalkPackageName); //根据应用包名启动某个应用
+            device.cancelKeepingAwake(); //取消屏幕常亮。
+            engines.myEngine().forceStop(); //停止当前脚本
+            break;
+        }
+    }
+} else {
+    toast(&quot;今天无需打卡&quot;);
+}
+</code></pre>
+<h3 id="图案密码解锁手机型号华为mate60pro图案解锁滑动出现错误未实现">图案密码解锁，手机型号：华为mate60pro，图案解锁滑动出现错误未实现</h3>
+<pre><code class="language-js">// 判断是否唤醒
+device.wakeUpIfNeeded(); // 设备未唤醒，进行唤醒
+device.keepScreenOn(); //保持亮屏
+sleep(2000);
+// 上滑打开锁屏界面
+swipe(225, 2160, 930, 2160, 500);
+sleep(800);
+// 输入锁屏密码
+// 第一种：数字密码形式
+desc(1).findOne().click();
+sleep(500);
+desc(2).findOne().click();
+sleep(500);
+desc(3).findOne().click();
+sleep(500);
+desc(4).findOne().click();
+sleep(500);
+desc(5).findOne().click();
+sleep(500);
+desc(6).findOne().click();
+sleep(500);
+//获取当前时间，非工作日不启动
+var curr_time = new Date();
+var now_Hours = curr_time.getHours();
+var now_Minutes = curr_time.getMinutes();
+var now_Day = curr_time.getDay();
+if (now_Day != 0) {
+    while (true) {
+        var autoJsApp = desc(&quot;Auto.js&quot;).findOnce();
+        if (autoJsApp == null) {
+            // 滑动桌面，直到找到auto.js
+            swipe(630, 2700, 850, 2400, 75);
+            sleep(3000);
+        } else {
+            autoJsApp.click();
+            sleep(1000);
+            // 打开钉钉
+            launch(&quot;com.alibaba.android.rimet&quot;); //根据应用包名启动某个应用
+            device.cancelKeepingAwake(); //取消屏幕常亮。
+            engines.myEngine().forceStop(); //停止当前脚本
+            break;
+        }
+    }
+} else {
+    toast(&quot;今天无需打卡&quot;);
+}
+</code></pre>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://viaoh.github.io/tag/aDo9-TH1B/" class="tag">
+                    其它
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://viaoh.github.io/post/eKqZjmenJ/">
+                  <h3 class="post-title">
+                    黑群晖6.1.7 物理机安装
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+              
+                <div id="gitalk-container" data-aos="fade-in"></div>
+              
+
+              
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+  
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+
+      var gitalk = new Gitalk({
+        clientID: '4970b3e2cb2b185b5af7',
+        clientSecret: 'a413a9c025c85c8c7d510b5b5cbe613c47e76bdc',
+        repo: 'viaoh.github.io',
+        owner: 'viaoh',
+        admin: ['viaoh'],
+        id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+        distractionFreeMode: false  // Facebook-like distraction free mode
+      })
+
+      gitalk.render('gitalk-container')
+
+    </script>
+  
+
+  
+
+
+
+
+  </body>
+</html>
