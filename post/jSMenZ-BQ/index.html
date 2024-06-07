@@ -1,0 +1,528 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>文件工具类 | liuyoung&#39;s blog</title>
+<link rel="shortcut icon" href="https://viaoh.github.io/favicon.ico?v=1717750062207">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://viaoh.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="文件工具类 | liuyoung&#39;s blog - Atom Feed" href="https://viaoh.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="pom.xml
+&lt;!-- 图片压缩 --&gt;
+&lt;dependency&gt;
+	&lt;groupId&gt;net.coobird&lt;/groupId&gt;
+	&lt;artifactId&gt;thumbnaila..." />
+    <meta name="keywords" content="编程生涯" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://viaoh.github.io">
+  <img class="avatar" src="https://viaoh.github.io/images/avatar.png?v=1717750062207" alt="">
+  </a>
+  <h1 class="site-title">
+    liuyoung&#39;s blog
+  </h1>
+  <p class="site-description">
+    年与时驰，意与日去，遂成枯落，多不接世
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="https://viaoh.github.io/post/XuQvrNvEf" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/liuyoung-cc/liuyoung-cc.github.io" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+    
+      
+        <a href="https://weibo.com/viaoh" target="_blank">
+          <i class="ri-weibo-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://www.zhihu.com/people/viaoh-" target="_blank">
+          <i class="ri-zhihu-line"></i>
+        </a>
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              文件工具类
+            </h2>
+            <div class="post-info">
+              <span>
+                2024-05-11
+              </span>
+              <span>
+                7 min read
+              </span>
+              
+                <a href="https://viaoh.github.io/tag/BzttDH753/" class="post-tag">
+                  # 编程生涯
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <h6 id="pomxml">pom.xml</h6>
+<pre><code class="language-xml">&lt;!-- 图片压缩 --&gt;
+&lt;dependency&gt;
+	&lt;groupId&gt;net.coobird&lt;/groupId&gt;
+	&lt;artifactId&gt;thumbnailator&lt;/artifactId&gt;
+	&lt;version&gt;0.4.8&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<h6 id="工具类">工具类</h6>
+<pre><code class="language-java">import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
+
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.web.multipart.MultipartFile;
+
+import net.coobird.thumbnailator.Thumbnails;
+
+public class FileTool {
+
+	/**
+	 * 获取文件大小
+	 * 
+	 * @param fileSrc
+	 * @return
+	 */
+	public static long getFileSize(String fileSrc) {
+		File file = new File(fileSrc);
+		if (!file.exists() || !file.isFile()) {
+			return -1;
+		}
+		return file.length();
+	}
+
+	/**
+	 * 获取上传文件的后缀名
+	 * 
+	 * @param file
+	 * @return
+	 */
+	public static String getFileSuffixName(MultipartFile file) {
+		String fileSuffixName = file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf(&quot;.&quot;));
+		return fileSuffixName;
+	}
+    
+    	/**
+	 * 获取文件夹下文件列表
+	 * 
+	 * @param strPath
+	 * @return
+	 */
+	public static List&lt;File&gt; getFileList(String strPath) {
+		List&lt;File&gt; filelist = new ArrayList&lt;&gt;();
+		File dir = new File(strPath);
+		File[] files = dir.listFiles(); // 该文件目录下文件全部放入数组
+		if (files != null) {
+			for (int i = 0; i &lt; files.length; i++) {
+				String fileName = files[i].getName();
+				if (files[i].isDirectory()) {
+					getFileList(files[i].getAbsolutePath()); // 遍历子文件夹里面的东西
+				} else if (fileName.endsWith(&quot;exe&quot;)) { // 以***结尾的文件
+					String strFileName = files[i].getAbsolutePath();
+					filelist.add(files[i]);
+				} else {
+					filelist.add(files[i]);
+					continue;
+				}
+			}
+		}
+		return filelist;
+	}
+
+	/**
+	 * 将文件压缩至指定大小
+	 * 
+	 * @param fileSrc
+	 *            文件路径
+	 * @param fileSize
+	 *            压缩后最大值
+	 * @return
+	 * @throws IOException
+	 */
+	public static Boolean FileCompress(String fileSrc, long fileSize) throws IOException {
+		Thumbnails.of(fileSrc).scale(1). // 缩放大小
+				outputQuality(0.8). // 图片压缩80%质量
+				toFile(fileSrc);
+		long FileCompressSize = getFileSize(fileSrc);
+		if (FileCompressSize / 1024 &gt; fileSize) {
+			FileCompress(fileSrc, fileSize);
+		}
+		return true;
+	}
+
+	/**
+	 * 下载硬盘上的文件
+	 * 
+	 * @param response
+	 * @param DiskPath
+	 *            文件硬盘路径
+	 * @param FileName
+	 *            下载后的名称
+	 */
+	public static void downLoadDisk(HttpServletResponse response, String DiskPath, String FileName) {
+		// 1.设置文件ContentType类型，这样设置，会自动判断下载文件类型
+		response.setContentType(&quot;multipart/form-data&quot;);
+		// 2.设置文件头：最后一个参数是设置下载文件名
+		response.setHeader(&quot;Content-Disposition&quot;, &quot;attachment;fileName=&quot; + FileName);
+		// 通过文件路径获得File对象
+		File file = new File(DiskPath);
+		ServletOutputStream out = null;
+		FileInputStream inputStream = null;
+		try {
+			inputStream = new FileInputStream(file);
+			// 3.通过response获取ServletOutputStream对象(out)
+			out = response.getOutputStream();
+			int b = 0;
+			byte[] buffer = new byte[512];
+			while (b != -1) {
+				b = inputStream.read(buffer);
+				if (b != -1) {
+					out.write(buffer, 0, b);// 4.写到输出流(out)中
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (inputStream != null) {
+					inputStream.close();
+				}
+				if (out != null) {
+					out.close();
+					out.flush();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+		}
+	}
+
+	/**
+	 * @param srcDir
+	 *            压缩文件夹路径
+	 * @param out
+	 *            压缩文件输出流
+	 * @param KeepDirStructure
+	 *            是否保留原来的目录结构,true:保留目录结构;false:所有文件跑到压缩包根目录下(注意：不保留目录结构可能会出现同名文件,会压缩失败)
+	 * @throws RuntimeException
+	 *             压缩失败会抛出运行时异常
+	 */
+	public static void fileToZip(String srcDir, OutputStream out, boolean KeepDirStructure) throws RuntimeException {
+		long start = System.currentTimeMillis();
+		ZipOutputStream zos = null;
+		try {
+			zos = new ZipOutputStream(out);
+			File sourceFile = new File(srcDir);
+			compressZip(sourceFile, zos, sourceFile.getName(), KeepDirStructure);
+			long end = System.currentTimeMillis();
+			System.out.println(&quot;压缩完成，耗时：&quot; + (end - start) + &quot; ms&quot;);
+		} catch (Exception e) {
+			throw new RuntimeException(&quot;zip error from ZipUtils&quot;, e);
+		} finally {
+			if (zos != null) {
+				try {
+					zos.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+
+	/**
+	 * 
+	 * 压缩成ZIP 方法2
+	 * 
+	 * @param srcFiles
+	 *            需要压缩的文件列表
+	 * 
+	 * @param out
+	 *            压缩文件输出流
+	 * 
+	 * @throws RuntimeException
+	 *             压缩失败会抛出运行时异常
+	 * 
+	 */
+	public static void fileListToZip(List&lt;File&gt; srcFiles, OutputStream out) throws RuntimeException {
+		long start = System.currentTimeMillis();
+		ZipOutputStream zos = null;
+		try {
+			zos = new ZipOutputStream(out);
+			for (File srcFile : srcFiles) {
+				byte[] buf = new byte[BUFFER_SIZE];
+				zos.putNextEntry(new ZipEntry(srcFile.getName()));
+				int len;
+				FileInputStream in = new FileInputStream(srcFile);
+				while ((len = in.read(buf)) != -1) {
+					zos.write(buf, 0, len);
+				}
+				zos.closeEntry();
+				in.close();
+			}
+			long end = System.currentTimeMillis();
+			System.out.println(&quot;压缩完成，耗时：&quot; + (end - start) + &quot; ms&quot;);
+		} catch (Exception e) {
+			throw new RuntimeException(&quot;zip error from ZipUtils&quot;, e);
+		} finally {
+			if (zos != null) {
+				try {
+					zos.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+
+	/**
+	 * 递归压缩方法
+	 * 
+	 * @param sourceFile
+	 *            源文件
+	 * @param zos
+	 *            zip输出流
+	 * @param name
+	 *            压缩后的名称
+	 * @param KeepDirStructure
+	 *            是否保留原来的目录结构,true:保留目录结构;false:所有文件跑到压缩包根目录下(注意：不保留目录结构可能会出现同名文件,会压缩失败)
+	 * @throws Exception
+	 */
+	private static final int BUFFER_SIZE = 2 * 1024;
+
+	private static void compressZip(File sourceFile, ZipOutputStream zos, String name, boolean KeepDirStructure)
+			throws Exception {
+		byte[] buf = new byte[BUFFER_SIZE];
+		if (sourceFile.isFile()) {
+			// 向zip输出流中添加一个zip实体，构造器中name为zip实体的文件的名字
+			zos.putNextEntry(new ZipEntry(name));
+			// copy文件到zip输出流中
+			int len;
+			FileInputStream in = new FileInputStream(sourceFile);
+			while ((len = in.read(buf)) != -1) {
+				zos.write(buf, 0, len);
+			}
+			// Complete the entry
+			zos.closeEntry();
+			in.close();
+		} else {
+			File[] listFiles = sourceFile.listFiles();
+			if (listFiles == null || listFiles.length == 0) {
+				// 需要保留原来的文件结构时,需要对空文件夹进行处理
+				if (KeepDirStructure) {
+					// 空文件夹的处理
+					zos.putNextEntry(new ZipEntry(name + &quot;/&quot;));
+					// 没有文件，不需要文件的copy
+					zos.closeEntry();
+				}
+			} else {
+				for (File file : listFiles) {
+					// 判断是否需要保留原来的文件结构
+					if (KeepDirStructure) {
+						// 注意：file.getName()前面需要带上父文件夹的名字加一斜杠,
+						// 不然最后压缩包中就不能保留原来的文件结构,即：所有文件都跑到压缩包根目录下了
+						compressZip(file, zos, name + &quot;/&quot; + file.getName(), KeepDirStructure);
+					} else {
+						compressZip(file, zos, file.getName(), KeepDirStructure);
+					}
+				}
+			}
+		}
+	}
+    
+}
+</code></pre>
+<h6 id="压缩方法测试">压缩方法测试</h6>
+<pre><code class="language-java">//测试压缩方法1
+FileOutputStream fos1 = new FileOutputStream(new File(&quot;c:/mytest01.zip&quot;));
+FileTool.fileToZip(&quot;D:/log&quot;, fos1,true);
+//测试压缩方法2
+List&lt;File&gt; fileList = new ArrayList&lt;&gt;();
+fileList.add(new File(&quot;D:/Java/jdk1.7.0_45_64bit/bin/jar.exe&quot;));
+fileList.add(new File(&quot;D:/Java/jdk1.7.0_45_64bit/bin/java.exe&quot;));
+FileOutputStream fos2 = new FileOutputStream(new File(&quot;c:/mytest02.zip&quot;));
+FileTool.fileListToZip(fileList, fos2);
+</code></pre>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#pomxml">pom.xml</a></li>
+<li><a href="#%E5%B7%A5%E5%85%B7%E7%B1%BB">工具类</a></li>
+<li><a href="#%E5%8E%8B%E7%BC%A9%E6%96%B9%E6%B3%95%E6%B5%8B%E8%AF%95">压缩方法测试</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://viaoh.github.io/post/lpEPljG7l/">
+              <h3 class="post-title">
+                手机号码归属地查询
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '4970b3e2cb2b185b5af7',
+    clientSecret: 'a413a9c025c85c8c7d510b5b5cbe613c47e76bdc',
+    repo: 'viaoh.github.io',
+    owner: 'viaoh',
+    admin: ['viaoh'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  Powered by &nbsp;<a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://viaoh.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

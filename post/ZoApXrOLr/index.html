@@ -1,0 +1,365 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>钉钉推送工具类 | liuyoung&#39;s blog</title>
+<link rel="shortcut icon" href="https://viaoh.github.io/favicon.ico?v=1717750062207">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://viaoh.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="钉钉推送工具类 | liuyoung&#39;s blog - Atom Feed" href="https://viaoh.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="pom.xml
+&lt;!-- 钉钉sdk --&gt;
+&lt;dependency&gt;
+	&lt;groupId&gt;com.dingtalk&lt;/groupId&gt;
+	&lt;artifactId&gt;dingtalk..." />
+    <meta name="keywords" content="编程生涯" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://viaoh.github.io">
+  <img class="avatar" src="https://viaoh.github.io/images/avatar.png?v=1717750062207" alt="">
+  </a>
+  <h1 class="site-title">
+    liuyoung&#39;s blog
+  </h1>
+  <p class="site-description">
+    年与时驰，意与日去，遂成枯落，多不接世
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="https://viaoh.github.io/post/XuQvrNvEf" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/liuyoung-cc/liuyoung-cc.github.io" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+    
+      
+        <a href="https://weibo.com/viaoh" target="_blank">
+          <i class="ri-weibo-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://www.zhihu.com/people/viaoh-" target="_blank">
+          <i class="ri-zhihu-line"></i>
+        </a>
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              钉钉推送工具类
+            </h2>
+            <div class="post-info">
+              <span>
+                2024-05-11
+              </span>
+              <span>
+                4 min read
+              </span>
+              
+                <a href="https://viaoh.github.io/tag/BzttDH753/" class="post-tag">
+                  # 编程生涯
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <h6 id="pomxml">pom.xml</h6>
+<pre><code class="language-xml">&lt;!-- 钉钉sdk --&gt;
+&lt;dependency&gt;
+	&lt;groupId&gt;com.dingtalk&lt;/groupId&gt;
+	&lt;artifactId&gt;dingtalk-source&lt;/artifactId&gt;
+	&lt;version&gt;1.0.0&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+	&lt;groupId&gt;com.dingtalk&lt;/groupId&gt;
+	&lt;artifactId&gt;dingtalk&lt;/artifactId&gt;
+	&lt;version&gt;1.0.0&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<h6 id="工具类">工具类</h6>
+<pre><code class="language-java">import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.dingtalk.api.DefaultDingTalkClient;
+import com.dingtalk.api.DingTalkClient;
+import com.dingtalk.api.request.OapiDepartmentListIdsRequest;
+import com.dingtalk.api.request.OapiGettokenRequest;
+import com.dingtalk.api.request.OapiMessageCorpconversationAsyncsendV2Request;
+import com.dingtalk.api.request.OapiUserListbypageRequest;
+import com.dingtalk.api.response.OapiDepartmentListIdsResponse;
+import com.dingtalk.api.response.OapiGettokenResponse;
+import com.dingtalk.api.response.OapiMessageCorpconversationAsyncsendV2Response;
+import com.dingtalk.api.response.OapiUserListbypageResponse;
+import com.taobao.api.ApiException;
+
+public class DingTalkTool {
+	
+	/**
+	 * 根据Appkey和Appsecret获取AccessToken
+	 * @return
+	 */
+	public static String getAccessToken(){
+		String AccessToken = null;
+		DefaultDingTalkClient client = new DefaultDingTalkClient(&quot;https://oapi.dingtalk.com/gettoken&quot;);
+		OapiGettokenRequest request = new OapiGettokenRequest();
+		request.setAppkey(&quot;您的Appkey&quot;);
+		request.setAppsecret(&quot;您的Appsecret&quot;);
+		request.setHttpMethod(&quot;GET&quot;);
+		try {
+			OapiGettokenResponse response = client.execute(request);
+			JSONObject jsonObject = (JSONObject) JSON.parse(response.getBody());
+			if (jsonObject.getString(&quot;errmsg&quot;).equals(&quot;ok&quot;)) {
+				AccessToken = jsonObject.getString(&quot;access_token&quot;);
+			}
+		} catch (ApiException e) {
+			e.printStackTrace();
+		}
+		return AccessToken;
+	}
+	
+	/**
+	 * 获取所有的部门id
+	 * @param accessToken
+	 */
+	public static void getDepartmentIdList(String accessToken){
+		DingTalkClient client = new DefaultDingTalkClient(&quot;https://oapi.dingtalk.com/department/list_ids&quot;);
+		OapiDepartmentListIdsRequest request = new OapiDepartmentListIdsRequest();
+		request.setId(&quot;1&quot;);
+		request.setHttpMethod(&quot;GET&quot;);
+		try {
+			OapiDepartmentListIdsResponse response = client.execute(request, accessToken);
+			System.out.println(response.getBody());
+		} catch (ApiException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * 获取部门所有用户详细信息，遍历后根据手机号返回唯一的用户id
+	 * @param accessToken
+	 * @param userPhone
+	 * @return
+	 */
+	public static String getUserId(String accessToken,String userPhone) {
+		DingTalkClient client = new DefaultDingTalkClient(&quot;https://oapi.dingtalk.com/user/listbypage&quot;);
+		OapiUserListbypageRequest request = new OapiUserListbypageRequest();
+		request.setDepartmentId(18622967L);// 部门id
+		request.setOffset(0L);
+		request.setSize(10L);
+		request.setOrder(&quot;entry_desc&quot;);
+		request.setHttpMethod(&quot;GET&quot;);
+		try {
+			OapiUserListbypageResponse response = client.execute(request,accessToken);
+			JSONObject jsonObject = (JSONObject) JSON.parse(response.getBody());
+			JSONArray json = JSONArray.parseArray(jsonObject.getString(&quot;userlist&quot;)); // 首先把字符串转成 JSONArray  对象
+			if(json.size()&gt;0){
+			  for(int i=0;i&lt;json.size();i++){
+			    JSONObject job = json.getJSONObject(i); 
+			    if(job.get(&quot;mobile&quot;).equals(userPhone)){
+			    	return (String) job.get(&quot;userid&quot;);
+			    }
+			  }
+			}
+		} catch (ApiException e) {
+			e.printStackTrace();
+		}
+	    return &quot;error&quot;;
+	}
+	
+	/**
+	 * 根据用户id推送消息到个人
+	 * @param accessToken
+	 * @param UserId
+	 */
+	public static void pushMessage(String accessToken,String UserId,String content){
+		
+		DingTalkClient client = new DefaultDingTalkClient(&quot;https://oapi.dingtalk.com/topapi/message/corpconversation/asyncsend_v2&quot;);
+		OapiMessageCorpconversationAsyncsendV2Request request = new OapiMessageCorpconversationAsyncsendV2Request();
+		request.setUseridList(UserId);
+		request.setAgentId(260932923L);
+		request.setToAllUser(false);
+		OapiMessageCorpconversationAsyncsendV2Request.Msg msg = new OapiMessageCorpconversationAsyncsendV2Request.Msg();
+		msg.setMsgtype(&quot;text&quot;);
+		msg.setText(new OapiMessageCorpconversationAsyncsendV2Request.Text());
+		msg.getText().setContent(content);
+		request.setMsg(msg);
+		try {
+			OapiMessageCorpconversationAsyncsendV2Response response = client.execute(request,accessToken);
+		    System.out.println(response.getBody());
+		} catch (ApiException e) {
+			e.printStackTrace();
+		}
+	}
+	
+}
+
+</code></pre>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#pomxml">pom.xml</a></li>
+<li><a href="#%E5%B7%A5%E5%85%B7%E7%B1%BB">工具类</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://viaoh.github.io/post/96LJYl71m/">
+              <h3 class="post-title">
+                MD5加密解密
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '4970b3e2cb2b185b5af7',
+    clientSecret: 'a413a9c025c85c8c7d510b5b5cbe613c47e76bdc',
+    repo: 'viaoh.github.io',
+    owner: 'viaoh',
+    admin: ['viaoh'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  Powered by &nbsp;<a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://viaoh.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

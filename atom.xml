@@ -1,0 +1,1707 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://viaoh.github.io</id>
+    <title>liuyoung&apos;s blog</title>
+    <updated>2024-06-07T08:47:45.248Z</updated>
+    <generator>https://github.com/jpmonette/feed</generator>
+    <link rel="alternate" href="https://viaoh.github.io"/>
+    <link rel="self" href="https://viaoh.github.io/atom.xml"/>
+    <subtitle>年与时驰，意与日去，遂成枯落，多不接世</subtitle>
+    <logo>https://viaoh.github.io/images/avatar.png</logo>
+    <icon>https://viaoh.github.io/favicon.ico</icon>
+    <rights>All rights reserved 2024, liuyoung&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[Word中的特殊格式符号]]></title>
+        <id>https://viaoh.github.io/post/kb1qw4MBX/</id>
+        <link href="https://viaoh.github.io/post/kb1qw4MBX/">
+        </link>
+        <updated>2024-06-07T08:47:03.000Z</updated>
+        <content type="html"><![CDATA[<pre><code>1、段落标记 ^p
+2、制表符 ^t
+3、任意字符 ^?
+4、任意数字 ^#
+5、任意字母 ^$
+6、脱字号 ^^
+7、分节符 ^%
+8、段落符号 ^v
+9、分栏符 ^n
+10、省略号 ^i
+11、全角省略号 ^j
+12、长划线 ^+
+13、1/4长划线 ^q
+14、短划线 ^=
+15、无宽可选分隔符 ^x
+16、无宽非分隔符 ^z
+17、尾注标记 ^e
+18、域 ^d
+19、脚注标记 ^f
+20、图形 ^g
+21、手动换行符 ^1
+22、手动分页符 ^m
+23、不间断连字符 ^~
+24、不间断空格 ^s
+25、可选连字符 ^-
+26、分节符 ^b
+27、空白区域 ^w
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Excel导入数据示例]]></title>
+        <id>https://viaoh.github.io/post/fjFmIKkI7/</id>
+        <link href="https://viaoh.github.io/post/fjFmIKkI7/">
+        </link>
+        <updated>2024-05-31T07:08:46.000Z</updated>
+        <content type="html"><![CDATA[<h4 id="导入表格样例">导入表格样例</h4>
+<figure data-type="image" tabindex="1"><img src="https://s3.bmp.ovh/imgs/2024/05/31/40889df5ca9c3f88.jpg" alt="" loading="lazy"></figure>
+<h4 id="pomxml">pom.xml</h4>
+<pre><code class="language-xml">&lt;!-- Excel导入 --&gt;
+&lt;dependency&gt;
+	&lt;groupId&gt;cn.afterturn&lt;/groupId&gt;
+	&lt;artifactId&gt;easypoi-spring-boot-starter&lt;/artifactId&gt;
+	&lt;version&gt;4.4.0&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<h4 id="exceltool工具类">ExcelTool工具类</h4>
+<pre><code class="language-java">import org.apache.poi.hssf.usermodel.*;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.List;
+
+/**
+ * Excel工具类
+ */
+public class ExcelTool {
+
+    /**
+     * Excel表格导出
+     * @param response HttpServletResponse对象
+     * @param excelData Excel表格的数据，封装为List&lt;List&lt;String&gt;&gt;
+     * @param sheetName sheet的名字
+     * @param fileName 导出Excel的文件名
+     * @param columnWidth Excel表格的宽度，建议为15
+     * @throws IOException 抛IO异常
+     */
+    public static void exportExcel(HttpServletResponse response,
+                                   List&lt;List&lt;String&gt;&gt; excelData, 
+                                   String sheetName, 
+                                   String fileName, 
+                                   int columnWidth) throws IOException {
+
+        //声明一个工作簿
+        HSSFWorkbook workbook = new HSSFWorkbook();
+
+        //生成一个表格，设置表格名称
+        HSSFSheet sheet = workbook.createSheet(sheetName);
+
+        //设置表格列宽度
+        sheet.setDefaultColumnWidth(columnWidth);
+
+        //写入List&lt;List&lt;String&gt;&gt;中的数据
+        int rowIndex = 0;
+        for(List&lt;String&gt; data : excelData){
+            //创建一个row行，然后自增1
+            HSSFRow row = sheet.createRow(rowIndex++);
+
+            //遍历添加本行数据
+            for (int i = 0; i &lt; data.size(); i++) {
+                //创建一个单元格
+                HSSFCell cell = row.createCell(i);
+
+                //创建一个内容对象
+                HSSFRichTextString text = new HSSFRichTextString(data.get(i));
+
+                //将内容对象的文字内容写入到单元格中
+                cell.setCellValue(text);
+            }
+        }
+
+        //准备将Excel的输出流通过response输出到页面下载
+        //八进制输出流
+        response.setContentType(&quot;application/octet-stream&quot;);
+
+        //设置导出Excel的名称
+        response.setHeader(&quot;Content-disposition&quot;, &quot;attachment;filename=&quot; + fileName);
+
+        //刷新缓冲
+        response.flushBuffer();
+
+        //workbook将Excel写入到response的输出流中，供页面下载该Excel文件
+        workbook.write(response.getOutputStream());
+
+        //关闭workbook
+        workbook.close();
+    }
+
+}
+</code></pre>
+<h4 id="serviceimpl实现类">serviceimpl实现类</h4>
+<pre><code class="language-java">	@Override
+	public Map&lt;String, Object&gt; uploadExcelSubmit(MultipartFile file, HttpServletRequest request) {
+		// 返回结果
+		Map&lt;String, Object&gt; mapResult = new HashMap&lt;&gt;();
+		int importSuccess = 0;
+		int importFail = 0;
+		// String contentType = file.getContentType();
+		// 获取文件后缀名
+		String fileName = file.getOriginalFilename();
+		String suffix = fileName.substring(fileName.lastIndexOf(&quot;.&quot;));
+		// 实体类集合
+		List&lt;Agentstudent&gt; agentstudentList = new ArrayList&lt;&gt;();
+		// 导入失败的集合
+		List&lt;Agentstudent&gt; agentstudentFailList = new ArrayList&lt;&gt;();
+		// 合作伙伴信息
+		Integer agentId = Integer.parseInt(redis.opsForValue().get(request.getHeader(&quot;sessionId&quot;)));
+		Agent agent = agentMapper.getAgentById(agentId);
+		if (suffix.equals(&quot;.xlsx&quot;)) {
+			try {
+				XSSFWorkbook xwb = new XSSFWorkbook(file.getInputStream());
+				XSSFSheet sheetXlsx = xwb.getSheetAt(0);
+				XSSFRow row = null;
+				XSSFRow rowOne = sheetXlsx.getRow(0);
+				if (rowOne.getCell(0).getStringCellValue() == &quot;姓名&quot; &amp;&amp; rowOne.getCell(1).getStringCellValue() == &quot;身份证号&quot;
+						&amp;&amp; rowOne.getCell(2).getStringCellValue() == &quot;手机号&quot;
+						&amp;&amp; rowOne.getCell(3).getStringCellValue() == &quot;报考院校&quot;
+						&amp;&amp; rowOne.getCell(4).getStringCellValue() == &quot;报考专业&quot;
+						&amp;&amp; rowOne.getCell(5).getStringCellValue() == &quot;学习形式&quot;
+						&amp;&amp; rowOne.getCell(6).getStringCellValue() == &quot;报考层次&quot;
+						&amp;&amp; rowOne.getCell(7).getStringCellValue() == &quot;报考日期&quot;
+						&amp;&amp; rowOne.getCell(8).getStringCellValue() == &quot;考生户籍地&quot;) {
+					// 循环sesheet页中数据从第二行开始，第一行是标题
+					for (int i = 1; i &lt; sheetXlsx.getPhysicalNumberOfRows(); i++) {
+						row = sheetXlsx.getRow(i);
+						Agentstudent data = new Agentstudent();
+						SimpleDateFormat df = new SimpleDateFormat(&quot;yyyy/MM/dd&quot;);
+						data.setStudentName(row.getCell(0).getStringCellValue());
+						row.getCell(1).setCellType(CellType.STRING);
+						data.setStudentIdCard(row.getCell(1).getStringCellValue());
+						row.getCell(2).setCellType(CellType.STRING);
+						data.setStudentPhone(row.getCell(2).getStringCellValue());
+						data.setStudentSchool(row.getCell(3).getStringCellValue());
+						data.setStudentMajor(row.getCell(4).getStringCellValue());
+						data.setStudentMajorType(row.getCell(5).getStringCellValue());
+						row.getCell(6).setCellType(CellType.STRING);
+						data.setStudentType(Integer.parseInt(row.getCell(6).getStringCellValue()));
+						data.setStudentAddDate(
+								df.parse(df.format(HSSFDateUtil.getJavaDate(row.getCell(7).getNumericCellValue()))));
+						if (row.getCell(8) == null) {
+							data.setStudentArea(&quot;未填写&quot;);
+						} else {// 单元格有值时，getCell方法获获取到单元格。
+							data.setStudentArea(row.getCell(8).getStringCellValue());
+						}
+						agentstudentList.add(data);
+					}
+					Integer addYear = addyearMapper.getNowAddyear().getAddYear();
+					// 循环展示导入的数据，实际应用中应该校验并存入数据库
+					for (Agentstudent student : agentstudentList) {
+						if (agentStudentMapper.getStudentByIdCard(student.getStudentIdCard()) &gt;= 1) {
+							student.setStudentIdCard(student.getStudentIdCard() + &quot; 身份证号重复录入&quot;);
+							agentstudentFailList.add(student);
+							importFail++;
+						} else if (!IdCardTool.isIDNumber(student.getStudentIdCard())) {
+							student.setStudentIdCard(student.getStudentIdCard() + &quot; 身份证号格式错误&quot;);
+							agentstudentFailList.add(student);
+							importFail++;
+						} else {
+							student.setStudentAgentName(agent.getAgentName());
+							student.setStudentAgentId(agent.getAgentId());
+							student.setStudentYear(addYear);
+							if (agentStudentMapper.addStudent(student) &gt; 0) {
+								importSuccess++;
+							} else {
+								student.setStudentIdCard(student.getStudentIdCard() + &quot; 录入失败&quot;);
+								agentstudentFailList.add(student);
+								importFail++;
+							}
+						}
+					}
+					mapResult.put(&quot;msg&quot;, &quot;success&quot;);
+					mapResult.put(&quot;importSuccess&quot;, importSuccess);
+					mapResult.put(&quot;importFail&quot;, importFail);
+					mapResult.put(&quot;importAll&quot;, agentstudentList.size());
+					mapResult.put(&quot;agentstudentFailList&quot;, agentstudentFailList);
+				} else {
+					mapResult.put(&quot;msg&quot;, &quot;fileTypeError&quot;);
+				}
+			} catch (Exception e) {
+				mapResult.put(&quot;msg&quot;, &quot;fail&quot;);
+				e.printStackTrace();
+			}
+		} else if (suffix.equals(&quot;.xls&quot;)) {
+			try {
+				HSSFWorkbook hwb = new HSSFWorkbook(file.getInputStream()); // 根据页面index
+				HSSFSheet sheetXls = hwb.getSheetAt(0);
+				HSSFRow row = null;
+				HSSFRow rowOne = sheetXls.getRow(0);
+				if (rowOne.getCell(0).getStringCellValue() == &quot;姓名&quot; &amp;&amp; rowOne.getCell(1).getStringCellValue() == &quot;身份证号&quot;
+						&amp;&amp; rowOne.getCell(2).getStringCellValue() == &quot;手机号&quot;
+						&amp;&amp; rowOne.getCell(3).getStringCellValue() == &quot;报考院校&quot;
+						&amp;&amp; rowOne.getCell(4).getStringCellValue() == &quot;报考专业&quot;
+						&amp;&amp; rowOne.getCell(5).getStringCellValue() == &quot;学习形式&quot;
+						&amp;&amp; rowOne.getCell(6).getStringCellValue() == &quot;报考层次&quot;
+						&amp;&amp; rowOne.getCell(7).getStringCellValue() == &quot;报考日期&quot;
+						&amp;&amp; rowOne.getCell(8).getStringCellValue() == &quot;考生户籍地&quot;) {
+					// 循环sesheet页中数据从第二行开始，第一行是标题
+					for (int i = 1; i &lt; sheetXls.getPhysicalNumberOfRows(); i++) {
+						// 获取每一行数据
+						row = sheetXls.getRow(i);
+						Agentstudent data = new Agentstudent();
+						SimpleDateFormat df = new SimpleDateFormat(&quot;yyyy/MM/dd&quot;);
+						data.setStudentName(row.getCell(0).getStringCellValue());
+						row.getCell(1).setCellType(CellType.STRING);
+						data.setStudentIdCard(row.getCell(1).getStringCellValue());
+						row.getCell(2).setCellType(CellType.STRING);
+						data.setStudentPhone(row.getCell(2).getStringCellValue());
+						data.setStudentSchool(row.getCell(3).getStringCellValue());
+						data.setStudentMajor(row.getCell(4).getStringCellValue());
+						data.setStudentMajorType(row.getCell(5).getStringCellValue());
+						row.getCell(6).setCellType(CellType.STRING);
+						data.setStudentType(Integer.parseInt(row.getCell(6).getStringCellValue()));
+						data.setStudentAddDate(
+								df.parse(df.format(HSSFDateUtil.getJavaDate(row.getCell(7).getNumericCellValue()))));
+						if (row.getCell(8) == null) {
+							data.setStudentArea(&quot;未填写&quot;);
+						} else {// 单元格有值时，getCell方法获获取到单元格。
+							data.setStudentArea(row.getCell(8).getStringCellValue());
+						}
+						agentstudentList.add(data);
+					}
+					Integer addYear = addyearMapper.getNowAddyear().getAddYear();
+					// 循环展示导入的数据，实际应用中应该校验并存入数据库
+					for (Agentstudent student : agentstudentList) {
+						if (agentStudentMapper.getStudentByIdCard(student.getStudentIdCard()) &gt;= 1) {
+							student.setStudentIdCard(student.getStudentIdCard() + &quot; 身份证号重复录入&quot;);
+							agentstudentFailList.add(student);
+							importFail++;
+						} else if (!IdCardTool.isIDNumber(student.getStudentIdCard())) {
+							student.setStudentIdCard(student.getStudentIdCard() + &quot; 身份证号格式错误&quot;);
+							agentstudentFailList.add(student);
+							importFail++;
+						} else if (student.getStudentType() &lt;= 0 || student.getStudentType() &gt; 3) {
+							student.setStudentIdCard(student.getStudentIdCard() + &quot; 录入报考层次无效&quot;);
+							agentstudentFailList.add(student);
+							importFail++;
+						} else {
+							student.setStudentAgentName(agent.getAgentName());
+							student.setStudentAgentId(agent.getAgentId());
+							student.setStudentYear(addYear);
+							if (agentStudentMapper.addStudent(student) &gt; 0) {
+								importSuccess++;
+							} else {
+								student.setStudentIdCard(student.getStudentIdCard() + &quot; 录入失败&quot;);
+								agentstudentFailList.add(student);
+								importFail++;
+							}
+						}
+					}
+					mapResult.put(&quot;msg&quot;, &quot;success&quot;);
+					mapResult.put(&quot;importSuccess&quot;, importSuccess);
+					mapResult.put(&quot;importFail&quot;, importFail);
+					mapResult.put(&quot;importAll&quot;, agentstudentList.size());
+					mapResult.put(&quot;agentstudentFailList&quot;, agentstudentFailList);
+				} else {
+					mapResult.put(&quot;msg&quot;, &quot;fileTypeError&quot;);
+				}
+			} catch (Exception e) {
+				mapResult.put(&quot;msg&quot;, &quot;fail&quot;);
+				e.printStackTrace();
+			}
+		} else {
+			mapResult.put(&quot;msg&quot;, &quot;fail&quot;);
+		}
+		return mapResult;
+	}
+</code></pre>
+<h4 id="前端请求">前端请求</h4>
+<pre><code class="language-js">	// 判断上传Excel文件
+    excelFileChange() {
+      var _this = this;
+      var fileObject = document.getElementById(&quot;uploadExcelFile&quot;);
+      if (fileObject.value != &quot;&quot;) {
+        var fileSrc = fileObject.value.split(&quot;\\&quot;);
+        var fileName = fileSrc[fileSrc.length - 1];
+        var fileExt = fileName.substr(fileName.lastIndexOf(&quot;.&quot;)).toLowerCase();
+        var fileSize = Math.ceil(fileObject.files[0].size / 1024);
+        var allowExt = &quot;.xlsx|.xls|&quot;;
+        if (allowExt !== 0 &amp;&amp; allowExt.indexOf(fileExt + &quot;|&quot;) === -1) {
+          fileObject.value = &quot;&quot;;
+          _this.$alert(&quot;alert alert-danger&quot;, &quot;上传文件格式不符合要求&quot;);
+          return false;
+        } else if (fileSize &gt; 2048) {
+          fileObject.value = &quot;&quot;;
+          _this.$alert(&quot;alert alert-danger&quot;, &quot;上传的文件不能超过 2 M&quot;);
+          return false;
+        }
+      } else {
+        fileObject.value = &quot;&quot;;
+        _this.$alert(&quot;alert alert-danger&quot;, &quot;文件取消上传&quot;);
+      }
+    },
+</code></pre>
+<pre><code class="language-js">	// 上传excel提交
+    uploadExcelSubmit() {
+      var _this = this;
+      var fileObject = document.getElementById(&quot;uploadExcelFile&quot;);
+      if (fileObject.value === &quot;&quot; || fileObject.value == null) {
+        _this.$alert(&quot;alert alert-danger&quot;, &quot;请选择要上传的附件&quot;);
+        return false;
+      } else {
+        var formdata = new FormData();
+        // 上传的文件
+        formdata.append(&quot;file&quot;, fileObject.files[0]);
+        _this.$loading(true, &quot;数据导入中，请勿关闭此页面......&quot;);
+        _this
+          .$http({
+            headers: {
+              &quot;Content-Type&quot;: &quot;multipart/form-databoundary&quot;,
+            },
+            method: &quot;post&quot;,
+            url: &quot;/api/partnet/agentstudent/uploadExcelSubmit&quot;,
+            data: formdata,
+          })
+          .then(
+            (res) =&gt; {
+              if (res.status == 200) {
+                if (res.data.msg == &quot;success&quot;) {
+                  fileObject.value = &quot;&quot;;
+                  _this.agentstudentFailList = res.data.agentstudentFailList;
+                  _this.agentGetStudentList();
+                  alert(
+                    &quot;导入总数据 &quot; +
+                      res.data.importAll +
+                      &quot; 条，成功 &quot; +
+                      res.data.importSuccess +
+                      &quot; 条，失败 &quot; +
+                      res.data.importFail +
+                      &quot; 条&quot;
+                  );
+                } else if (res.data.msg == &quot;fileTypeError&quot;) {
+                  fileObject.value = &quot;&quot;;
+                  alert(&quot;导入失败，请与模板文件保持一致&quot;);
+                } else {
+                  _this.$alert(&quot;alert alert-danger&quot;, &quot;文件导入失败&quot;);
+                }
+              } else {
+                _this.$alert(&quot;alert alert-danger&quot;, &quot;服务器错误&quot;);
+              }
+              _this.$loading(false);
+            },
+            (err) =&gt; {
+              if (err.status === 403) {
+                var agentLoginInfo = {
+                  agentIsLogin: false,
+                  agentRole: 1,
+                  agentName: &quot;&quot;,
+                };
+                _this.$store.commit(&quot;changeAgentLoginInfo&quot;, agentLoginInfo);
+                _this.$router.push(&quot;/login.html&quot;);
+                _this.$alert(&quot;alert alert-danger&quot;, &quot;请重新登录&quot;);
+              } else {
+                _this.$alert(&quot;alert alert-danger&quot;, &quot;出错了，请稍后再试&quot;);
+              }
+              _this.$loading(false);
+            }
+          );
+      }
+    },
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[解决方案]]></title>
+        <id>https://viaoh.github.io/post/sqnsjjd4y/</id>
+        <link href="https://viaoh.github.io/post/sqnsjjd4y/">
+        </link>
+        <updated>2024-05-11T07:42:10.000Z</updated>
+        <content type="html"><![CDATA[<p>edge浏览器安装扩展插件报错</p>
+<pre><code class="language-sql">1、将记事本以管理员身份运行
+
+2、文件—&gt;打开C:\Windows\System32\drivers\etc\hosts
+
+3、在hosts文件里面最后面，添加（不需要添加井号）：
+
+131.253.33.219 edge.microsoft.com
+
+131.253.33.219 msedgeextensions.sf.tlu.dl.delivery.mp.microsoft.com
+</code></pre>
+<p>不清除数据卸载微信</p>
+<pre><code class="language-sql">adb devices  //检测adb连接状态
+
+adb shell pm uninstall -k com.tencent.mm  //不清除数据卸载微信
+</code></pre>
+<p>快捷方式修复.bat</p>
+<pre><code class="language-sql">rem 关闭explorer.exe
+
+taskkill /f /im explorer.exe
+
+attrib -s -h -i %userprofile%\AppData\Local\IconCache.db
+
+del %userprofile%\AppData\Local\IconCache.db /a
+
+attrib +h +s %userprofile%\AppData\Local\IconCache.db
+
+rem 打开explorer
+
+start explorer
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[指定路径执行指定命令]]></title>
+        <id>https://viaoh.github.io/post/QiGBPxk_U/</id>
+        <link href="https://viaoh.github.io/post/QiGBPxk_U/">
+        </link>
+        <updated>2024-05-11T07:26:46.000Z</updated>
+        <content type="html"><![CDATA[<pre><code class="language-js">cmd /k &quot;cd /d E:/dev/workspace/java/studentmanage&amp;&amp;mvn assembly:assembly&quot;
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[正则表达式]]></title>
+        <id>https://viaoh.github.io/post/phrRmI429/</id>
+        <link href="https://viaoh.github.io/post/phrRmI429/">
+        </link>
+        <updated>2024-05-11T07:23:57.000Z</updated>
+        <content type="html"><![CDATA[<h4 id="一-常用正则表达式">一、常用正则表达式</h4>
+<h6 id="1-校验数字的表达式">1、校验数字的表达式</h6>
+<pre><code class="language-sql">//数字：
+^[0-9]*$
+//n位的数字：
+^\d{n}$
+//至少n位的数字：
+^\d{n,}$
+//m-n位的数字：
+^\d{m,n}$
+//零和非零开头的数字：
+^(0|[1-9][0-9]*)$
+//非零开头的最多带两位小数的数字：
+^([1-9][0-9]*)+(\.[0-9]{1,2})?$
+//带1-2位小数的正数或负数：
+^(\-)?\d+(\.\d{1,2})$
+//正数、负数、和小数：
+^(\-|\+)?\d+(\.\d+)?$
+//有两位小数的正实数：
+^[0-9]+(\.[0-9]{2})?$
+//有1~3位小数的正实数：
+^[0-9]+(\.[0-9]{1,3})?$
+//非零的正整数：
+^[1-9]\d*$ 或 ^([1-9][0-9]*){1,3}$ 或 ^\+?[1-9][0-9]*$
+//非零的负整数：
+^\-[1-9][]0-9&quot;*$ 或 ^-[1-9]\d*$
+//非负整数：
+^\d+$ 或 ^[1-9]\d*|0$
+//非正整数：
+^-[1-9]\d*|0$ 或 ^((-\d+)|(0+))$
+//非负浮点数：
+^\d+(\.\d+)?$ 或 ^[1-9]\d*\.\d*|0\.\d*[1-9]\d*|0?\.0+|0$
+//非正浮点数：
+^((-\d+(\.\d+)?)|(0+(\.0+)?))$ 或 ^(-([1-9]\d*\.\d*|0\.\d*[1-9]\d*))|0?\.0+|0$
+//正浮点数：
+^[1-9]\d*\.\d*|0\.\d*[1-9]\d*$ 或 ^(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*))$
+//负浮点数：
+^-([1-9]\d*\.\d*|0\.\d*[1-9]\d*)$ 或 ^(-(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*)))$
+//浮点数：
+^(-?\d+)(\.\d+)?$ 或 ^-?([1-9]\d*\.\d*|0\.\d*[1-9]\d*|0?\.0+|0)$
+</code></pre>
+<h6 id="2-校验字符的表达式">2、校验字符的表达式</h6>
+<pre><code class="language-sql">//汉字：
+^[\u4e00-\u9fa5]{0,}$
+//英文和数字：
+^[A-Za-z0-9]+$ 或 ^[A-Za-z0-9]{4,40}$
+//长度为3-20的所有字符：
+^.{3,20}$
+//由26个英文字母组成的字符串：
+^[A-Za-z]+$
+//由26个大写英文字母组成的字符串：
+^[A-Z]+$
+//由26个小写英文字母组成的字符串：
+^[a-z]+$
+//由数字和26个英文字母组成的字符串：
+^[A-Za-z0-9]+$
+//由数字、26个英文字母或者下划线组成的字符串：
+^\w+$ 或 ^\w{3,20}$
+//中文、英文、数字包括下划线：
+^[\u4E00-\u9FA5A-Za-z0-9_]+$
+//中文、英文、数字但不包括下划线等符号：
+^[\u4E00-\u9FA5A-Za-z0-9]+$ 或 ^[\u4E00-\u9FA5A-Za-z0-9]{2,20}$
+//可以输入含有^%&amp;',;=?$\&quot;等字符：
+[^%&amp;',;=?$\x22]+
+//禁止输入含有~的字符：
+[^~\x22]+
+</code></pre>
+<h6 id="3-特殊需求表达式">3、特殊需求表达式</h6>
+<pre><code class="language-sql">//Email地址：
+^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$
+//域名：
+[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+\.?
+//InternetURL：
+[a-zA-z]+://[^\s]* 或 ^http://([\w-]+\.)+[\w-]+(/[\w-./?%&amp;=]*)?$
+//手机号码：
+^(13[0-9]|14[5|7]|15[0|1|2|3|4|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\d{8}$
+//电话号码(&quot;XXX-XXXXXXX&quot;、&quot;XXXX-XXXXXXXX&quot;、&quot;XXX-XXXXXXX&quot;、&quot;XXX-XXXXXXXX&quot;、&quot;XXXXXXX&quot;和&quot;XXXXXXXX)：
+^(\(\d{3,4}-)|\d{3.4}-)?\d{7,8}$
+//国内电话号码(0511-4405222、021-87888822)：
+\d{3}-\d{8}|\d{4}-\d{7}
+//电话号码正则表达式（支持手机号码，3-4位区号，7-8位直播号码，1－4位分机号）: 
+((\d{11})|^((\d{7,8})|(\d{4}|\d{3})-(\d{7,8})|(\d{4}|\d{3})-(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1})|(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1}))$)
+//身份证号(15位、18位数字)，最后一位是校验位，可能为数字或字符X：
+(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)
+//帐号是否合法(字母开头，允许5-16字节，允许字母数字下划线)：
+^[a-zA-Z][a-zA-Z0-9_]{4,15}$
+//密码(以字母开头，长度在6~18之间，只能包含字母、数字和下划线)：
+^[a-zA-Z]\w{5,17}$
+//强密码(必须包含大小写字母和数字的组合，不能使用特殊字符，长度在 8-10 之间)：
+^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[a-zA-Z0-9]{8,10}$
+//强密码(必须包含大小写字母和数字的组合，可以使用特殊字符，长度在8-10之间)：
+^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,10}$
+//日期格式：
+^\d{4}-\d{1,2}-\d{1,2}
+//一年的12个月(01～09和1～12)：
+^(0?[1-9]|1[0-2])$
+//一个月的31天(01～09和1～31)：
+^((0?[1-9])|((1|2)[0-9])|30|31)$
+//钱的输入格式：
+//有四种钱的表示形式我们可以接受:&quot;10000.00&quot; 和 &quot;10,000.00&quot;, 和没有 &quot;分&quot; 的 &quot;10000&quot; 和 &quot;10,000&quot;：
+^[1-9][0-9]*$
+//这表示任意一个不以0开头的数字,但是,这也意味着一个字符&quot;0&quot;不通过,所以我们采用下面的形式：
+^(0|[1-9][0-9]*)$
+//一个0或者一个不以0开头的数字.我们还可以允许开头有一个负号：
+^(0|-?[1-9][0-9]*)$
+//这表示一个0或者一个可能为负的开头不为0的数字.让用户以0开头好了.把负号的也去掉,因为钱总不能是负的吧。下面我们要加的是说明可能的小数部分：
+^[0-9]+(.[0-9]+)?$
+//必须说明的是,小数点后面至少应该有1位数,所以&quot;10.&quot;是不通过的,但是 &quot;10&quot; 和 &quot;10.2&quot; 是通过的：
+^[0-9]+(.[0-9]{2})?$
+//这样我们规定小数点后面必须有两位,如果你认为太苛刻了,可以这样：
+^[0-9]+(.[0-9]{1,2})?$
+//这样就允许用户只写一位小数.下面我们该考虑数字中的逗号了,我们可以这样：
+^[0-9]{1,3}(,[0-9]{3})*(.[0-9]{1,2})?$
+//1到3个数字,后面跟着任意个 逗号+3个数字,逗号成为可选,而不是必须：
+^([0-9]+|[0-9]{1,3}(,[0-9]{3})*)(.[0-9]{1,2})?$
+//备注：这就是最终结果了,别忘了&quot;+&quot;可以用&quot;*&quot;替代如果你觉得空字符串也可以接受的话(奇怪,为什么?)最后,别忘了在用函数时去掉去掉那个反斜杠,一般的错误都在这里
+//xml文件：
+^([a-zA-Z]+-?)+[a-zA-Z0-9]+\\.[x|X][m|M][l|L]$
+//中文字符的正则表达式：
+[\u4e00-\u9fa5]
+//双字节字符：
+[^\x00-\xff] (包括汉字在内，可以用来计算字符串的长度(一个双字节字符长度计2，ASCII字符计1))
+//空白行的正则表达式：
+\n\s*\r (可以用来删除空白行)
+//HTML标记的正则表达式：
+&lt;(\S*?)[^&gt;]*&gt;.*?|&lt;.*? /&gt; ( 
+//首尾空白字符的正则表达式，可以用来删除行首行尾的空白字符(包括空格、制表符、换页符等等)，非常有用的表达式
+^\s*|\s*$或(^\s*)|(\s*$) 
+//腾讯QQ号： (腾讯QQ号从10000开始)
+[1-9][0-9]{4,}
+//中国邮政编码：(中国邮政编码为6位数字)
+[1-9]\d{5}(?!\d) 
+//IPv4地址：
+((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})){3}
+</code></pre>
+<h4 id="二-js使用正则表达式">二、JS使用正则表达式</h4>
+<pre><code class="language-sql">var r = /^\+?[1-9][0-9]*$/;　　//正整数
+var str = &quot;123&quot;;
+var flag=r.test(str); //如果判断为正整数，则flag为true
+</code></pre>
+<h4 id="三-java使用正则表达式">三、java使用正则表达式</h4>
+<pre><code class="language-java">String content = &quot;I am noob &quot; +&quot;from runoob.com.&quot;;
+String pattern = &quot;.*runoob.*&quot;;
+boolean isMatch = Pattern.matches(pattern, content);
+System.out.println(&quot;字符串中是否包含了 'runoob' 子字符串? &quot; + isMatch);
+// 字符串中是否包含了 'runoob' 子字符串? true
+</code></pre>
+<h4 id="四-正则表达式中需要转义的字符">四、正则表达式中需要转义的字符</h4>
+<pre><code class="language-sql">$
+匹配输入字符串的结尾位置。如果设置了 RegExp 对象的 Multiline 属性，则 $ 也匹配 ‘\n' 或 ‘\r'。要匹配 $ 字符本身，请使用 \$。
+ 
+( )
+标记一个子表达式的开始和结束位置。子表达式可以获取供以后使用。要匹配这些字符，请使用 。
+ 
+*
+匹配前面的子表达式零次或多次。要匹配 * 字符，请使用 \*。
+ 
++
+匹配前面的子表达式一次或多次。要匹配 + 字符，请使用 \+。
+ 
+.
+匹配除换行符 \n之外的任何单字符。要匹配 .，请使用 \。
+ 
+[ ]
+标记一个中括号表达式的开始。要匹配 [，请使用 \[。
+ 
+?
+匹配前面的子表达式零次或一次，或指明一个非贪婪限定符。要匹配 ? 字符，请使用 \?。
+ 
+\
+将下一个字符标记为或特殊字符、或原义字符、或向后引用、或八进制转义符。例如， ‘n' 匹配字符 ‘n'。'\n' 匹配换行符。序列 ‘\\' 匹配 “\”，而 ‘\(' 则匹配 “(”。
+ 
+^
+匹配输入字符串的开始位置，除非在方括号表达式中使用，此时它表示不接受该字符集合。要匹配 ^ 字符本身，请使用 \^。
+ 
+{ }
+标记限定符表达式的开始。要匹配 {，请使用 \{。
+ 
+|
+指明两项之间的一个选择。要匹配 |，请使用 \|。
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[图形验证码]]></title>
+        <id>https://viaoh.github.io/post/hXmfjxh2r/</id>
+        <link href="https://viaoh.github.io/post/hXmfjxh2r/">
+        </link>
+        <updated>2024-05-11T07:23:31.000Z</updated>
+        <content type="html"><![CDATA[<h4 id="一-java生成图形验证码">一、java生成图形验证码</h4>
+<h6 id="1-java生成图形验证码工具类">1、java生成图形验证码工具类</h6>
+<pre><code class="language-java">import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.*;
+import javax.imageio.ImageIO;
+
+public class VerifyCodeTool {
+	// 使用到Algerian字体，系统里没有的话需要安装字体，字体只显示大写，去掉了1,0,i,o几个容易混淆的字符
+	public static final String VERIFY_CODES = &quot;23456789ABCDEFGHJKLMNPQRSTUVWXYZ&quot;;
+	private static Random random = new Random();
+
+	/**
+	 * 使用系统默认字符源生成验证码
+	 * 
+	 * @param verifySize
+	 *            验证码长度
+	 * @return
+	 */
+	public static String generateVerifyCode(int verifySize) {
+		return generateVerifyCode(verifySize, VERIFY_CODES);
+	}
+
+	/**
+	 * 使用指定源生成验证码
+	 * 
+	 * @param verifySize
+	 *            验证码长度
+	 * @param sources
+	 *            验证码字符源
+	 * @return
+	 */
+	public static String generateVerifyCode(int verifySize, String sources) {
+		if (sources == null || sources.length() == 0) {
+			sources = VERIFY_CODES;
+		}
+		int codesLen = sources.length();
+		Random rand = new Random(System.currentTimeMillis());
+		StringBuilder verifyCode = new StringBuilder(verifySize);
+		for (int i = 0; i &lt; verifySize; i++) {
+			verifyCode.append(sources.charAt(rand.nextInt(codesLen - 1)));
+		}
+		return verifyCode.toString();
+	}
+
+	/**
+	 * 生成随机验证码文件,并返回验证码值
+	 * 
+	 * @param w
+	 * @param h
+	 * @param outputFile
+	 * @param verifySize
+	 * @return
+	 * @throws IOException
+	 */
+	public static String outputVerifyImage(int w, int h, File outputFile, int verifySize) throws IOException {
+		String verifyCode = generateVerifyCode(verifySize);
+		outputImage(w, h, outputFile, verifyCode);
+		return verifyCode;
+	}
+
+	/**
+	 * 输出随机验证码图片流,并返回验证码值
+	 * 
+	 * @param w
+	 * @param h
+	 * @param os
+	 * @param verifySize
+	 * @return
+	 * @throws IOException
+	 */
+	public static String outputVerifyImage(int w, int h, OutputStream os, int verifySize) throws IOException {
+		String verifyCode = generateVerifyCode(verifySize);
+		outputImage(w, h, os, verifyCode);
+		return verifyCode;
+	}
+
+	/**
+	 * 生成指定验证码图像文件
+	 * 
+	 * @param w
+	 * @param h
+	 * @param outputFile
+	 * @param code
+	 * @throws IOException
+	 */
+	public static void outputImage(int w, int h, File outputFile, String code) throws IOException {
+		if (outputFile == null) {
+			return;
+		}
+		File dir = outputFile.getParentFile();
+		if (!dir.exists()) {
+			dir.mkdirs();
+		}
+		try {
+			outputFile.createNewFile();
+			FileOutputStream fos = new FileOutputStream(outputFile);
+			outputImage(w, h, fos, code);
+			fos.close();
+		} catch (IOException e) {
+			throw e;
+		}
+	}
+
+	/**
+	 * 输出指定验证码图片流
+	 * 
+	 * @param w
+	 * @param h
+	 * @param os
+	 * @param code
+	 * @throws IOException
+	 */
+	public static void outputImage(int w, int h, OutputStream os, String code) throws IOException {
+		int verifySize = code.length();
+		BufferedImage image = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
+		Random rand = new Random();
+		Graphics2D g2 = image.createGraphics();
+		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		Color[] colors = new Color[5];
+		Color[] colorSpaces = new Color[] { Color.WHITE, Color.CYAN, Color.GRAY, Color.LIGHT_GRAY, Color.MAGENTA,
+				Color.ORANGE, Color.PINK, Color.YELLOW };
+		float[] fractions = new float[colors.length];
+		for (int i = 0; i &lt; colors.length; i++) {
+			colors[i] = colorSpaces[rand.nextInt(colorSpaces.length)];
+			fractions[i] = rand.nextFloat();
+		}
+		Arrays.sort(fractions);
+		g2.setColor(Color.GRAY);// 设置边框色
+		g2.fillRect(0, 0, w, h);
+		Color c = getRandColor(200, 250);
+		g2.setColor(c);// 设置背景色
+		g2.fillRect(0, 2, w, h - 4);
+		// 绘制干扰线
+		Random random = new Random();
+		g2.setColor(getRandColor(160, 200));// 设置线条的颜色
+		for (int i = 0; i &lt; 20; i++) {
+			int x = random.nextInt(w - 1);
+			int y = random.nextInt(h - 1);
+			int xl = random.nextInt(6) + 1;
+			int yl = random.nextInt(12) + 1;
+			g2.drawLine(x, y, x + xl + 40, y + yl + 20);
+		}
+		// 添加噪点
+		float yawpRate = 0.05f;// 噪声率
+		int area = (int) (yawpRate * w * h);
+		for (int i = 0; i &lt; area; i++) {
+			int x = random.nextInt(w);
+			int y = random.nextInt(h);
+			int rgb = getRandomIntColor();
+			image.setRGB(x, y, rgb);
+		}
+		shear(g2, w, h, c);// 使图片扭曲
+		g2.setColor(getRandColor(100, 160));
+		int fontSize = h - 4;
+		Font font = new Font(&quot;Algerian&quot;, Font.ITALIC, fontSize);
+		g2.setFont(font);
+		char[] chars = code.toCharArray();
+		for (int i = 0; i &lt; verifySize; i++) {
+			AffineTransform affine = new AffineTransform();
+			affine.setToRotation(Math.PI / 4 * rand.nextDouble() * (rand.nextBoolean() ? 1 : -1),
+					(w / verifySize) * i + fontSize / 2, h / 2);
+			g2.setTransform(affine);
+			g2.drawChars(chars, i, 1, ((w - 10) / verifySize) * i + 5, h / 2 + fontSize / 2 - 10);
+		}
+		g2.dispose();
+		ImageIO.write(image, &quot;jpg&quot;, os);
+	}
+
+	/**
+	 * 随机生成字符 或 者数字
+	 * 
+	 * @return
+	 */
+	private static String getRandom() {
+		String value = &quot;&quot;;
+		Random random = new Random();
+		int gen = random.nextInt(2);
+		String charOrNum = gen % 2 == 0 ? &quot;char&quot; : &quot;num&quot;;
+		if (&quot;char&quot;.equals(charOrNum)) {
+			// 字符
+			int temp = random.nextInt(2) % 2 == 0 ? 65 : 97;
+			int ascii = random.nextInt(26);
+			value += (char) (ascii + temp);
+		} else if (&quot;num&quot;.equals(charOrNum)) {
+			// 是数字
+			value += String.valueOf(random.nextInt(10));
+		}
+		return value;
+	}
+
+	/**
+	 * 随机生成字符串（包含字符和数字）
+	 * 
+	 * @param length
+	 *            指定长度
+	 * @return 返回set
+	 */
+	private static Set&lt;String&gt; getStrAndNum(int length) {
+		Set&lt;String&gt; set = new HashSet&lt;&gt;();
+		for (int i = 0; i &lt; length; i++) {
+			String value = getRandom();
+			set.add(value);
+		}
+		// 若生成的字符串没达到指定长度 继续生成
+		if (set.size() &lt; length) {
+			String value = getRandom();
+			set.add(value);
+		}
+		return set;
+	}
+
+	/**
+	 * 存放在set中的字符组拼接成字符串
+	 * 
+	 * @param set
+	 * @return
+	 */
+	private static String printSet(Set set) { // 打印set的方法
+		Iterator iterator = set.iterator();
+		String value = &quot;&quot;;
+		while (iterator.hasNext()) {
+			// String ele = (String) iterator.next();
+			value += (String) iterator.next();
+		}
+		return value;
+	}
+
+	/**
+	 * 返回生成的随机字符串
+	 * 
+	 * @param length
+	 *            指定随机字符串长度
+	 * @return 指定长度 大于零 返回指定长度随机字符，小于等于零 返回null
+	 */
+	public static String getRandonString(int length) {
+		String value = &quot;&quot;;
+		if (length &gt; 0) {
+			// 如果返回的字符串小于指定长度 重新生成
+			if (value.length() &lt; length) {
+				Set&lt;String&gt; store = getStrAndNum(length);
+				value = printSet(store);
+			}
+			return value;
+		} else {
+			return value;
+		}
+	}
+
+	private static Color getRandColor(int fc, int bc) {
+		if (fc &gt; 255)
+			fc = 255;
+		if (bc &gt; 255)
+			bc = 255;
+		int r = fc + random.nextInt(bc - fc);
+		int g = fc + random.nextInt(bc - fc);
+		int b = fc + random.nextInt(bc - fc);
+		return new Color(r, g, b);
+	}
+
+	private static int getRandomIntColor() {
+		int[] rgb = getRandomRgb();
+		int color = 0;
+		for (int c : rgb) {
+			color = color &lt;&lt; 8;
+			color = color | c;
+		}
+		return color;
+	}
+
+	private static int[] getRandomRgb() {
+		int[] rgb = new int[3];
+		for (int i = 0; i &lt; 3; i++) {
+			rgb[i] = random.nextInt(255);
+		}
+		return rgb;
+	}
+
+	private static void shear(Graphics g, int w1, int h1, Color color) {
+		shearX(g, w1, h1, color);
+		shearY(g, w1, h1, color);
+	}
+
+	private static void shearX(Graphics g, int w1, int h1, Color color) {
+		int period = random.nextInt(2);
+		boolean borderGap = true;
+		int frames = 1;
+		int phase = random.nextInt(2);
+		for (int i = 0; i &lt; h1; i++) {
+			double d = (double) (period &gt;&gt; 1)
+					* Math.sin((double) i / (double) period + (6.2831853071795862D * (double) phase) / (double) frames);
+			g.copyArea(0, i, w1, 1, (int) d, 0);
+			if (borderGap) {
+				g.setColor(color);
+				g.drawLine((int) d, i, 0, i);
+				g.drawLine((int) d + w1, i, w1, i);
+			}
+		}
+	}
+
+	private static void shearY(Graphics g, int w1, int h1, Color color) {
+		int period = random.nextInt(40) + 10; // 50;
+		boolean borderGap = true;
+		int frames = 20;
+		int phase = 7;
+		for (int i = 0; i &lt; w1; i++) {
+			double d = (double) (period &gt;&gt; 1)
+					* Math.sin((double) i / (double) period + (6.2831853071795862D * (double) phase) / (double) frames);
+			g.copyArea(i, 0, 1, h1, 0, (int) d);
+			if (borderGap) {
+				g.setColor(color);
+				g.drawLine(i, (int) d, i, 0);
+				g.drawLine(i, (int) d + h1, i, h1);
+			}
+		}
+	}
+}
+</code></pre>
+<h6 id="2-生成图像验证码">2、生成图像验证码</h6>
+<pre><code class="language-java">/**
+	 * 生成图形验证码
+	 * 
+	 * @param request
+	 * @param response
+	 * @throws IOException
+	 */
+	@RequestMapping(value = &quot;/getVerifyCode&quot;, method = RequestMethod.POST)
+	public void getVerifyCode(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		response.setHeader(&quot;Pragma&quot;, &quot;No-cache&quot;);
+		response.setHeader(&quot;Cache-Control&quot;, &quot;no-cache&quot;);
+		response.setDateHeader(&quot;Expires&quot;, 0);
+		response.setContentType(&quot;image/jpeg&quot;);
+		// 生成随机大写字串
+		String verifyCode = VerifyCodeTool.generateVerifyCode(4);
+		// 存入会话session
+		HttpSession session = request.getSession(true);
+		// 删除以前的
+		session.removeAttribute(&quot;verifyCode&quot;);
+		session.removeAttribute(&quot;verifyCodeDate&quot;);
+		// 设置新的验证码
+		session.setAttribute(&quot;verifyCode&quot;, verifyCode.toLowerCase());
+		session.setAttribute(&quot;verifyCodeDate&quot;, new Date());
+		// 10分钟验证码过期
+		session.setMaxInactiveInterval(60 * 10);
+		// 生成图片
+		int w = 100, h = 40;
+		OutputStream out = response.getOutputStream();
+		VerifyCodeTool.outputImage(w, h, out, verifyCode);
+	}
+</code></pre>
+<h6 id="3-判断验证码是否输入正确">3、判断验证码是否输入正确</h6>
+<pre><code class="language-java">/**
+	 * 判断验证码是否输入正确
+	 * 
+	 * @param verifyCode
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = &quot;/imgCodeVerify&quot;, method = RequestMethod.POST)
+	@ResponseBody
+	public String imgCodeVerify(HttpServletRequest request) {
+		HttpSession session = request.getSession(true);
+		if (session.getAttribute(&quot;verifyCode&quot;) != null) {
+			String sessionfVerifyCode = session.getAttribute(&quot;verifyCode&quot;).toString();
+			if (sessionfVerifyCode.equals(mapParam.get(&quot;verifyCode&quot;).toLowerCase())) {
+				// 输入正确
+				return &quot;success&quot;;
+			} else {
+				// 输入错误
+				return &quot;fail&quot;;
+			}
+		} else {
+			// 过期
+			return &quot;expire&quot;;
+		}
+	}
+</code></pre>
+<h4 id="二-vue前端图形验证码">二、Vue前端图形验证码</h4>
+<h6 id="1-验证页面调用验证码组件">1、验证页面，调用验证码组件</h6>
+<pre><code class="language-js">&lt;!--验证页面，调用验证码组件--&gt;
+&lt;template&gt;
+  &lt;div id=&quot;img-code&quot;&gt;
+    &lt;div class=&quot;img-code-style&quot; @click=&quot;refreshCode&quot;&gt;
+      &lt;!--验证码组件--&gt;
+      &lt;s-identify :identifyCode=&quot;identifyCode&quot;&gt;&lt;/s-identify&gt;
+    &lt;/div&gt;
+    &lt;input v-model=&quot;code&quot; placeholder=&quot;请输入验证码&quot; /&gt;
+    &lt;button type=&quot;primary&quot; @click=&quot;submitForm&quot; class=&quot;login-submit&quot;&gt;
+      登录
+    &lt;/button&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+&lt;script&gt;
+import SIdentify from &quot;../common/identify.vue&quot;;
+export default {
+  name: &quot;userLogin&quot;,
+  components: { SIdentify },
+  data() {
+    return {
+      identifyCodes: &quot;123456789&quot;,
+      identifyCode: &quot;&quot;,
+      code: &quot;&quot;,
+    };
+  },
+  methods: {
+    randomNum(min, max) {
+      return Math.floor(Math.random() * (max - min) + min);
+    },
+    refreshCode() {
+      this.identifyCode = &quot;&quot;;
+      this.makeCode(4);
+    },
+    makeCode(l) {
+      for (let i = 0; i &lt; l; i++) {
+        this.identifyCode +=
+          this.identifyCodes[this.randomNum(0, this.identifyCodes.length)];
+      }
+    },
+    submitForm() {
+      if (this.identifyCode === this.code) {
+        alert(&quot;验证码输入正确&quot;);
+      } else {
+        alert(&quot;错误&quot;);
+      }
+    },
+  },
+  created() {
+    this.refreshCode();
+  },
+};
+&lt;/script&gt;
+
+&lt;style scoped&gt;
+.img-code-style {
+  margin: 10px;
+}
+#img-code {
+  text-align: center;
+  margin-top: 10%;
+}
+&lt;/style&gt;
+</code></pre>
+<h6 id="2-子组件验证码组件代码">2、子组件验证码组件代码</h6>
+<pre><code class="language-vue">&lt;!--子组件验证码组件代码--&gt;
+&lt;template&gt;
+  &lt;div class=&quot;s-canvas&quot;&gt;
+    &lt;canvas
+      id=&quot;s-canvas&quot;
+      :width=&quot;contentWidth&quot;
+      :height=&quot;contentHeight&quot;
+    &gt;&lt;/canvas&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+&lt;script&gt;
+export default {
+  name: &quot;identify&quot;,
+  props: {
+    identifyCode: {
+      type: String,
+      default: &quot;1234&quot;,
+    },
+    fontSizeMin: {
+      type: Number,
+      default: 16,
+    },
+    fontSizeMax: {
+      type: Number,
+      default: 40,
+    },
+    backgroundColorMin: {
+      type: Number,
+      default: 180,
+    },
+    backgroundColorMax: {
+      type: Number,
+      default: 240,
+    },
+    colorMin: {
+      type: Number,
+      default: 50,
+    },
+    colorMax: {
+      type: Number,
+      default: 160,
+    },
+    lineColorMin: {
+      type: Number,
+      default: 40,
+    },
+    lineColorMax: {
+      type: Number,
+      default: 180,
+    },
+    dotColorMin: {
+      type: Number,
+      default: 0,
+    },
+    dotColorMax: {
+      type: Number,
+      default: 255,
+    },
+    contentWidth: {
+      type: Number,
+      default: 112,
+    },
+    contentHeight: {
+      type: Number,
+      default: 38,
+    },
+  },
+  methods: {
+    // 生成一个随机数
+    randomNum(min, max) {
+      return Math.floor(Math.random() * (max - min) + min);
+    },
+    // 生成一个随机的颜色
+    randomColor(min, max) {
+      let r = this.randomNum(min, max);
+      let g = this.randomNum(min, max);
+      let b = this.randomNum(min, max);
+      return &quot;rgb(&quot; + r + &quot;,&quot; + g + &quot;,&quot; + b + &quot;)&quot;;
+    },
+    drawPic() {
+      let canvas = document.getElementById(&quot;s-canvas&quot;);
+      let ctx = canvas.getContext(&quot;2d&quot;);
+      ctx.textBaseline = &quot;bottom&quot;;
+      // 绘制背景
+      ctx.fillStyle = this.randomColor(
+        this.backgroundColorMin,
+        this.backgroundColorMax
+      );
+      ctx.fillRect(0, 0, this.contentWidth, this.contentHeight);
+      // 绘制文字
+      for (let i = 0; i &lt; this.identifyCode.length; i++) {
+        this.drawText(ctx, this.identifyCode[i], i);
+      }
+      this.drawLine(ctx);
+      this.drawDot(ctx);
+    },
+    drawText(ctx, txt, i) {
+      ctx.fillStyle = this.randomColor(this.colorMin, this.colorMax);
+      ctx.font =
+        this.randomNum(this.fontSizeMin, this.fontSizeMax) + &quot;px SimHei&quot;;
+      let x = (i + 1) * (this.contentWidth / (this.identifyCode.length + 1));
+      let y = this.randomNum(this.fontSizeMax, this.contentHeight - 5);
+      var deg = this.randomNum(-45, 45);
+      // 修改坐标原点和旋转角度
+      ctx.translate(x, y);
+      ctx.rotate((deg * Math.PI) / 180);
+      ctx.fillText(txt, 0, 0);
+      // 恢复坐标原点和旋转角度
+      ctx.rotate((-deg * Math.PI) / 180);
+      ctx.translate(-x, -y);
+    },
+    drawLine(ctx) {
+      // 绘制干扰线
+      for (let i = 0; i &lt; 8; i++) {
+        ctx.strokeStyle = this.randomColor(
+          this.lineColorMin,
+          this.lineColorMax
+        );
+        ctx.beginPath();
+        ctx.moveTo(
+          this.randomNum(0, this.contentWidth),
+          this.randomNum(0, this.contentHeight)
+        );
+        ctx.lineTo(
+          this.randomNum(0, this.contentWidth),
+          this.randomNum(0, this.contentHeight)
+        );
+        ctx.stroke();
+      }
+    },
+    drawDot(ctx) {
+      // 绘制干扰点
+      for (let i = 0; i &lt; 50; i++) {
+        ctx.fillStyle = this.randomColor(0, 255);
+        ctx.beginPath();
+        ctx.arc(
+          this.randomNum(0, this.contentWidth),
+          this.randomNum(0, this.contentHeight),
+          1,
+          0,
+          2 * Math.PI
+        );
+        ctx.fill();
+      }
+    },
+  },
+  watch: {
+    identifyCode() {
+      this.drawPic();
+    },
+  },
+  mounted() {
+    this.drawPic();
+  },
+};
+&lt;/script&gt;
+&lt;style scoped&gt;
+.s-canvas {
+  height: 38px;
+}
+.s-canvas canvas {
+  margin-top: 1px;
+  margin-left: 8px;
+}
+&lt;/style&gt;
+</code></pre>
+<h4 id="三-腾讯云滑块验证码">三、腾讯云滑块验证码</h4>
+<h6 id="1-配置文件">1、配置文件</h6>
+<pre><code>#springboot配置文件配置
+qq.captcha.open= false
+qq.captcha.url= https://ssl.captcha.qq.com/ticket/verify
+qq.captcha.appid: 2070825777
+qq.captcha.AppSecretKey: 0SMUvPE3rlknblBFBU0ohgA**
+//前端index.html引入
+&lt;script src=&quot;https://ssl.captcha.qq.com/TCaptcha.js&quot;&gt;&lt;/script&gt;
+</code></pre>
+<h6 id="2-前端调用">2、前端调用</h6>
+<pre><code class="language-JS">	//前端调用
+    qqCaptchaVarify() {
+      var _this = this;
+      var captchaId = &quot;2070825777&quot;; //腾讯滑块验证码appid
+      //生成一个滑块验证码对象
+      var captcha = new TencentCaptcha(captchaId, function (res) {
+        if (res.ret == 0) {
+          _this
+            .$http({
+              headers: {
+                &quot;Content-Type&quot;: &quot;application/json;charset=utf8&quot;,
+              },
+              method: &quot;post&quot;,
+              url: &quot;/api/studentmanage/student/qqCaptcha&quot;,
+              data: {
+                Ticket: res.ticket,
+                CaptchaAppId: res.appid,
+                Randstr: res.randstr,
+              },
+            })
+            .then(
+              (res) =&gt; {
+                if (res.data) {
+                  alert(&quot;成功&quot;);
+                } else {
+                  alert(&quot;失败&quot;);
+                }
+              },
+              (err) =&gt; {
+                alert(&quot;error&quot;);
+              }
+            );
+        }
+      });
+      // 滑块显示
+      captcha.show();
+    },
+</code></pre>
+<h6 id="3-后端处理">3、后端处理</h6>
+<pre><code class="language-java">	// 后端业务逻辑处理
+	public Boolean qqCaptcha(HashMap&lt;String, String&gt; mapParam, HttpServletRequest request) {
+		Map&lt;String, Object&gt; mapResult = new HashMap&lt;&gt;();
+		mapResult.put(&quot;aid&quot;, appid);// 配置文件配置的qq.captcha.aid
+		mapResult.put(&quot;AppSecretKey&quot;, AppSecretKey);// 配置文件配置的qq.captcha.AppSecretKey
+		mapResult.put(&quot;Ticket&quot;, mapParam.get(&quot;Ticket&quot;));
+		mapResult.put(&quot;Randstr&quot;, mapParam.get(&quot;Randstr&quot;));
+		mapResult.put(&quot;UserIP&quot;, IPTool.getIpAddress(request));
+		// 此处使用了http请求工具类
+		String msg = HttpTool.getRequest(url, mapResult);
+		/**
+		 * response: 1:验证成功，0:验证失败，100:AppSecretKey参数校验错误[required]
+		 * evil_level:[0,100]，恶意等级[optional] err_msg:验证错误信息[optional]
+		 */
+		JSONObject json = JSONObject.parseObject(msg);
+		String response = (String) json.get(&quot;response&quot;);
+		if (&quot;1&quot;.equals(response)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[vue相关方法]]></title>
+        <id>https://viaoh.github.io/post/XtR9Xb2cb/</id>
+        <link href="https://viaoh.github.io/post/XtR9Xb2cb/">
+        </link>
+        <updated>2024-05-11T07:22:52.000Z</updated>
+        <content type="html"><![CDATA[<h4 id="1-vue时间相关方法">1、vue时间相关方法</h4>
+<pre><code class="language-js">// 日期转字符串
+dateToString(date) {
+  var dateInfo = {
+    year: date.getFullYear(),
+    month: (date.getMonth() + 1 + &quot;&quot;).padStart(2, &quot;0&quot;),
+    date: (date.getDate() + &quot;&quot;).padStart(2, &quot;0&quot;),
+  };
+  var dateStr = dateInfo.year + &quot;-&quot; + dateInfo.month + &quot;-&quot; + dateInfo.date;
+  return dateStr;
+},
+// 获取今天日期
+getNowDate() {
+  var nowDate = new Date();
+  console.log(&quot;今天日期为：&quot; + this.dateToString(nowDate));
+},
+// 获取指定天数之前的日期
+getNumDaysBeforeDate(num) {
+  var nowDate = new Date();
+  var beforeDate = new Date(nowDate.getTime() - 24 * 60 * 60 * 1000 * num);
+  console.log(num + &quot;天之前的日期为：&quot; + this.dateToString(beforeDate);
+},
+// 获取本周
+getNowWeek() {
+  var nowDate = new Date();
+  var nowTime = nowDate.getTime();
+  var week = nowDate.getDay() || 7; // 不加 || 7.周末会变成下周一
+  var oneDayTime = 24 * 60 * 60 * 1000;
+  var MondayTime = nowTime - (week - 1) * oneDayTime; //显示周一
+  var SundayTime = nowTime + (7 - week) * oneDayTime; //显示周日
+  console.log(&quot;本周一：&quot; + this.dateToString(new Date(MondayTime));
+  console.log(&quot;本周日：&quot; + this.dateToString(new Date(SundayTime));
+},
+// 获取本月
+getNowMonth() {
+  var nowDate = new Date();
+  var nowDateStr = this.dateToString(nowDate);
+  nowDate.setDate(1);
+  console.log(&quot;本月1号日期：：&quot; + thi/2s.dateToString(new Date(nowDate));
+},
+</code></pre>
+<h4 id="2-vue-blob文件类型">2、vue blob文件类型</h4>
+<pre><code class="language-js">import axios from 'axios'
+import { getToken } from '@/utils/auth'
+
+const mimeMap = {
+  zip: 'application/zip',
+  pdf: 'application/pdf',
+  png: 'application/png',
+  jpg: 'image/jpeg',
+  jpeg: 'image/jpeg',
+  xls: 'application/vnd.ms-excel',
+  xlsx: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  csv: 'application/csv',
+  doc: 'application/msword',
+  docx: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  bmp: 'image/bmp',
+  gif: 'image/gif',
+}
+
+const baseUrl = process.env.VUE_APP_BASE_API
+export function downLoadBlob(str, type,filename) {
+  var url = baseUrl + str
+  axios({
+    method: 'get',
+    url: url,
+    responseType: 'blob',
+    headers: { 'Authorization': 'Bearer ' + getToken() }
+  }).then(res =&gt; {
+    let mimeType;
+    if(type == 'zip'){
+      mimeType = mimeMap.zip
+    }else if(type == 'pdf'){
+      mimeType = mimeMap.pdf
+    }else if(type == 'png'){
+      mimeType = mimeMap.png
+    }else if(type == 'jpg'){
+      mimeType = mimeMap.jpg
+    }else if(type == 'jpeg'){
+      mimeType = mimeMap.jpeg
+    }else if(type == 'xls'){
+      mimeType = mimeMap.xls
+    }else if(type == 'xlsx'){
+      mimeType = mimeMap.xlsx
+    }else if(type == 'csv'){
+      mimeType = mimeMap.csv
+    }else if(type == 'doc'){
+      mimeType = mimeMap.doc
+    }else if(type == 'docx'){
+      mimeType = mimeMap.docx
+    }else if(type == 'bmp'){
+      mimeType = mimeMap.bmp
+    }else if(type == 'gif'){
+      mimeType = mimeMap.gif
+    }
+    resolveBlob(res, mimeType, filename)
+
+  })
+}
+/**
+ * 解析blob响应内容并下载
+ * @param {*} res blob响应内容
+ * @param {String} mimeType MIME类型
+ */
+export function resolveBlob(res, mimeType,filename) {
+  const aLink = document.createElement('a')
+  var blob = new Blob([res.data], { type: mimeType })
+  // 视情况而定
+  // 1.从response的headers中获取filename, 后端response.setHeader(&quot;Content-disposition&quot;, &quot;attachment; filename=xxxx.docx&quot;) 设置的文件名;
+  // var patt = new RegExp('filename=([^;]+\\.[^\\.;]+);*')
+  // var contentDisposition = decodeURI(res.headers['content-disposition'])
+  // var result = patt.exec(contentDisposition)
+  // var fileName = result[1]
+  // fileName = fileName.replace(/\&quot;/g, '')
+  aLink.href = URL.createObjectURL(blob)
+  // 2.直接使用自定义文件名
+  aLink.setAttribute('download', filename) // 设置下载文件名称
+  document.body.appendChild(aLink)
+  aLink.click()
+  document.body.removeChild(aLink);
+}
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[SQL语句]]></title>
+        <id>https://viaoh.github.io/post/F80mUKrNo/</id>
+        <link href="https://viaoh.github.io/post/F80mUKrNo/">
+        </link>
+        <updated>2024-05-11T07:21:50.000Z</updated>
+        <content type="html"><![CDATA[<h4 id="mysql删除表的三种用法">MySQL删除表的三种用法</h4>
+<pre><code class="language-sql">用法：
+1、当你不再需要该表时， 用 drop;
+2、当你仍要保留该表，但要删除所有记录时， 用 truncate;
+3、当你要删除部分记录或者有可能会后悔的话， 用 delete。
+
+
+删除程度可从强到弱如下排列：
+1.  drop table tb;
+    drop 是直接将表格删除，无法找回。例如删除 user 表：
+    drop table user;
+2.  truncate （table） tb;
+    truncate 是删除表中所有数据，但不能与where一起使用；
+    TRUNCATE TABLE user;
+3.  delete from tb (where);
+    delete 也是删除表中数据，但可以与where连用，删除特定行；
+    -- 删除表中所有数据
+    delete from user;
+    -- 删除指定行
+    delete from user where username ='Tom';
+
+truncate 和 delete 的区别：
+1. 事物
+   truncate删除后不记录mysql日志，因此不可以rollback，更不可以恢复数据；而 delete 是可以 rollback;
+   原因：truncate 相当于保留原mysql表的结果，重新创建了这个表，所有的状态都相当于新的，而delete的效果相当于一行行删除，所以可以rollback;
+2. 效果
+   效率上 truncate 比 delete快，而且 truncate 删除后将重建索引（新插入数据后id从0开始记起），而 delete不会删除索引 （新插入的数据将在删除数据的索引后继续增加）
+3. truncate 不会触发任何 DELETE触发器；
+4. 返回值
+   delete 操作后返回删除的记录数，而 truncate 返回的是0或者-1（成功则返回0，失败返回-1）；
+   delete 与 delete from 区别：
+   如果只针对一张表进行删除，则效果一样；如果需要联合其他表，则需要使用from ：
+   delete tb1 from tb1 m where id in (select id from tb2)
+</code></pre>
+<h4 id="去除数据库换行空格">去除数据库换行空格：</h4>
+<pre><code class="language-sql">update test
+set info = replace(replace(info,char(10),''),char(13),'')
+where info like concat('%',char(10),'%');
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[MySQL数据库定时删除数据]]></title>
+        <id>https://viaoh.github.io/post/tTVsh1r-l/</id>
+        <link href="https://viaoh.github.io/post/tTVsh1r-l/">
+        </link>
+        <updated>2024-05-11T07:21:34.000Z</updated>
+        <content type="html"><![CDATA[<h3 id="1-开启事件调度器">1、开启事件调度器</h3>
+<h5 id="确认是否开启">确认是否开启</h5>
+<pre><code class="language-sql">SHOW VARIABLES LIKE 'event_scheduler';
+</code></pre>
+<h5 id="开启命令">开启命令</h5>
+<pre><code class="language-sql">SET GLOBAL event_scheduler = ON;
+</code></pre>
+<h3 id="2-创建事件创建后默认开启">2、创建事件&lt;创建后默认开启&gt;</h3>
+<pre><code class="language-bash">CREATE EVENT [IF NOT EXISTS] event_name ON SCHEDULE schedule
+ [ON COMPLETION [NOT] PRESERVE] [ENABLE | DISABLE] [COMMENT 'comment']
+ DO sql_statement;
+</code></pre>
+<h5 id="例如每分钟60s清空一次记录表">例如：每分钟(60S)清空一次记录表</h5>
+<pre><code class="language-sql">use database_name;
+create event table_truncate on schedule every 60 second do truncate table operator_record_log;
+</code></pre>
+<h5 id="20211227补充每30天2592000s清空30天前的所有记录仅保留近30天数据">&lt;2021.12.27&gt;补充：每30天(2592000S)清空30天前的所有记录，仅保留近30天数据</h5>
+<pre><code class="language-sql">use database_name;
+create event table_truncate on schedule every 2592000 second do delete from operator_record_log where create_date &lt; DATE_SUB(CURDATE(),INTERVAL 30 DAY);
+</code></pre>
+<h5 id="例如指定时间将表清空">例如：指定时间将表清空</h5>
+<pre><code class="language-sql">use database_name;
+create event table_truncate on schedule at timestamp '2022-01-01 00:00:00' do truncate table operator_record_log;
+</code></pre>
+<h5 id="例如每天定时清空">例如：每天定时清空</h5>
+<pre><code class="language-sql">use database_name;
+create event table_truncate on schedule every 1 day starts '2022-01-01 00:00:00' do truncate table operator_record_log;
+</code></pre>
+<h3 id="3-关闭事件">3、关闭事件</h3>
+<pre><code class="language-sql">alter event event_name disable;
+</code></pre>
+<h3 id="4-开启事件">4、开启事件</h3>
+<pre><code class="language-sql">alter event event_name enable;
+</code></pre>
+<h3 id="5-删除事件">5、删除事件</h3>
+<pre><code class="language-sql">drop event if exists event_name;
+</code></pre>
+<h3 id="6-查看事件">6、查看事件</h3>
+<pre><code class="language-sql">show events;
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Linux系统利用crontab定时备份Mysql数据库方法]]></title>
+        <id>https://viaoh.github.io/post/pKY5mSIwr/</id>
+        <link href="https://viaoh.github.io/post/pKY5mSIwr/">
+        </link>
+        <updated>2024-05-11T07:20:36.000Z</updated>
+        <content type="html"><![CDATA[<p>程序可能出现崩溃级的bug，但这种bug可能十天半月才出现一次。修改起来比较困难，验证也非常耗时。这时候为了保证程序持续稳定运行，就需要一个监控程序了。</p>
+<p><strong>功能</strong>：监控进程 demo-admin.jar 是否存在，如果不存在就启动它。</p>
+<p><strong>实现方式</strong>：使用<a href="https://so.csdn.net/so/search?q=crontab&amp;spm=1001.2101.3001.7020">crontab</a> -e 添加定时任务, 每分钟都执行脚本文件 demo_startup.sh</p>
+<p><strong>脚本</strong>：demo_startup.sh： 判断进程demo-admin.jar是否存在，不存在就执行 nohup java -jar demo-admin.jar &amp; ，如果存在就忽略。</p>
+<h5 id="1-在linux-shell中输入-crontab-e-在打开的文件中填入以下信息并保存设置的定时任务就生效了"><strong>1、在linux shell中输入 crontab -e ， 在打开的文件中填入以下信息并保存，设置的定时任务就生效了。</strong></h5>
+<pre><code>*/1 * * * * sh /work/demo_startup.sh
+</code></pre>
+<h5 id="2-查看设置的定时任务信息"><strong>2、查看设置的定时任务信息</strong></h5>
+<pre><code>crontab -l
+*/1 * * * * sh /work/demo_startup.sh
+0 23 * * 6   每周六晚上11点
+</code></pre>
+<h5 id="3-demo_startupsh的中具体内容">**3、demo_startup.sh的中具体内容</h5>
+<h6 id="示例">示例：</h6>
+<pre><code>\#!/bin/sh
+source /etc/profile
+ps -fe | grep demo-admin | grep -v grep
+if [ $? -ne 0 ]
+then
+cd /work
+nohup java -jar demo-admin.jar &amp;
+echo &quot;running runing.....&quot;
+else
+echo &quot;runing.....&quot;
+fi
+</code></pre>
+<h6 id="备份mysql的demo_startupsh">备份MySQL的demo_startup.sh</h6>
+<pre><code>/usr/local/mysql/bin/mysqldump --defaults-extra-file=/etc/my.cnf studentmanage &gt; /home/dbback/studentmanage_$(date +%Y%m%d_%H%M%S).sql
+</code></pre>
+<h5 id="4-如何查看定时任务日志文件"><strong>4、如何查看定时任务日志文件</strong></h5>
+<pre><code>/var/log/cron.log
+</code></pre>
+<h5 id="5-定时任务日志格式说明"><strong>5、定时任务日志格式说明</strong></h5>
+<pre><code>crontab文件的含义：
+
+用户建立的crontab文件中，每一行代表一项任务，每行的每个字段代表一项设置。它的格式共分为六个字段，前五段是时间设定段，第六段是要执行的命令段，格式如下：
+
+minute hour day month week command
+
+其中：
+
+minute： 表示分钟，可以是从0到59之间的任何整数。
+
+hour：表示小时，可以是从0到23之间的任何整数。
+
+day：表示日期，可以是从1到31之间的任何整数。
+
+month：表示月份，可以是从1到12之间的任何整数。
+
+week：表示星期几，可以是从0到7之间的任何整数，这里的0或7代表星期日。
+
+command：要执行的命令，可以是系统命令，也可以是自己编写的脚本文件。
+
+**在以上各个字段中，还可以使用以下特殊字符：**
+
+星号（*）：代表所有可能的值，例如month字段如果是星号，则表示在满足其它字段的制约条件后每月都执行该命令操作。
+
+逗号（,）：可以用逗号隔开的值指定一个列表范围，例如，“1,2,5,7,8,9”
+
+中杠（-）：可以用整数之间的中杠表示一个整数范围，例如“2-6”表示“2,3,4,5,6”
+
+正斜线（/）：可以用正斜线指定时间的间隔频率，例如“0-23/2”表示每两小时执行一次。同时正斜线可以和星号一起使用，例如*/10，如果用在minute字段，表示每十分钟执行一次。
+
+grep -v grep 是去掉包含grep的行
+
+&gt; \# ps -ef | grep demo | grep -v grep
+&gt; root 11996 1 0 12:08 ? 00:00:38 java -jar demo-admin.jar -Dspring.profiles.active=prod
+
+##### **6、配置定时任务**
+
+cron有两个配置文件，一个是一个全局配置文件（/etc/crontab），是针对系统任务的；一组是crontab命令生成的配置文件（/var/spool/cron下的文件）
+
+查看用户下的定时任务:crontab -l或cat /var/spool/cron/用户名
+
+实例1：每1分钟执行一次command
+
+命令：* * * * * command
+
+实例2：每小时的第3和第15分钟执行
+
+命令：3,15 * * * * command
+
+实例3：在上午8点到11点的第3和第15分钟执行
+
+命令：3,15 8-11 * * * command
+
+实例4：每隔两天的上午8点到11点的第3和第15分钟执行
+
+命令：3,15 8-11 */2 * * command
+
+实例5：每个星期一的上午8点到11点的第3和第15分钟执行
+
+命令：3,15 8-11 * * 1 command
+
+##### **7、crond服务启动/关闭/重启**
+
+service crond status //查看服务器状态
+
+service crond start //启动服务
+
+service crond stop //关闭服务
+
+service crond restart //重启服务
+
+service crond reload //重新载入配置
+
+##### **8、与cron相关的目录和文件**
+
+/etc/crontab：系统定时任务，只能root用户使用，格式与crontab也不一样。
+
+/var/spool/cron 目录 ：通过crontab命令添加的定时任务会以添加的账号命名放在此目录下
+
+/etc/cron.d：这个目录里包含不同的用户的定时任务
+
+/etc/cron.deny：禁止使用cron的用户列表文件
+
+/etc/cron.allow：允许使用cron的用户列表文件
+
+/etc/cron.daily：存放每天执行一次的脚本
+
+/etc/cron.hourly：存放每个小时执行一个的脚本
+
+/etc/cron.monthly：存放每个月执行一次的脚本
+
+/etc/cron.weekly：存放每个星期执行一个的脚本
+</code></pre>
+]]></content>
+    </entry>
+</feed>
