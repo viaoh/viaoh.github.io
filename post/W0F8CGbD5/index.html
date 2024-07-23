@@ -1,0 +1,348 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Excel导出工具类 | liuyoung&#39;s blog</title>
+<link rel="shortcut icon" href="https://viaoh.github.io/favicon.ico?v=1721748950849">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://viaoh.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Excel导出工具类 | liuyoung&#39;s blog - Atom Feed" href="https://viaoh.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="pom.xml
+&lt;!-- Excel导出 --&gt;
+&lt;dependency&gt;
+	&lt;groupId&gt;org.apache.poi&lt;/groupId&gt;
+	&lt;artifactId&gt;poi&..." />
+    <meta name="keywords" content="编程生涯" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://viaoh.github.io">
+  <img class="avatar" src="https://viaoh.github.io/images/avatar.png?v=1721748950849" alt="">
+  </a>
+  <h1 class="site-title">
+    liuyoung&#39;s blog
+  </h1>
+  <p class="site-description">
+    年与时驰，意与日去，遂成枯落，多不接世
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="https://viaoh.github.io/post/XuQvrNvEf" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/liuyoung-cc/liuyoung-cc.github.io" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+    
+      
+        <a href="https://weibo.com/viaoh" target="_blank">
+          <i class="ri-weibo-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://www.zhihu.com/people/viaoh-" target="_blank">
+          <i class="ri-zhihu-line"></i>
+        </a>
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              Excel导出工具类
+            </h2>
+            <div class="post-info">
+              <span>
+                2024-05-11
+              </span>
+              <span>
+                4 min read
+              </span>
+              
+                <a href="https://viaoh.github.io/tag/BzttDH753/" class="post-tag">
+                  # 编程生涯
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <h6 id="pomxml">pom.xml</h6>
+<pre><code class="language-xml">&lt;!-- Excel导出 --&gt;
+&lt;dependency&gt;
+	&lt;groupId&gt;org.apache.poi&lt;/groupId&gt;
+	&lt;artifactId&gt;poi&lt;/artifactId&gt;
+	&lt;version&gt;3.17&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<h6 id="工具类">工具类</h6>
+<pre><code>import org.apache.poi.hssf.usermodel.*;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.List;
+
+/**
+ * Excel工具类
+ */
+public class ExcelTool {
+
+    /**
+     * Excel表格导出
+     * @param response HttpServletResponse对象
+     * @param excelData Excel表格的数据，封装为List&lt;List&lt;String&gt;&gt;
+     * @param sheetName sheet的名字
+     * @param fileName 导出Excel的文件名
+     * @param columnWidth Excel表格的宽度，建议为15
+     * @throws IOException 抛IO异常
+     */
+    public static void exportExcel(HttpServletResponse response,
+                                   List&lt;List&lt;String&gt;&gt; excelData, 
+                                   String sheetName, 
+                                   String fileName, 
+                                   int columnWidth) throws IOException {
+
+        //声明一个工作簿
+        HSSFWorkbook workbook = new HSSFWorkbook();
+
+        //生成一个表格，设置表格名称
+        HSSFSheet sheet = workbook.createSheet(sheetName);
+
+        //设置表格列宽度
+        sheet.setDefaultColumnWidth(columnWidth);
+
+        //写入List&lt;List&lt;String&gt;&gt;中的数据
+        int rowIndex = 0;
+        for(List&lt;String&gt; data : excelData){
+            //创建一个row行，然后自增1
+            HSSFRow row = sheet.createRow(rowIndex++);
+
+            //遍历添加本行数据
+            for (int i = 0; i &lt; data.size(); i++) {
+                //创建一个单元格
+                HSSFCell cell = row.createCell(i);
+
+                //创建一个内容对象
+                HSSFRichTextString text = new HSSFRichTextString(data.get(i));
+
+                //将内容对象的文字内容写入到单元格中
+                cell.setCellValue(text);
+            }
+        }
+
+        //准备将Excel的输出流通过response输出到页面下载
+        //八进制输出流
+        response.setContentType(&quot;application/octet-stream&quot;);
+
+        //设置导出Excel的名称
+        response.setHeader(&quot;Content-disposition&quot;, &quot;attachment;filename=&quot; + fileName);
+
+        //刷新缓冲
+        response.flushBuffer();
+
+        //workbook将Excel写入到response的输出流中，供页面下载该Excel文件
+        workbook.write(response.getOutputStream());
+
+        //关闭workbook
+        workbook.close();
+    }
+
+}
+</code></pre>
+<h6 id="导出方法">导出方法</h6>
+<pre><code class="language-java">public void excelExportData(HttpServletRequest request, HttpServletResponse response)
+			throws IOException, ParseException {
+		// 设置excel表头
+		List&lt;List&lt;String&gt;&gt; excelData = new ArrayList&lt;&gt;();
+		List&lt;String&gt; head = new ArrayList&lt;&gt;();
+		head.add(&quot;第一列&quot;);
+		head.add(&quot;第二列&quot;);
+		head.add(&quot;第三列&quot;);
+		excelData.add(head);
+		// 设置excel内容
+		List&lt;String&gt; data1 = new ArrayList&lt;&gt;();
+		data.add(&quot;第一列第一行内容&quot;);
+    	data.add(&quot;第二列第一行内容&quot;);
+    	data.add(&quot;第二列第一行内容&quot;);
+		List&lt;String&gt; data2 = new ArrayList&lt;&gt;();
+		data.add(&quot;第一列第二行内容&quot;);
+    	data.add(&quot;第二列第二行内容&quot;);
+    	data.add(&quot;第二列第二行内容&quot;);
+    	List&lt;String&gt; data3 = new ArrayList&lt;&gt;();
+		data.add(&quot;第一列第三行内容&quot;);
+    	data.add(&quot;第二列第三行内容&quot;);
+    	data.add(&quot;第二列第三行内容&quot;);
+		excelData.add(data1);
+    	excelData.add(data2);
+    	excelData.add(data3);
+		String sheetName = &quot;导出文件测试&quot;;
+		String fileName = &quot;导出文件测试.xls&quot;;
+		ExcelTool.exportExcel(response, excelData, sheetName, fileName, 15);
+	}
+</code></pre>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#pomxml">pom.xml</a></li>
+<li><a href="#%E5%B7%A5%E5%85%B7%E7%B1%BB">工具类</a></li>
+<li><a href="#%E5%AF%BC%E5%87%BA%E6%96%B9%E6%B3%95">导出方法</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://viaoh.github.io/post/ew2Vr4pXL/">
+              <h3 class="post-title">
+                按键精灵常用代码
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '4970b3e2cb2b185b5af7',
+    clientSecret: 'a413a9c025c85c8c7d510b5b5cbe613c47e76bdc',
+    repo: 'viaoh.github.io',
+    owner: 'viaoh',
+    admin: ['viaoh'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  Powered by &nbsp;<a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://viaoh.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

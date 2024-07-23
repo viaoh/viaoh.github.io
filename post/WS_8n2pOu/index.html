@@ -1,0 +1,299 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Linux安装Redis | liuyoung&#39;s blog</title>
+<link rel="shortcut icon" href="https://viaoh.github.io/favicon.ico?v=1721748950849">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://viaoh.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Linux安装Redis | liuyoung&#39;s blog - Atom Feed" href="https://viaoh.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="一、下载安装包
+访问https://redis.io/download 到官网进行下载。这里下载最新的4.0版本
+
+二、安装
+1.通过远程管理工具，将压缩包拷贝到Linux服务器中，执行解压操作，输入命令：
+tar -zxf redis-4..." />
+    <meta name="keywords" content="编程生涯" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://viaoh.github.io">
+  <img class="avatar" src="https://viaoh.github.io/images/avatar.png?v=1721748950849" alt="">
+  </a>
+  <h1 class="site-title">
+    liuyoung&#39;s blog
+  </h1>
+  <p class="site-description">
+    年与时驰，意与日去，遂成枯落，多不接世
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="https://viaoh.github.io/post/XuQvrNvEf" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/liuyoung-cc/liuyoung-cc.github.io" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+    
+      
+        <a href="https://weibo.com/viaoh" target="_blank">
+          <i class="ri-weibo-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://www.zhihu.com/people/viaoh-" target="_blank">
+          <i class="ri-zhihu-line"></i>
+        </a>
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              Linux安装Redis
+            </h2>
+            <div class="post-info">
+              <span>
+                2024-05-11
+              </span>
+              <span>
+                3 min read
+              </span>
+              
+                <a href="https://viaoh.github.io/tag/BzttDH753/" class="post-tag">
+                  # 编程生涯
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <h4 id="一-下载安装包">一、下载安装包</h4>
+<h6 id="访问httpsredisiodownload-到官网进行下载-这里下载最新的40版本">访问https://redis.io/download 到官网进行下载。这里下载最新的4.0版本</h6>
+<img src="https://s3.bmp.ovh/imgs/2024/05/11/ee4f8d2c7cf177ba.png" alt="image-20211029103735678" style="zoom:50%;margin:0" />
+<h4 id="二-安装">二、安装</h4>
+<h6 id="1通过远程管理工具将压缩包拷贝到linux服务器中执行解压操作输入命令">1.通过远程管理工具，将压缩包拷贝到Linux服务器中，执行解压操作，输入命令：</h6>
+<pre><code>tar -zxf redis-4.0.9.tar.gz
+</code></pre>
+<img src="https://s3.bmp.ovh/imgs/2024/05/11/b499ff41e7e9b46e.png" alt="image-20211029103735678" style="margin:0" />
+<h6 id="2进入解压文件目录使用make对解压的redis文件进行编译">2.进入解压文件目录使用make对解压的Redis文件进行编译</h6>
+<p>图示：这里因为我redis的安装目录在 /usr/local/  目录下，因此会有如下操作</p>
+<img src="https://s3.bmp.ovh/imgs/2024/05/11/a8469c10452d2a4a.png" alt="image-20211029103735678" style="margin:0" />
+<img src="https://s3.bmp.ovh/imgs/2024/05/11/8b7083fae6003e81.png" alt="image-20211029103735678" style="margin:0" />
+<p>注：如果在编译过程中出现问题，有可能是安装包下载的有误，这里可以尝试的用别人下载的安装包或者直接用</p>
+<pre><code>wget http://download.redis.io/releases/redis-4.0.9.tar.gz
+</code></pre>
+<p>如果发现上述读不能解决问题，请参照该链接：https://www.cnblogs.com/liu2-/p/6914159.html<br>
+编译完成之后，可以看到解压文件redis-3.0.7 中会有对应的src、conf等文件夹</p>
+<img src="https://s3.bmp.ovh/imgs/2024/05/11/fca5fa05c3ae91be.png" alt="image-20211029103735678" style="margin:0" />
+<h6 id="3编译成功后进入src文件夹执行make-install进行redis安装如下图示安装完成界面如下">3.编译成功后，进入src文件夹，执行make install进行Redis安装，如下图示安装完成，界面如下：</h6>
+<img src="https://s3.bmp.ovh/imgs/2024/05/11/d92bc8d8c97a5277.png" alt="image-20211029103735678" style="margin:0" />
+<h4 id="三-部署">三、部署</h4>
+<h6 id="1为了方便管理将redis文件中的conf配置文件和常用命令移动到统一文件中">1.为了方便管理，将Redis文件中的conf配置文件和常用命令移动到统一文件中</h6>
+<p>1）、创建bin和etc文件，如图示：</p>
+<img src="https://s3.bmp.ovh/imgs/2024/05/11/ff87725c6466df34.png" alt="image-20211029103735678" style="margin:0" />
+<p>2）、回到刚刚安装目录，找到redis.conf，将其复制移动到 /usr/local/redis/ect 下，执行命令如下：</p>
+<pre><code>mv redis.conf /usr/local/redis/etc/
+</code></pre>
+<img src="https://s3.bmp.ovh/imgs/2024/05/11/5197198f3a1705f6.png" alt="image-20211029103735678" style="margin:0" />
+<p>进入src目录，移动mkreleasehdr.sh redis-benchmark redis-check-aof redis-check-rdb redis-cli redis-server到/usr/local/redis/bin/，执行命令 ：</p>
+<pre><code>mv mkreleasehdr.sh redis-benchmark redis-check-aof redis-check-rdb redis-cli redis-server /usr/local/redis/bin/
+</code></pre>
+<img src="https://s3.bmp.ovh/imgs/2024/05/11/bb5a8da5d41fe33c.png" alt="image-20211029103735678" style="margin:0" />
+<p>依次查看移动后文件</p>
+<img src="https://s3.bmp.ovh/imgs/2024/05/11/5417e9f47d05cd56.png" alt="image-20211029103735678" style="margin:0" />
+<h6 id="2-执行redis-server-启动redis">2、执行redis-server 启动redis</h6>
+<img src="https://s3.bmp.ovh/imgs/2024/05/11/9fa0c9f865c97e3e.png" alt="image-20211029103735678" style="margin:0" />
+<h6 id="3-设置绑定ip注该步骤如果不需要可省略">3、设置绑定ip（注：该步骤如果不需要可省略）</h6>
+<img src="https://s3.bmp.ovh/imgs/2024/05/11/5b4d0f4c620030d0.png" alt="image-20211029103735678" style="margin:0" />
+<p>如需要，可将上图绑定ip改为指定ip。</p>
+<h6 id="4-设置后台启动redis">4、设置后台启动redis</h6>
+<p>1）、首先编辑conf文件，将daemonize属性改为yes（表明需要在后台运行）</p>
+<pre><code>cd etc/
+vim redis.conf
+</code></pre>
+<img src="https://s3.bmp.ovh/imgs/2024/05/11/e1f304caeb729730.png" alt="image-20211029103735678" style="margin:0" />
+<p>将no修改为yes</p>
+<p>2)、再次启动redis服务，并指定启动服务配置文件</p>
+<pre><code>redis-server /usr/local/redis/etc/redis.conf
+</code></pre>
+<img src="https://s3.bmp.ovh/imgs/2024/05/11/77d362cc1128a85f.png" alt="image-20211029103735678" style="margin:0" />
+<p>配置后台运行成功。``</p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#%E4%B8%80-%E4%B8%8B%E8%BD%BD%E5%AE%89%E8%A3%85%E5%8C%85">一、下载安装包</a><br>
+*
+<ul>
+<li><a href="#%E8%AE%BF%E9%97%AEhttpsredisiodownload-%E5%88%B0%E5%AE%98%E7%BD%91%E8%BF%9B%E8%A1%8C%E4%B8%8B%E8%BD%BD-%E8%BF%99%E9%87%8C%E4%B8%8B%E8%BD%BD%E6%9C%80%E6%96%B0%E7%9A%8440%E7%89%88%E6%9C%AC">访问https://redis.io/download 到官网进行下载。这里下载最新的4.0版本</a></li>
+</ul>
+</li>
+<li><a href="#%E4%BA%8C-%E5%AE%89%E8%A3%85">二、安装</a><br>
+*
+<ul>
+<li><a href="#1%E9%80%9A%E8%BF%87%E8%BF%9C%E7%A8%8B%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7%E5%B0%86%E5%8E%8B%E7%BC%A9%E5%8C%85%E6%8B%B7%E8%B4%9D%E5%88%B0linux%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%AD%E6%89%A7%E8%A1%8C%E8%A7%A3%E5%8E%8B%E6%93%8D%E4%BD%9C%E8%BE%93%E5%85%A5%E5%91%BD%E4%BB%A4">1.通过远程管理工具，将压缩包拷贝到Linux服务器中，执行解压操作，输入命令：</a></li>
+<li><a href="#2%E8%BF%9B%E5%85%A5%E8%A7%A3%E5%8E%8B%E6%96%87%E4%BB%B6%E7%9B%AE%E5%BD%95%E4%BD%BF%E7%94%A8make%E5%AF%B9%E8%A7%A3%E5%8E%8B%E7%9A%84redis%E6%96%87%E4%BB%B6%E8%BF%9B%E8%A1%8C%E7%BC%96%E8%AF%91">2.进入解压文件目录使用make对解压的Redis文件进行编译</a></li>
+<li><a href="#3%E7%BC%96%E8%AF%91%E6%88%90%E5%8A%9F%E5%90%8E%E8%BF%9B%E5%85%A5src%E6%96%87%E4%BB%B6%E5%A4%B9%E6%89%A7%E8%A1%8Cmake-install%E8%BF%9B%E8%A1%8Credis%E5%AE%89%E8%A3%85%E5%A6%82%E4%B8%8B%E5%9B%BE%E7%A4%BA%E5%AE%89%E8%A3%85%E5%AE%8C%E6%88%90%E7%95%8C%E9%9D%A2%E5%A6%82%E4%B8%8B">3.编译成功后，进入src文件夹，执行make install进行Redis安装，如下图示安装完成，界面如下：</a></li>
+</ul>
+</li>
+<li><a href="#%E4%B8%89-%E9%83%A8%E7%BD%B2">三、部署</a><br>
+*
+<ul>
+<li><a href="#1%E4%B8%BA%E4%BA%86%E6%96%B9%E4%BE%BF%E7%AE%A1%E7%90%86%E5%B0%86redis%E6%96%87%E4%BB%B6%E4%B8%AD%E7%9A%84conf%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E5%92%8C%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E7%A7%BB%E5%8A%A8%E5%88%B0%E7%BB%9F%E4%B8%80%E6%96%87%E4%BB%B6%E4%B8%AD">1.为了方便管理，将Redis文件中的conf配置文件和常用命令移动到统一文件中</a></li>
+<li><a href="#2-%E6%89%A7%E8%A1%8Credis-server-%E5%90%AF%E5%8A%A8redis">2、执行redis-server 启动redis</a></li>
+<li><a href="#3-%E8%AE%BE%E7%BD%AE%E7%BB%91%E5%AE%9Aip%E6%B3%A8%E8%AF%A5%E6%AD%A5%E9%AA%A4%E5%A6%82%E6%9E%9C%E4%B8%8D%E9%9C%80%E8%A6%81%E5%8F%AF%E7%9C%81%E7%95%A5">3、设置绑定ip（注：该步骤如果不需要可省略）</a></li>
+<li><a href="#4-%E8%AE%BE%E7%BD%AE%E5%90%8E%E5%8F%B0%E5%90%AF%E5%8A%A8redis">4、设置后台启动redis</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://viaoh.github.io/post/6ZJCzf030/">
+              <h3 class="post-title">
+                Linux安装Nginx
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '4970b3e2cb2b185b5af7',
+    clientSecret: 'a413a9c025c85c8c7d510b5b5cbe613c47e76bdc',
+    repo: 'viaoh.github.io',
+    owner: 'viaoh',
+    admin: ['viaoh'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  Powered by &nbsp;<a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://viaoh.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>
