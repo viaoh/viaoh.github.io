@@ -1,0 +1,321 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>小程序模板通知 | liuyoung&#39;s blog</title>
+<link rel="shortcut icon" href="https://viaoh.github.io/favicon.ico?v=1723820307873">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://viaoh.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="小程序模板通知 | liuyoung&#39;s blog - Atom Feed" href="https://viaoh.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.springframework.http.Resp..." />
+    <meta name="keywords" content="编程生涯" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://viaoh.github.io">
+  <img class="avatar" src="https://viaoh.github.io/images/avatar.png?v=1723820307873" alt="">
+  </a>
+  <h1 class="site-title">
+    liuyoung&#39;s blog
+  </h1>
+  <p class="site-description">
+    年与时驰，意与日去，遂成枯落，多不接世
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="https://viaoh.github.io/post/XuQvrNvEf" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/liuyoung-cc/liuyoung-cc.github.io" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+    
+      
+        <a href="https://weibo.com/viaoh" target="_blank">
+          <i class="ri-weibo-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://www.zhihu.com/people/viaoh-" target="_blank">
+          <i class="ri-zhihu-line"></i>
+        </a>
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              小程序模板通知
+            </h2>
+            <div class="post-info">
+              <span>
+                2024-05-11
+              </span>
+              <span>
+                4 min read
+              </span>
+              
+                <a href="https://viaoh.github.io/tag/BzttDH753/" class="post-tag">
+                  # 编程生涯
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <pre><code class="language-java">import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
+
+import com.google.gson.Gson;
+import com.wowmake.aftersale.model.Bill;
+import com.wowmake.aftersale.model.wechat.WeChatTemplateData;
+import com.wowmake.aftersale.model.wechat.WeChatTemplateMsg;
+import com.wowmake.aftersale.model.wechat.WechatAccessToken;
+
+public class WeChatPush {
+
+	/*
+	 * 微信小程序推送单个用户
+	 */
+	public static void pushOneUser(RestTemplate restTemplate,String openid,String formId,Bill bill) {
+		// 获取access_token
+		String access_token = getAccess_token(&quot;wx5db83dbd5a5df58c&quot;, &quot;f4af31412da4baf7b4a616113ff8f270&quot;,restTemplate);
+		String url = &quot;https://api.weixin.qq.com/cgi-bin/message/wxopen/template/send&quot; + &quot;?access_token=&quot; + access_token;
+		Integer billState = bill.getBillState();
+		WeChatTemplateMsg wxTemplateMsg = new WeChatTemplateMsg();
+		wxTemplateMsg.setTouser(openid);// 要推送用户的openid
+		wxTemplateMsg.setForm_id(formId);// 要推送用户的formid
+		if (billState == 1) {
+			wxTemplateMsg.setTemplate_id(&quot;z6NUC6iQ5rb5hnZElv3qljgulHwgXKykAzWO8RcPQxY&quot;);// 模版id
+			Map&lt;String, WeChatTemplateData&gt; m = new HashMap&lt;&gt;();
+			// 拼接推送的模版
+			WeChatTemplateData keyword1 = new WeChatTemplateData();
+			keyword1.setValue(bill.getBillNumber());
+			m.put(&quot;keyword1&quot;, keyword1);
+
+			WeChatTemplateData keyword2 = new WeChatTemplateData();
+			keyword2.setValue(bill.getMachineInfo().getMachineNumber());
+			m.put(&quot;keyword2&quot;, keyword2);
+			wxTemplateMsg.setData(m);
+
+			WeChatTemplateData keyword3 = new WeChatTemplateData();
+			keyword3.setValue(bill.getBillArea()+bill.getBillAddress());
+			m.put(&quot;keyword3&quot;, keyword3);
+			wxTemplateMsg.setData(m);
+
+			WeChatTemplateData keyword4 = new WeChatTemplateData();
+			keyword4.setValue(bill.getCustomerInfo().getUserNickName());
+			m.put(&quot;keyword4&quot;, keyword4);
+			wxTemplateMsg.setData(m);
+
+			WeChatTemplateData keyword5 = new WeChatTemplateData();
+			SimpleDateFormat sdf = new SimpleDateFormat(&quot;yyyy-MM-dd HH:mm:ss&quot;);
+			keyword5.setValue(sdf.format(bill.getBillSubmitDate()));
+			m.put(&quot;keyword5&quot;, keyword5);
+			wxTemplateMsg.setData(m);
+			
+			WeChatTemplateData keyword6 = new WeChatTemplateData();
+			keyword6.setValue(bill.getServiceInfo().getUserNickName());
+			m.put(&quot;keyword6&quot;, keyword6);
+			wxTemplateMsg.setData(m);
+			
+			WeChatTemplateData keyword7 = new WeChatTemplateData();
+			keyword7.setValue(bill.getServiceInfo().getUserPhone());
+			m.put(&quot;keyword7&quot;, keyword7);
+			wxTemplateMsg.setData(m);
+			
+			WeChatTemplateData keyword8 = new WeChatTemplateData();
+			keyword8.setValue(&quot;待处理&quot;);
+			m.put(&quot;keyword8&quot;, keyword8);
+			wxTemplateMsg.setData(m);
+		} else if(billState == 2){
+			wxTemplateMsg.setTemplate_id(&quot;mVkOVv_yO4GcS5kTAuCPJf3k9sxcF__p75h_7M0e85Y&quot;);// 模版id
+			Map&lt;String, WeChatTemplateData&gt; m = new HashMap&lt;&gt;();
+			// 拼接推送的模版
+			WeChatTemplateData keyword1 = new WeChatTemplateData();
+			keyword1.setValue(bill.getBillNumber());
+			m.put(&quot;keyword1&quot;, keyword1);
+
+			WeChatTemplateData keyword2 = new WeChatTemplateData();
+			keyword2.setValue(bill.getServiceInfo().getUserNickName());
+			m.put(&quot;keyword2&quot;, keyword2);
+			wxTemplateMsg.setData(m);
+			
+			WeChatTemplateData keyword3 = new WeChatTemplateData();
+			keyword3.setValue(bill.getServiceInfo().getUserPhone());
+			m.put(&quot;keyword3&quot;, keyword3);
+			wxTemplateMsg.setData(m);
+			
+			WeChatTemplateData keyword4 = new WeChatTemplateData();
+			keyword4.setValue(&quot;已处理，期待您的评价&quot;);
+			m.put(&quot;keyword4&quot;, keyword4);
+			wxTemplateMsg.setData(m);
+		}
+		ResponseEntity&lt;String&gt; responseEntity = restTemplate.postForEntity(url, wxTemplateMsg, String.class);
+		System.out.printf(&quot;小程序推送结果：&quot;);
+		System.out.println(responseEntity.getBody());
+	}
+
+	/*
+	 * 获取access_token appid和appsecret到小程序后台获取，当然也可以让小程序开发人员给你传过来
+	 */
+	public static String getAccess_token(String appid, String appsecret,RestTemplate restTemplate) {
+		// 获取access_token
+		String url = &quot;https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&quot; + &quot;&amp;appid=&quot; + appid
+				+ &quot;&amp;secret=&quot; + appsecret;
+		String json = restTemplate.getForObject(url, String.class);
+		WechatAccessToken accessToken = new Gson().fromJson(json, WechatAccessToken.class);
+		return accessToken.getAccess_token();
+	}
+
+}
+</code></pre>
+
+              </div>
+              <div class="toc-container">
+                
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://viaoh.github.io/post/jSMenZ-BQ/">
+              <h3 class="post-title">
+                文件工具类
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '4970b3e2cb2b185b5af7',
+    clientSecret: 'a413a9c025c85c8c7d510b5b5cbe613c47e76bdc',
+    repo: 'viaoh.github.io',
+    owner: 'viaoh',
+    admin: ['viaoh'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  Powered by &nbsp;<a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://viaoh.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>
