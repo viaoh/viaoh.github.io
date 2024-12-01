@@ -1,0 +1,362 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Linux系统利用crontab定时备份Mysql数据库方法 | liuyoung&#39;s blog</title>
+<link rel="shortcut icon" href="https://viaoh.github.io/favicon.ico?v=1733061287409">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://viaoh.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Linux系统利用crontab定时备份Mysql数据库方法 | liuyoung&#39;s blog - Atom Feed" href="https://viaoh.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="程序可能出现崩溃级的bug，但这种bug可能十天半月才出现一次。修改起来比较困难，验证也非常耗时。这时候为了保证程序持续稳定运行，就需要一个监控程序了。
+功能：监控进程 demo-admin.jar 是否存在，如果不存在就启动它。
+实现方式..." />
+    <meta name="keywords" content="编程生涯" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://viaoh.github.io">
+  <img class="avatar" src="https://viaoh.github.io/images/avatar.png?v=1733061287409" alt="">
+  </a>
+  <h1 class="site-title">
+    liuyoung&#39;s blog
+  </h1>
+  <p class="site-description">
+    人生难得秋前雨，乞我虚堂自在眠
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="https://viaoh.github.io/post/XuQvrNvEf" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/liuyoung-cc/liuyoung-cc.github.io" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+    
+      
+        <a href="https://weibo.com/viaoh" target="_blank">
+          <i class="ri-weibo-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://www.zhihu.com/people/viaoh-" target="_blank">
+          <i class="ri-zhihu-line"></i>
+        </a>
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              Linux系统利用crontab定时备份Mysql数据库方法
+            </h2>
+            <div class="post-info">
+              <span>
+                2024-05-11
+              </span>
+              <span>
+                5 min read
+              </span>
+              
+                <a href="https://viaoh.github.io/tag/BzttDH753/" class="post-tag">
+                  # 编程生涯
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <p>程序可能出现崩溃级的bug，但这种bug可能十天半月才出现一次。修改起来比较困难，验证也非常耗时。这时候为了保证程序持续稳定运行，就需要一个监控程序了。</p>
+<p><strong>功能</strong>：监控进程 demo-admin.jar 是否存在，如果不存在就启动它。</p>
+<p><strong>实现方式</strong>：使用<a href="https://so.csdn.net/so/search?q=crontab&amp;spm=1001.2101.3001.7020">crontab</a> -e 添加定时任务, 每分钟都执行脚本文件 demo_startup.sh</p>
+<p><strong>脚本</strong>：demo_startup.sh： 判断进程demo-admin.jar是否存在，不存在就执行 nohup java -jar demo-admin.jar &amp; ，如果存在就忽略。</p>
+<h5 id="1-在linux-shell中输入-crontab-e-在打开的文件中填入以下信息并保存设置的定时任务就生效了"><strong>1、在linux shell中输入 crontab -e ， 在打开的文件中填入以下信息并保存，设置的定时任务就生效了。</strong></h5>
+<pre><code>*/1 * * * * sh /work/demo_startup.sh
+</code></pre>
+<h5 id="2-查看设置的定时任务信息"><strong>2、查看设置的定时任务信息</strong></h5>
+<pre><code>crontab -l
+*/1 * * * * sh /work/demo_startup.sh
+0 23 * * 6   每周六晚上11点
+</code></pre>
+<h5 id="3-demo_startupsh的中具体内容">**3、demo_startup.sh的中具体内容</h5>
+<h6 id="示例">示例：</h6>
+<pre><code>\#!/bin/sh
+source /etc/profile
+ps -fe | grep demo-admin | grep -v grep
+if [ $? -ne 0 ]
+then
+cd /work
+nohup java -jar demo-admin.jar &amp;
+echo &quot;running runing.....&quot;
+else
+echo &quot;runing.....&quot;
+fi
+</code></pre>
+<h6 id="备份mysql的demo_startupsh">备份MySQL的demo_startup.sh</h6>
+<pre><code>/usr/local/mysql/bin/mysqldump --defaults-extra-file=/etc/my.cnf studentmanage &gt; /home/dbback/studentmanage_$(date +%Y%m%d_%H%M%S).sql
+</code></pre>
+<h5 id="4-如何查看定时任务日志文件"><strong>4、如何查看定时任务日志文件</strong></h5>
+<pre><code>/var/log/cron.log
+</code></pre>
+<h5 id="5-定时任务日志格式说明"><strong>5、定时任务日志格式说明</strong></h5>
+<pre><code>crontab文件的含义：
+
+用户建立的crontab文件中，每一行代表一项任务，每行的每个字段代表一项设置。它的格式共分为六个字段，前五段是时间设定段，第六段是要执行的命令段，格式如下：
+
+minute hour day month week command
+
+其中：
+
+minute： 表示分钟，可以是从0到59之间的任何整数。
+
+hour：表示小时，可以是从0到23之间的任何整数。
+
+day：表示日期，可以是从1到31之间的任何整数。
+
+month：表示月份，可以是从1到12之间的任何整数。
+
+week：表示星期几，可以是从0到7之间的任何整数，这里的0或7代表星期日。
+
+command：要执行的命令，可以是系统命令，也可以是自己编写的脚本文件。
+
+**在以上各个字段中，还可以使用以下特殊字符：**
+
+星号（*）：代表所有可能的值，例如month字段如果是星号，则表示在满足其它字段的制约条件后每月都执行该命令操作。
+
+逗号（,）：可以用逗号隔开的值指定一个列表范围，例如，“1,2,5,7,8,9”
+
+中杠（-）：可以用整数之间的中杠表示一个整数范围，例如“2-6”表示“2,3,4,5,6”
+
+正斜线（/）：可以用正斜线指定时间的间隔频率，例如“0-23/2”表示每两小时执行一次。同时正斜线可以和星号一起使用，例如*/10，如果用在minute字段，表示每十分钟执行一次。
+
+grep -v grep 是去掉包含grep的行
+
+&gt; \# ps -ef | grep demo | grep -v grep
+&gt; root 11996 1 0 12:08 ? 00:00:38 java -jar demo-admin.jar -Dspring.profiles.active=prod
+
+##### **6、配置定时任务**
+
+cron有两个配置文件，一个是一个全局配置文件（/etc/crontab），是针对系统任务的；一组是crontab命令生成的配置文件（/var/spool/cron下的文件）
+
+查看用户下的定时任务:crontab -l或cat /var/spool/cron/用户名
+
+实例1：每1分钟执行一次command
+
+命令：* * * * * command
+
+实例2：每小时的第3和第15分钟执行
+
+命令：3,15 * * * * command
+
+实例3：在上午8点到11点的第3和第15分钟执行
+
+命令：3,15 8-11 * * * command
+
+实例4：每隔两天的上午8点到11点的第3和第15分钟执行
+
+命令：3,15 8-11 */2 * * command
+
+实例5：每个星期一的上午8点到11点的第3和第15分钟执行
+
+命令：3,15 8-11 * * 1 command
+
+##### **7、crond服务启动/关闭/重启**
+
+service crond status //查看服务器状态
+
+service crond start //启动服务
+
+service crond stop //关闭服务
+
+service crond restart //重启服务
+
+service crond reload //重新载入配置
+
+##### **8、与cron相关的目录和文件**
+
+/etc/crontab：系统定时任务，只能root用户使用，格式与crontab也不一样。
+
+/var/spool/cron 目录 ：通过crontab命令添加的定时任务会以添加的账号命名放在此目录下
+
+/etc/cron.d：这个目录里包含不同的用户的定时任务
+
+/etc/cron.deny：禁止使用cron的用户列表文件
+
+/etc/cron.allow：允许使用cron的用户列表文件
+
+/etc/cron.daily：存放每天执行一次的脚本
+
+/etc/cron.hourly：存放每个小时执行一个的脚本
+
+/etc/cron.monthly：存放每个月执行一次的脚本
+
+/etc/cron.weekly：存放每个星期执行一个的脚本
+</code></pre>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#1-%E5%9C%A8linux-shell%E4%B8%AD%E8%BE%93%E5%85%A5-crontab-e-%E5%9C%A8%E6%89%93%E5%BC%80%E7%9A%84%E6%96%87%E4%BB%B6%E4%B8%AD%E5%A1%AB%E5%85%A5%E4%BB%A5%E4%B8%8B%E4%BF%A1%E6%81%AF%E5%B9%B6%E4%BF%9D%E5%AD%98%E8%AE%BE%E7%BD%AE%E7%9A%84%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1%E5%B0%B1%E7%94%9F%E6%95%88%E4%BA%86"><strong>1、在linux shell中输入 crontab -e ， 在打开的文件中填入以下信息并保存，设置的定时任务就生效了。</strong></a></li>
+<li><a href="#2-%E6%9F%A5%E7%9C%8B%E8%AE%BE%E7%BD%AE%E7%9A%84%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1%E4%BF%A1%E6%81%AF"><strong>2、查看设置的定时任务信息</strong></a></li>
+<li><a href="#3-demo_startupsh%E7%9A%84%E4%B8%AD%E5%85%B7%E4%BD%93%E5%86%85%E5%AE%B9">**3、demo_startup.sh的中具体内容</a>
+<ul>
+<li><a href="#%E7%A4%BA%E4%BE%8B">示例：</a></li>
+<li><a href="#%E5%A4%87%E4%BB%BDmysql%E7%9A%84demo_startupsh">备份MySQL的demo_startup.sh</a></li>
+</ul>
+</li>
+<li><a href="#4-%E5%A6%82%E4%BD%95%E6%9F%A5%E7%9C%8B%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1%E6%97%A5%E5%BF%97%E6%96%87%E4%BB%B6"><strong>4、如何查看定时任务日志文件</strong></a></li>
+<li><a href="#5-%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1%E6%97%A5%E5%BF%97%E6%A0%BC%E5%BC%8F%E8%AF%B4%E6%98%8E"><strong>5、定时任务日志格式说明</strong></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://viaoh.github.io/post/WS_8n2pOu/">
+              <h3 class="post-title">
+                Linux安装Redis
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '4970b3e2cb2b185b5af7',
+    clientSecret: 'a413a9c025c85c8c7d510b5b5cbe613c47e76bdc',
+    repo: 'viaoh.github.io',
+    owner: 'viaoh',
+    admin: ['viaoh'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  Powered by &nbsp;<a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://viaoh.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>
