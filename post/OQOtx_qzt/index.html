@@ -1,0 +1,413 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>邮箱发送工具类 | liuyoung&#39;s blog</title>
+<link rel="shortcut icon" href="https://viaoh.github.io/favicon.ico?v=1734445748125">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://viaoh.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="邮箱发送工具类 | liuyoung&#39;s blog - Atom Feed" href="https://viaoh.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="pom.xml
+&lt;!-- 邮箱配置 --&gt;
+&lt;dependency&gt;
+	&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+	&lt;artifactId&..." />
+    <meta name="keywords" content="编程生涯" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://viaoh.github.io">
+  <img class="avatar" src="https://viaoh.github.io/images/avatar.png?v=1734445748125" alt="">
+  </a>
+  <h1 class="site-title">
+    liuyoung&#39;s blog
+  </h1>
+  <p class="site-description">
+    人生难得秋前雨，乞我虚堂自在眠
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="https://viaoh.github.io/post/XuQvrNvEf" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/liuyoung-cc/liuyoung-cc.github.io" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+    
+      
+        <a href="https://weibo.com/viaoh" target="_blank">
+          <i class="ri-weibo-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://www.zhihu.com/people/viaoh-" target="_blank">
+          <i class="ri-zhihu-line"></i>
+        </a>
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              邮箱发送工具类
+            </h2>
+            <div class="post-info">
+              <span>
+                2024-05-11
+              </span>
+              <span>
+                6 min read
+              </span>
+              
+                <a href="https://viaoh.github.io/tag/BzttDH753/" class="post-tag">
+                  # 编程生涯
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <h6 id="pomxml">pom.xml</h6>
+<pre><code class="language-xml">&lt;!-- 邮箱配置 --&gt;
+&lt;dependency&gt;
+	&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+	&lt;artifactId&gt;spring-boot-starter-mail&lt;/artifactId&gt;
+&lt;/dependency&gt;
+</code></pre>
+<h6 id="工具类1">工具类1</h6>
+<pre><code class="language-java">import java.io.UnsupportedEncodingException;
+import java.security.Security;
+import java.util.Date;
+import java.util.Properties;
+
+import javax.activation.DataHandler;
+import javax.activation.FileDataSource;
+import javax.mail.Authenticator;
+import javax.mail.BodyPart;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Multipart;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+import javax.mail.internet.MimeUtility;
+
+/**
+ * 邮件处理类
+ * 
+ * @author jiafuwei
+ * 
+ */
+public class sendMail {
+
+    private static final String FROM_MAIL_SMTP = &quot;邮箱服务器，例如smtp.163.com&quot;;
+    private static final String FROM_MAIL_NAME = &quot;您的邮箱&quot;;
+    private static final String FROM_MAIL_PASS = &quot;您的授权码&quot;;
+
+    
+    /**
+     * 发送邮件(灵活度高，通用版)
+     * @param from 发件人
+     * @param to 收件人, 多个Email以英文逗号分隔
+     * @param cc 抄送, 多个Email以英文逗号分隔
+     * @param subject 主题
+     * @param content 内容
+     * @param fileList 附件列表
+     * @return
+     */
+    public static boolean sendMail(String to, String cc, String subject, String content, String[] fileList){
+         try {
+             Security.addProvider(new com.sun.net.ssl.internal.ssl.Provider());
+             final String SSL_FACTORY = &quot;javax.net.ssl.SSLSocketFactory&quot;;
+             final Properties p = System.getProperties() ;
+             p.setProperty(&quot;mail.smtp.host&quot;, FROM_MAIL_SMTP);
+             p.setProperty(&quot;mail.smtp.auth&quot;, &quot;true&quot;);
+             p.setProperty(&quot;mail.smtp.user&quot;, FROM_MAIL_NAME);
+             p.setProperty(&quot;mail.smtp.pass&quot;, FROM_MAIL_PASS);
+             
+             p.setProperty(&quot;mail.smtp.socketFactory.class&quot;, SSL_FACTORY);
+             p.setProperty(&quot;mail.smtp.socketFactory.fallback&quot;, &quot;false&quot;);
+             //邮箱发送服务器端口,这里设置为465端口
+             p.setProperty(&quot;mail.smtp.port&quot;, &quot;465&quot;);
+             p.setProperty(&quot;mail.smtp.socketFactory.port&quot;, &quot;465&quot;);
+    
+            // 根据邮件会话属性和密码验证器构造一个发送邮件的session
+            Session session = Session.getInstance(p, new Authenticator(){
+                protected PasswordAuthentication getPasswordAuthentication() {
+                    return new PasswordAuthentication(p.getProperty(&quot;mail.smtp.user&quot;),p.getProperty(&quot;mail.smtp.pass&quot;));
+                }
+            });
+            session.setDebug(true);
+            Message message = new MimeMessage(session);
+            //消息发送的主题
+            message.setSubject(subject);
+            //接受消息的人
+            message.setReplyTo(InternetAddress.parse(FROM_MAIL_NAME));
+            //消息的发送者
+            message.setFrom(new InternetAddress(p.getProperty(&quot;mail.smtp.user&quot;),&quot;您的邮箱&quot;));
+            // 创建邮件的接收者地址，并设置到邮件消息中
+            String[] split = to.split(&quot;,&quot;);
+            InternetAddress []tos = new InternetAddress[split.length];
+            for (int i = 0; i &lt; split.length; i++) {
+                tos[i]=new InternetAddress(split[i]);
+            }
+            // 设置抄送人
+//            if (cc != null &amp;&amp; cc.length() &gt; 0) {
+//                message.setRecipients(Message.RecipientType.CC, InternetAddress.parse(cc)); 
+//            }
+            message.setRecipients(Message.RecipientType.TO, tos);
+            // 消息发送的时间
+            message.setSentDate(new Date());
+            Multipart mainPart = new MimeMultipart();
+            // 创建一个包含HTML内容的MimeBodyPart
+            BodyPart html = new MimeBodyPart();
+            // 设置HTML内容
+            html.setContent(content, &quot;text/html; charset=utf-8&quot;);
+            mainPart.addBodyPart(html);
+            // 将MiniMultipart对象设置为邮件内容
+            message.setContent(mainPart);
+            // 设置附件
+            if (fileList != null &amp;&amp; fileList.length &gt; 0) {
+                for (int i = 0; i &lt; fileList.length; i++) {
+                    html = new MimeBodyPart();
+                    FileDataSource fds = new FileDataSource(fileList[i]); 
+                    html.setDataHandler(new DataHandler(fds)); 
+                    html.setFileName(MimeUtility.encodeText(fds.getName(), &quot;UTF-8&quot;, &quot;B&quot;));
+                    mainPart.addBodyPart(html); 
+                }
+            }
+            message.setContent(mainPart); 
+            message.saveChanges(); 
+            Transport.send(message);
+         } catch (MessagingException e) {
+             e.printStackTrace();
+             return false;
+         } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 测试Mian方法
+     * 
+     * @param args
+     */
+    public static void main(String[] args) {
+        String content = &quot;&lt;html&gt;&lt;head&gt;&lt;style type='text/css'&gt;p{padding-left:50px;font-family:'楷体';font-size:20px;}table{padding-left:50px;border:0;font-family:'楷体';font-size:30px;}&lt;/style&gt;&lt;/head&gt;&lt;body&gt;验证码：&lt;br/&gt;&lt;p&gt;123456&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;&quot;;
+//        String[] fileList = new String[1];
+//        fileList[0] = &quot;d:/pac.txt&quot;;
+        System.out.println(sendMail(&quot;发送者邮箱&quot;, null, &quot;测试测试&quot;, content,null));
+    }
+}
+
+</code></pre>
+<h6 id="工具类2">工具类2</h6>
+<pre><code class="language-java">import java.util.Objects;
+
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
+
+public class sendMail {
+	public static JavaMailSenderImpl JavaMailSender() {
+        JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+        mailSender.setHost(&quot;邮箱服务器，例如smtp.163.com&quot;);
+        mailSender.setUsername(&quot;您的邮箱&quot;);
+        mailSender.setPassword(&quot;您的授权码&quot;);
+        return mailSender;
+    }
+    //一个简单的邮件,只有text信息
+    /**
+     * @Description:
+     * @Param: [subject:标题, text:内容, email:接收人的邮件地址]
+     * @return: void
+     * @Author: liuyang
+     * @Date: 2020/2/27
+     */
+    public static void SendSimpleEmail(String subject, String text, String email) {
+        JavaMailSenderImpl javaMailSender = JavaMailSender();
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setSubject(subject); //邮件的主题
+        mailMessage.setText(text);
+        mailMessage.setTo(email); //发送给谁
+        mailMessage.setFrom(Objects.requireNonNull(javaMailSender.getUsername())); //谁发送的
+        javaMailSender.send(mailMessage);
+    }
+    
+    public static void main(String[] args) {
+    	SendMail.SendSimpleEmail(&quot;邮件主题&quot;, &quot;邮件内容&quot;, &quot;收件人邮箱&quot;);
+	}
+
+}
+</code></pre>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#pomxml">pom.xml</a></li>
+<li><a href="#%E5%B7%A5%E5%85%B7%E7%B1%BB1">工具类1</a></li>
+<li><a href="#%E5%B7%A5%E5%85%B7%E7%B1%BB2">工具类2</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://viaoh.github.io/post/pOSJswbRk/">
+              <h3 class="post-title">
+                小程序模板通知
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '4970b3e2cb2b185b5af7',
+    clientSecret: 'a413a9c025c85c8c7d510b5b5cbe613c47e76bdc',
+    repo: 'viaoh.github.io',
+    owner: 'viaoh',
+    admin: ['viaoh'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  Powered by &nbsp;<a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://viaoh.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>
