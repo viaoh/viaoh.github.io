@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>MD5加密解密 | liuyoung&#39;s blog</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://viaoh.github.io/favicon.ico?v=1749222208648">
+<link rel="stylesheet" href="https://viaoh.github.io/styles/main.css">
+
+
+  
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
+  
+
+  
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="SpringBoot自带加密方法：
+String encryptStr = DigestUtils.md5DigestAsHex(&quot;需要加密的字符串&quot;.getBytes());
+
+MD5加密解密
+import java...." />
+    <meta name="keywords" content="java工具类" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://viaoh.github.io">
+        <img src="https://viaoh.github.io/images/avatar.png?v=1749222208648" class="site-logo">
+        <h1 class="site-title">liuyoung&#39;s blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="https://viaoh.github.io/post/XuQvrNvEf" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+          <a class="social-link" href="https://github.com/viaoh" target="_blank">
+            <i class="fab fa-github"></i>
+          </a>
+        
+      
+        
+      
+        
+          <a class="social-link" href="https://weibo.com/u/6377680111" target="_blank">
+            <i class="fab fa-weibo"></i>
+          </a>
+        
+      
+        
+          <a class="social-link" href="https://www.zhihu.com/people/viaoh-" target="_blank">
+            <i class="fab fa-zhihu"></i>
+          </a>
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      人生难得秋前雨，乞我虚堂自在眠
+    </div>
+    <div class="site-footer">
+      Powered by &nbsp;<a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://viaoh.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">MD5加密解密</h2>
+            <div class="post-date">2024-05-11</div>
+            
+            <div class="post-content" v-pre>
+              <h5 id="springboot自带加密方法">SpringBoot自带加密方法：</h5>
+<pre><code class="language-java">String encryptStr = DigestUtils.md5DigestAsHex(&quot;需要加密的字符串&quot;.getBytes());
+</code></pre>
+<h5 id="md5加密解密">MD5加密解密</h5>
+<pre><code class="language-java">import java.security.MessageDigest;
+ 
+/**
+ * 采用MD5加密解密
+ */
+public class MD5Tool {
+	/*String s = new String(&quot;tangfuqiang&quot;);
+	System.out.println(&quot;原始：&quot; + s);
+	System.out.println(&quot;MD5后：&quot; + md5Encryption(s));
+	System.out.println(&quot;加密的：&quot; + md5Decrypt(s));
+	System.out.println(&quot;解密的：&quot; + md5Decrypt(md5Decrypt(s)));*/
+	/***
+	 * MD5加码 生成32位md5码
+	 */
+	public static String md5Encryption(String inStr){
+		MessageDigest md5 = null;
+		try{
+			md5 = MessageDigest.getInstance(&quot;MD5&quot;);
+		}catch (Exception e){
+			System.out.println(e.toString());
+			e.printStackTrace();
+			return &quot;&quot;;
+		}
+		char[] charArray = inStr.toCharArray();
+		byte[] byteArray = new byte[charArray.length];
+ 
+		for (int i = 0; i &lt; charArray.length; i++)
+			byteArray[i] = (byte) charArray[i];
+		byte[] md5Bytes = md5.digest(byteArray);
+		StringBuffer hexValue = new StringBuffer();
+		for (int i = 0; i &lt; md5Bytes.length; i++){
+			int val = ((int) md5Bytes[i]) &amp; 0xff;
+			if (val &lt; 16)
+				hexValue.append(&quot;0&quot;);
+			hexValue.append(Integer.toHexString(val));
+		}
+		return hexValue.toString();
+	}
+ 
+	/**
+	 * 加密解密算法 执行一次加密，两次解密
+	 */ 
+	public static String md5Decrypt(String inStr){
+		char[] a = inStr.toCharArray();
+		for (int i = 0; i &lt; a.length; i++){
+			a[i] = (char) (a[i] ^ 't');
+		}
+		String s = new String(a);
+		return s;
+	}
+ 
+}
+</code></pre>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://viaoh.github.io/tag/MJDpA1HvdV/" class="tag">
+                    java工具类
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://viaoh.github.io/post/oGGzfLzXA/">
+                  <h3 class="post-title">
+                    JSON对象遍历
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+              
+                <div id="gitalk-container" data-aos="fade-in"></div>
+              
+
+              
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+  
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+
+      var gitalk = new Gitalk({
+        clientID: '4970b3e2cb2b185b5af7',
+        clientSecret: 'a413a9c025c85c8c7d510b5b5cbe613c47e76bdc',
+        repo: 'viaoh.github.io',
+        owner: 'viaoh',
+        admin: ['viaoh'],
+        id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+        distractionFreeMode: false  // Facebook-like distraction free mode
+      })
+
+      gitalk.render('gitalk-container')
+
+    </script>
+  
+
+  
+
+
+
+
+  </body>
+</html>

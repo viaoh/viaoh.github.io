@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>Http请求工具类 | liuyoung&#39;s blog</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://viaoh.github.io/favicon.ico?v=1749222208648">
+<link rel="stylesheet" href="https://viaoh.github.io/styles/main.css">
+
+
+  
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
+  
+
+  
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="pom.xml
+&lt;!-- http --&gt;
+&lt;dependency&gt;
+	&lt;groupId&gt;org.apache.httpcomponents&lt;/groupId&gt;
+	&lt;artifactId..." />
+    <meta name="keywords" content="java工具类" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://viaoh.github.io">
+        <img src="https://viaoh.github.io/images/avatar.png?v=1749222208648" class="site-logo">
+        <h1 class="site-title">liuyoung&#39;s blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="https://viaoh.github.io/post/XuQvrNvEf" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+          <a class="social-link" href="https://github.com/viaoh" target="_blank">
+            <i class="fab fa-github"></i>
+          </a>
+        
+      
+        
+      
+        
+          <a class="social-link" href="https://weibo.com/u/6377680111" target="_blank">
+            <i class="fab fa-weibo"></i>
+          </a>
+        
+      
+        
+          <a class="social-link" href="https://www.zhihu.com/people/viaoh-" target="_blank">
+            <i class="fab fa-zhihu"></i>
+          </a>
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      人生难得秋前雨，乞我虚堂自在眠
+    </div>
+    <div class="site-footer">
+      Powered by &nbsp;<a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://viaoh.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">Http请求工具类</h2>
+            <div class="post-date">2024-05-11</div>
+            
+            <div class="post-content" v-pre>
+              <h6 id="pomxml">pom.xml</h6>
+<pre><code class="language-xml">&lt;!-- http --&gt;
+&lt;dependency&gt;
+	&lt;groupId&gt;org.apache.httpcomponents&lt;/groupId&gt;
+	&lt;artifactId&gt;httpclient&lt;/artifactId&gt;
+	&lt;version&gt;4.5&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+	&lt;groupId&gt;org.apache.httpcomponents&lt;/groupId&gt;
+	&lt;artifactId&gt;httpmime&lt;/artifactId&gt;
+	&lt;version&gt;4.5&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+	&lt;groupId&gt;org.apache.httpcomponents&lt;/groupId&gt;
+	&lt;artifactId&gt;httpcore&lt;/artifactId&gt;
+	&lt;version&gt;4.4.5&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<h6 id="工具类">工具类</h6>
+<pre><code class="language-java">import java.io.IOException;
+import java.nio.charset.Charset;
+import java.security.KeyManagementException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+ 
+import javax.net.ssl.SSLContext;
+ 
+import com.alibaba.fastjson.JSONObject;
+import org.apache.http.HttpEntity;
+import org.apache.http.NameValuePair;
+import org.apache.http.ParseException;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.config.ConnectionConfig;
+import org.apache.http.config.Registry;
+import org.apache.http.config.RegistryBuilder;
+import org.apache.http.config.SocketConfig;
+import org.apache.http.conn.socket.ConnectionSocketFactory;
+import org.apache.http.conn.socket.LayeredConnectionSocketFactory;
+import org.apache.http.conn.socket.PlainConnectionSocketFactory;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.SSLContexts;
+import org.apache.http.conn.ssl.TrustStrategy;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.apache.http.message.BasicHeader;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
+ 
+/**
+ * &lt;p&gt;类名: HttpUtils&lt;/p&gt;
+ * &lt;p&gt;描述: http请求工具类&lt;/p&gt;
+ * &lt;p&gt;修改时间: 2019年04月30日 上午10:12:35&lt;/p&gt;
+ *
+ * @author lidongyang
+ */
+public class HttpTool {
+ 
+    public static String defaultEncoding = &quot;utf-8&quot;;
+ 
+    /**
+     * 发送http post请求，并返回响应实体
+     *
+     * @param url 请求地址
+     * @return url响应实体
+     */
+    public static String postRequest(String url) {
+        return postRequest(url, null, null);
+    }
+ 
+    /**
+     * &lt;p&gt;方法名: postRequest&lt;/p&gt;
+     * &lt;p&gt;描述: 发送httpPost请求&lt;/p&gt;
+     *
+     * @param url
+     * @param params
+     * @return
+     */
+    public static String postRequest(String url, Map&lt;String, Object&gt; params) {
+        return postRequest(url, null, params);
+    }
+ 
+    /**
+     * 发送http post请求，并返回响应实体
+     *
+     * @param url     访问的url
+     * @param headers 请求需要添加的请求头
+     * @param params  请求参数
+     * @return
+     */
+    public static String postRequest(String url, Map&lt;String, String&gt; headers,
+                                     Map&lt;String, Object&gt; params) {
+        String result = null;
+        CloseableHttpClient httpClient = buildHttpClient();
+        HttpPost httpPost = new HttpPost(url);
+ 
+        if (null != headers &amp;&amp; headers.size() &gt; 0) {
+            for (Entry&lt;String, String&gt; entry : headers.entrySet()) {
+                String key = entry.getKey();
+                String value = entry.getValue();
+                httpPost.addHeader(new BasicHeader(key, value));
+            }
+        }
+        if (null != params &amp;&amp; params.size() &gt; 0) {
+            List&lt;NameValuePair&gt; pairList = new ArrayList&lt;NameValuePair&gt;(params.size());
+            for (Map.Entry&lt;String, Object&gt; entry : params.entrySet()) {
+                NameValuePair pair = new BasicNameValuePair(entry.getKey(), entry.getValue().toString());
+                pairList.add(pair);
+            }
+            httpPost.setEntity(new UrlEncodedFormEntity(pairList, Charset.forName(defaultEncoding)));
+        }
+ 
+        try {
+            CloseableHttpResponse response = httpClient.execute(httpPost);
+            try {
+                HttpEntity entity = response.getEntity();
+                if (entity != null) {
+                    result = EntityUtils.toString(entity,
+                            Charset.forName(defaultEncoding));
+                }
+            } finally {
+                response.close();
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            try {
+                httpClient.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+ 
+        return result;
+    }
+ 
+    /**
+     * 发送http get请求
+     *
+     * @param url 请求url
+     * @return url返回内容
+     */
+    public static String getRequest(String url) {
+        return getRequest(url, null);
+    }
+ 
+ 
+    /**
+     * 发送http get请求
+     *
+     * @param url    请求的url
+     * @param params 请求的参数
+     * @return
+     */
+    public static String getRequest(String url, Map&lt;String, Object&gt; params) {
+        return getRequest(url, null, params);
+    }
+ 
+    /**
+     * 发送http get请求
+     *
+     * @param url        请求的url
+     * @param headersMap 请求头
+     * @param params     请求的参数
+     * @return
+     */
+    public static String getRequest(String url, Map&lt;String, String&gt; headersMap, Map&lt;String, Object&gt; params) {
+        String result = null;
+        CloseableHttpClient httpClient = buildHttpClient();
+        try {
+            String apiUrl = url;
+            if (null != params &amp;&amp; params.size() &gt; 0) {
+                StringBuffer param = new StringBuffer();
+                int i = 0;
+                for (String key : params.keySet()) {
+                    if (i == 0)
+                        param.append(&quot;?&quot;);
+                    else
+                        param.append(&quot;&amp;&quot;);
+                    param.append(key).append(&quot;=&quot;).append(params.get(key));
+                    i++;
+                }
+                apiUrl += param;
+            }
+ 
+            HttpGet httpGet = new HttpGet(apiUrl);
+            if (null != headersMap &amp;&amp; headersMap.size() &gt; 0) {
+                for (Entry&lt;String, String&gt; entry : headersMap.entrySet()) {
+                    String key = entry.getKey();
+                    String value = entry.getValue();
+                    httpGet.addHeader(new BasicHeader(key, value));
+                }
+            }
+            CloseableHttpResponse response = httpClient.execute(httpGet);
+            try {
+                HttpEntity entity = response.getEntity();
+                if (null != entity) {
+                    result = EntityUtils.toString(entity, defaultEncoding);
+                }
+            } finally {
+                response.close();
+            }
+        } catch (ClientProtocolException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                httpClient.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return result;
+    }
+ 
+    /**
+     * 创建httpclient
+     *
+     * @return
+     */
+    public static CloseableHttpClient buildHttpClient() {
+        try {
+            RegistryBuilder&lt;ConnectionSocketFactory&gt; builder = RegistryBuilder
+                    .create();
+            ConnectionSocketFactory factory = new PlainConnectionSocketFactory();
+            builder.register(&quot;http&quot;, factory);
+            KeyStore trustStore = KeyStore.getInstance(KeyStore
+                    .getDefaultType());
+            SSLContext context = SSLContexts.custom().useTLS()
+                    .loadTrustMaterial(trustStore, new TrustStrategy() {
+                        public boolean isTrusted(X509Certificate[] chain,
+                                                 String authType) throws CertificateException {
+                            return true;
+                        }
+                    }).build();
+            LayeredConnectionSocketFactory sslFactory = new SSLConnectionSocketFactory(
+                    context,
+                    SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+            builder.register(&quot;https&quot;, sslFactory);
+            Registry&lt;ConnectionSocketFactory&gt; registry = builder.build();
+            PoolingHttpClientConnectionManager manager = new PoolingHttpClientConnectionManager(
+                    registry);
+            ConnectionConfig connConfig = ConnectionConfig.custom()
+                    .setCharset(Charset.forName(defaultEncoding)).build();
+            SocketConfig socketConfig = SocketConfig.custom()
+                    .setSoTimeout(100000).build();
+            manager.setDefaultConnectionConfig(connConfig);
+            manager.setDefaultSocketConfig(socketConfig);
+            return HttpClientBuilder.create().setConnectionManager(manager)
+                    .build();
+        } catch (KeyStoreException e) {
+            e.printStackTrace();
+        } catch (KeyManagementException e) {
+            e.printStackTrace();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+ 
+    public static void main(String[] args) {
+        String url = &quot;请求路径&quot;;
+        JSONObject params = new JSONObject();
+        params.put(&quot;参数key&quot;, &quot;参数value&quot;);
+        String result = HttpTool.getRequest(url, params);
+        System.out.println(&quot;请求时间&quot; + System.currentTimeMillis());
+        System.out.println(&quot;请求结果&quot; + result);
+    }
+ 
+ 
+}
+</code></pre>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://viaoh.github.io/tag/MJDpA1HvdV/" class="tag">
+                    java工具类
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://viaoh.github.io/post/W0F8CGbD5/">
+                  <h3 class="post-title">
+                    Excel导出工具类
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+              
+                <div id="gitalk-container" data-aos="fade-in"></div>
+              
+
+              
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+  
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+
+      var gitalk = new Gitalk({
+        clientID: '4970b3e2cb2b185b5af7',
+        clientSecret: 'a413a9c025c85c8c7d510b5b5cbe613c47e76bdc',
+        repo: 'viaoh.github.io',
+        owner: 'viaoh',
+        admin: ['viaoh'],
+        id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+        distractionFreeMode: false  // Facebook-like distraction free mode
+      })
+
+      gitalk.render('gitalk-container')
+
+    </script>
+  
+
+  
+
+
+
+
+  </body>
+</html>

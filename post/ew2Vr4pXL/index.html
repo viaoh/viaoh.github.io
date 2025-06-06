@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>按键精灵常用代码 | liuyoung&#39;s blog</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://viaoh.github.io/favicon.ico?v=1749222208648">
+<link rel="stylesheet" href="https://viaoh.github.io/styles/main.css">
+
+
+  
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
+  
+
+  
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="常用代码
+//句柄
+MoveTo 824, 705
+LeftClick 1
+Delay 300
+//切屏两下
+KeyDown 18, 1
+KeyPress 9, 2 //此处的2为切屏次数
+KeyUp 18, 1
+Delay 300
+//选..." />
+    <meta name="keywords" content="按键精灵" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://viaoh.github.io">
+        <img src="https://viaoh.github.io/images/avatar.png?v=1749222208648" class="site-logo">
+        <h1 class="site-title">liuyoung&#39;s blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="https://viaoh.github.io/post/XuQvrNvEf" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+          <a class="social-link" href="https://github.com/viaoh" target="_blank">
+            <i class="fab fa-github"></i>
+          </a>
+        
+      
+        
+      
+        
+          <a class="social-link" href="https://weibo.com/u/6377680111" target="_blank">
+            <i class="fab fa-weibo"></i>
+          </a>
+        
+      
+        
+          <a class="social-link" href="https://www.zhihu.com/people/viaoh-" target="_blank">
+            <i class="fab fa-zhihu"></i>
+          </a>
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      人生难得秋前雨，乞我虚堂自在眠
+    </div>
+    <div class="site-footer">
+      Powered by &nbsp;<a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://viaoh.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">按键精灵常用代码</h2>
+            <div class="post-date">2024-05-11</div>
+            
+            <div class="post-content" v-pre>
+              <h4 id="常用代码">常用代码</h4>
+<pre><code class="language-js">//句柄
+MoveTo 824, 705
+LeftClick 1
+Delay 300
+//切屏两下
+KeyDown 18, 1
+KeyPress 9, 2 //此处的2为切屏次数
+KeyUp 18, 1
+Delay 300
+//选择变量
+UserVar link = DropList{&quot;zzabjy&quot;:&quot;www.zzabjy.com/&quot;|&quot;hencjw&quot;:&quot;www.hencjw.cn/&quot;}=0 &quot;网站地址&quot;
+SayString link
+//运行次数
+UserVar Var=100 &quot;运行次数&quot;
+For Var
+Next
+//每隔一秒判断某个坐标的颜色【0 等于】【1 不等于】【2 近似于】
+Do While true
+    Delay 1000
+    IfColor 949, 421, &quot;00CCFF&quot;, 0 Then
+        Exit do  
+    End If
+Loop
+Msgbox &quot;判断成功&quot;
+//获取剪切板的内容
+StuName = Plugin.Sys.GetCLB()
+//设置剪切板的内容
+Plugin.Sys.SetCLB(StuName)
+//清除换行
+NewStuName = Replace(StuName, vbcrlf, &quot;&quot;) 
+Delay 800
+//根据两个坐标截图以及字符串和变量拼接
+Call Plugin.Pic.PrintScreen(634, 308, 1583, 880, &quot;本地储存路径&quot; + NewStuName &amp; &quot;.jpg&quot;)
+Delay 800
+//截取字符串，从第7位开始截取，截取6位
+userBirthDate = Mid(&quot;410184199708263245&quot;, 7, 6)//取出出生年月
+//判断年龄是否大于25
+If userBirthDate + 0 &lt; 199510 Then 
+    Msgbox &quot;大于25岁&quot;
+End If
+//判断字符串是否相等
+userNation = &quot;汉&quot;
+If userNation &lt;&gt; &quot;汉&quot; Then  
+    Msgbox &quot;是少数民族&quot;  
+End If
+//判断数组是否包含
+myname = &quot;张三&quot;
+nameArray = array(&quot;张三&quot;,&quot;李四&quot;,&quot;王五&quot;)
+If UBound(Filter(nameArray, myname)) + 1 &gt; 0 Then  
+    Msgbox &quot;包含张三这个人&quot; 
+End If
+</code></pre>
+<h4 id="帖子修改">帖子修改</h4>
+<h4 id=""></h4>
+<pre><code class="language-js">// 打开文档
+KeyPress &quot;Enter&quot;, 1
+Do While true
+    Delay 500
+    IfColor 1123, 992, &quot;FFFFFF&quot;, 0 Then //判断文档是否打开
+        Exit do  
+    End If
+Loop
+// 全选 便于判断是否为空文档
+KeyDown 17, 1
+KeyPress 65, 1
+KeyUp 17, 1
+Delay 500
+// 是用文字工具对文档整体格式整理
+MoveTo 1053, 54
+LeftClick 1
+Delay 500
+KeyPress &quot;W&quot;, 1
+Delay 500
+MoveTo 1053, 54
+LeftClick 1
+Delay 500
+KeyPress &quot;B&quot;, 1
+MoveTo 1053, 54
+LeftClick 1
+Delay 500
+KeyPress &quot;F&quot;, 1
+Delay 500
+// 判断是否是空文档
+IfColor 750, 250, &quot;C7C7C7&quot;, 1 Then
+    IfColor 735, 270, &quot;C7C7C7&quot;, 1 Then
+        IfColor 372, 253, &quot;C7C7C7&quot;, 1 Then
+            //  保存当前文档
+            KeyDown 17, 1
+            KeyPress 83, 1
+            KeyUp 17, 1
+            Delay 500
+            // 关闭文档
+            KeyDown 17, 1
+            KeyPress 87, 1
+            KeyUp 17, 1
+            Delay 500
+            // 删除空白文档
+            MoveTo 106, 1059
+            LeftClick 1
+            Delay 500
+            KeyDown 17, 1
+            KeyPress 68, 1
+            KeyUp 17, 1
+            Delay 800
+            KeyPress &quot;Enter&quot;, 1
+            Delay 800
+            // 选择下一个文档
+            KeyPress &quot;Up&quot;, 1
+            Delay 500
+            KeyPress &quot;Down&quot;, 1
+            // 结束代码，重新执行
+            EndScript
+        End If
+    End If
+End If
+// 打开替换框
+Delay 600
+KeyDown 17, 1
+KeyPress 72, 1
+KeyUp 17, 1
+Delay 500
+//--------------------------------将内容替换为空-----------------------------
+// 定义一个数组，储存替换的内容，将其替换为空
+contentArray1 = array(&quot; &quot;)
+// 循环替换内容
+For Each value In contentArray1
+    // 设置剪贴板内容为数组中的内容
+    Call Plugin.Sys.SetCLB(value)
+    Delay 500
+    // 粘贴替换内容
+    KeyDown 17, 1
+    KeyPress 86, 1
+    KeyUp 17, 1
+    Delay 500
+    // 点击全部替换
+    MoveTo 811, 596
+    LeftClick 1
+    Delay 500
+    // 如果出现提示点击确定，不出现点击无任何反应
+    MoveTo 878, 541
+    LeftClick 1
+    Delay 500
+    // 点击确认替换完成
+    MoveTo 934, 544
+    LeftClick 1
+    Delay 500
+Next
+//--------------------------------将内容替换为空-----------------------------
+//--------------------------------将指定内容替换为指定值-----------------------------
+Dim contentArray2 //创建替换对象，key为替换前的内容，value为替换后的内容
+Set contentArray2 = CreateObject(&quot;Scripting.Dictionary&quot;)
+contentArray2.Add &quot;免费领取考试复习资料价值988元的视频课件!&quot;, &quot;领取考试复习资料和视频课件!&quot;
+contentArray2.Add &quot;第一&quot;, &quot;第1&quot;
+contentArray2.Add &quot;国家&quot;, &quot;我国&quot;
+contentArray2.Add &quot;优秀&quot;, &quot;优-秀&quot;
+contentArray2.Add &quot;最&quot;,&quot;zui&quot;
+oldContent = contentArray2.keys
+newContent = contentArray2.Items
+For i = 0 To contentArray2.count - 1 //从上到下遍历
+    //替换敏感词
+    KeyPress &quot;BackSpace&quot;, 1
+    Delay 800
+    Call Plugin.Sys.SetCLB(oldContent(i))
+    KeyDown 17, 1
+    KeyPress 86, 1
+    KeyUp 17, 1
+    Delay 500
+    KeyPress &quot;Tab&quot;, 1
+    Call Plugin.Sys.SetCLB(newContent(i))
+    KeyDown 17, 1
+    KeyPress 86, 1
+    KeyUp 17, 1
+    Delay 500
+    // 点击全部替换
+    MoveTo 811, 596
+    LeftClick 1
+    Delay 500
+    // 如果出现提示点击确定，不出现点击无任何反应
+    MoveTo 878, 541
+    LeftClick 1
+    Delay 500
+    // 点击确认替换完成
+    MoveTo 934, 544
+    LeftClick 1
+    Delay 500
+Next
+//--------------------------------将指定内容替换为指定值-----------------------------
+//--------------------------------将符合条件的正则表达式替换为指定值-----------------------------
+// 在word中使用正则表达式
+// 打开高级搜索
+MoveTo 743, 552
+LeftClick 1
+Delay 500
+// 点击通配符
+MoveTo 698, 652
+LeftClick 1
+Delay 500
+//创建替换对象，key为符合条件的正则表达式，value为替换后的内容
+Dim contentArray3 
+Set contentArray3 = CreateObject(&quot;Scripting.Dictionary&quot;)
+contentArray3.Add &quot;[0-9]{11,}&quot;,&quot;177-3711-8576&quot;
+regularExpression = contentArray3.keys
+replaceContent = contentArray3.Items
+For i = 0 To contentArray3.count - 1//从上到下遍历
+    // 移动到正则表达式框
+    MoveTo 797, 434
+    LeftClick 1
+    Delay 500
+    // 清空内容
+    KeyDown 17, 1
+    KeyPress 65, 1
+    KeyUp 17, 1
+    Delay 500
+    KeyPress &quot;BackSpace&quot;, 1
+    Delay 500
+    //输入正则表达式
+    SayString regularExpression(i)
+    Delay 500
+    // 输入替换后的内容
+    MoveTo 792, 490
+    LeftClick 1
+    Delay 500
+    // 清空内容
+    KeyDown 17, 1
+    KeyPress 65, 1
+    KeyUp 17, 1
+    Delay 500
+    KeyPress &quot;BackSpace&quot;, 1
+    Delay 500
+    SayString replaceContent(i)
+    Delay 500
+    // 点击全部替换
+    MoveTo 811, 731
+    LeftClick 1
+    Delay 500
+    // 如果出现提示点击确定，不出现点击无任何反应
+    MoveTo 876, 612
+    LeftClick 1
+    Delay 500
+    // 点击确认替换完成
+    MoveTo 934, 612
+    LeftClick 1
+    Delay 500
+Next
+// 在word中关闭正则表达式
+// 关闭通配符
+MoveTo 698, 652
+LeftClick 1
+Delay 500
+// 选择普通文本替换
+MoveTo 697, 670
+LeftClick 1
+Delay 500
+// 关闭高级搜索
+MoveTo 743, 552
+LeftClick 1
+Delay 500
+//--------------------------------将符合条件的正则表达式替换为指定值-----------------------------
+// 关闭替换框
+KeyPress &quot;Esc&quot;, 1
+Delay 600
+//--------------------------
+// 保存文档并退出
+KeyDown 17, 1
+KeyPress 83, 1
+KeyUp 17, 1
+Delay 800
+KeyDown 17, 1
+KeyPress 87, 1
+KeyUp 17, 1
+Delay 800
+// 切换到下一个文档
+MoveTo 106, 1059
+LeftClick 1
+Delay 500
+KeyPress &quot;Down&quot;, 1
+Delay 500
+</code></pre>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://viaoh.github.io/tag/zU0CvvKSQ9/" class="tag">
+                    按键精灵
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://viaoh.github.io/post/XuQvrNvEf/">
+                  <h3 class="post-title">
+                    关于
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+              
+                <div id="gitalk-container" data-aos="fade-in"></div>
+              
+
+              
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+  
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+
+      var gitalk = new Gitalk({
+        clientID: '4970b3e2cb2b185b5af7',
+        clientSecret: 'a413a9c025c85c8c7d510b5b5cbe613c47e76bdc',
+        repo: 'viaoh.github.io',
+        owner: 'viaoh',
+        admin: ['viaoh'],
+        id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+        distractionFreeMode: false  // Facebook-like distraction free mode
+      })
+
+      gitalk.render('gitalk-container')
+
+    </script>
+  
+
+  
+
+
+
+
+  </body>
+</html>

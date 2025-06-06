@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>小程序模板通知 | liuyoung&#39;s blog</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://viaoh.github.io/favicon.ico?v=1749222208648">
+<link rel="stylesheet" href="https://viaoh.github.io/styles/main.css">
+
+
+  
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
+  
+
+  
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.springframework.http.Resp..." />
+    <meta name="keywords" content="java工具类" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://viaoh.github.io">
+        <img src="https://viaoh.github.io/images/avatar.png?v=1749222208648" class="site-logo">
+        <h1 class="site-title">liuyoung&#39;s blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="https://viaoh.github.io/post/XuQvrNvEf" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+          <a class="social-link" href="https://github.com/viaoh" target="_blank">
+            <i class="fab fa-github"></i>
+          </a>
+        
+      
+        
+      
+        
+          <a class="social-link" href="https://weibo.com/u/6377680111" target="_blank">
+            <i class="fab fa-weibo"></i>
+          </a>
+        
+      
+        
+          <a class="social-link" href="https://www.zhihu.com/people/viaoh-" target="_blank">
+            <i class="fab fa-zhihu"></i>
+          </a>
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      人生难得秋前雨，乞我虚堂自在眠
+    </div>
+    <div class="site-footer">
+      Powered by &nbsp;<a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://viaoh.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">小程序模板通知</h2>
+            <div class="post-date">2024-05-11</div>
+            
+            <div class="post-content" v-pre>
+              <pre><code class="language-java">import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
+
+import com.google.gson.Gson;
+import com.wowmake.aftersale.model.Bill;
+import com.wowmake.aftersale.model.wechat.WeChatTemplateData;
+import com.wowmake.aftersale.model.wechat.WeChatTemplateMsg;
+import com.wowmake.aftersale.model.wechat.WechatAccessToken;
+
+public class WeChatPush {
+
+	/*
+	 * 微信小程序推送单个用户
+	 */
+	public static void pushOneUser(RestTemplate restTemplate,String openid,String formId,Bill bill) {
+		// 获取access_token
+		String access_token = getAccess_token(&quot;wx5db83dbd5a5df58c&quot;, &quot;f4af31412da4baf7b4a616113ff8f270&quot;,restTemplate);
+		String url = &quot;https://api.weixin.qq.com/cgi-bin/message/wxopen/template/send&quot; + &quot;?access_token=&quot; + access_token;
+		Integer billState = bill.getBillState();
+		WeChatTemplateMsg wxTemplateMsg = new WeChatTemplateMsg();
+		wxTemplateMsg.setTouser(openid);// 要推送用户的openid
+		wxTemplateMsg.setForm_id(formId);// 要推送用户的formid
+		if (billState == 1) {
+			wxTemplateMsg.setTemplate_id(&quot;z6NUC6iQ5rb5hnZElv3qljgulHwgXKykAzWO8RcPQxY&quot;);// 模版id
+			Map&lt;String, WeChatTemplateData&gt; m = new HashMap&lt;&gt;();
+			// 拼接推送的模版
+			WeChatTemplateData keyword1 = new WeChatTemplateData();
+			keyword1.setValue(bill.getBillNumber());
+			m.put(&quot;keyword1&quot;, keyword1);
+
+			WeChatTemplateData keyword2 = new WeChatTemplateData();
+			keyword2.setValue(bill.getMachineInfo().getMachineNumber());
+			m.put(&quot;keyword2&quot;, keyword2);
+			wxTemplateMsg.setData(m);
+
+			WeChatTemplateData keyword3 = new WeChatTemplateData();
+			keyword3.setValue(bill.getBillArea()+bill.getBillAddress());
+			m.put(&quot;keyword3&quot;, keyword3);
+			wxTemplateMsg.setData(m);
+
+			WeChatTemplateData keyword4 = new WeChatTemplateData();
+			keyword4.setValue(bill.getCustomerInfo().getUserNickName());
+			m.put(&quot;keyword4&quot;, keyword4);
+			wxTemplateMsg.setData(m);
+
+			WeChatTemplateData keyword5 = new WeChatTemplateData();
+			SimpleDateFormat sdf = new SimpleDateFormat(&quot;yyyy-MM-dd HH:mm:ss&quot;);
+			keyword5.setValue(sdf.format(bill.getBillSubmitDate()));
+			m.put(&quot;keyword5&quot;, keyword5);
+			wxTemplateMsg.setData(m);
+			
+			WeChatTemplateData keyword6 = new WeChatTemplateData();
+			keyword6.setValue(bill.getServiceInfo().getUserNickName());
+			m.put(&quot;keyword6&quot;, keyword6);
+			wxTemplateMsg.setData(m);
+			
+			WeChatTemplateData keyword7 = new WeChatTemplateData();
+			keyword7.setValue(bill.getServiceInfo().getUserPhone());
+			m.put(&quot;keyword7&quot;, keyword7);
+			wxTemplateMsg.setData(m);
+			
+			WeChatTemplateData keyword8 = new WeChatTemplateData();
+			keyword8.setValue(&quot;待处理&quot;);
+			m.put(&quot;keyword8&quot;, keyword8);
+			wxTemplateMsg.setData(m);
+		} else if(billState == 2){
+			wxTemplateMsg.setTemplate_id(&quot;mVkOVv_yO4GcS5kTAuCPJf3k9sxcF__p75h_7M0e85Y&quot;);// 模版id
+			Map&lt;String, WeChatTemplateData&gt; m = new HashMap&lt;&gt;();
+			// 拼接推送的模版
+			WeChatTemplateData keyword1 = new WeChatTemplateData();
+			keyword1.setValue(bill.getBillNumber());
+			m.put(&quot;keyword1&quot;, keyword1);
+
+			WeChatTemplateData keyword2 = new WeChatTemplateData();
+			keyword2.setValue(bill.getServiceInfo().getUserNickName());
+			m.put(&quot;keyword2&quot;, keyword2);
+			wxTemplateMsg.setData(m);
+			
+			WeChatTemplateData keyword3 = new WeChatTemplateData();
+			keyword3.setValue(bill.getServiceInfo().getUserPhone());
+			m.put(&quot;keyword3&quot;, keyword3);
+			wxTemplateMsg.setData(m);
+			
+			WeChatTemplateData keyword4 = new WeChatTemplateData();
+			keyword4.setValue(&quot;已处理，期待您的评价&quot;);
+			m.put(&quot;keyword4&quot;, keyword4);
+			wxTemplateMsg.setData(m);
+		}
+		ResponseEntity&lt;String&gt; responseEntity = restTemplate.postForEntity(url, wxTemplateMsg, String.class);
+		System.out.printf(&quot;小程序推送结果：&quot;);
+		System.out.println(responseEntity.getBody());
+	}
+
+	/*
+	 * 获取access_token appid和appsecret到小程序后台获取，当然也可以让小程序开发人员给你传过来
+	 */
+	public static String getAccess_token(String appid, String appsecret,RestTemplate restTemplate) {
+		// 获取access_token
+		String url = &quot;https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&quot; + &quot;&amp;appid=&quot; + appid
+				+ &quot;&amp;secret=&quot; + appsecret;
+		String json = restTemplate.getForObject(url, String.class);
+		WechatAccessToken accessToken = new Gson().fromJson(json, WechatAccessToken.class);
+		return accessToken.getAccess_token();
+	}
+
+}
+</code></pre>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://viaoh.github.io/tag/MJDpA1HvdV/" class="tag">
+                    java工具类
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://viaoh.github.io/post/jSMenZ-BQ/">
+                  <h3 class="post-title">
+                    文件工具类
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+              
+                <div id="gitalk-container" data-aos="fade-in"></div>
+              
+
+              
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+  
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+
+      var gitalk = new Gitalk({
+        clientID: '4970b3e2cb2b185b5af7',
+        clientSecret: 'a413a9c025c85c8c7d510b5b5cbe613c47e76bdc',
+        repo: 'viaoh.github.io',
+        owner: 'viaoh',
+        admin: ['viaoh'],
+        id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+        distractionFreeMode: false  // Facebook-like distraction free mode
+      })
+
+      gitalk.render('gitalk-container')
+
+    </script>
+  
+
+  
+
+
+
+
+  </body>
+</html>

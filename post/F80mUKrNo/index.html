@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>SQL语句 | liuyoung&#39;s blog</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://viaoh.github.io/favicon.ico?v=1749222208648">
+<link rel="stylesheet" href="https://viaoh.github.io/styles/main.css">
+
+
+  
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
+  
+
+  
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="MySQL删除表的三种用法
+用法：
+1、当你不再需要该表时， 用 drop;
+2、当你仍要保留该表，但要删除所有记录时， 用 truncate;
+3、当你要删除部分记录或者有可能会后悔的话， 用 delete。
+
+
+删除程度可从强到弱如下排..." />
+    <meta name="keywords" content="数据库" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://viaoh.github.io">
+        <img src="https://viaoh.github.io/images/avatar.png?v=1749222208648" class="site-logo">
+        <h1 class="site-title">liuyoung&#39;s blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="https://viaoh.github.io/post/XuQvrNvEf" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+          <a class="social-link" href="https://github.com/viaoh" target="_blank">
+            <i class="fab fa-github"></i>
+          </a>
+        
+      
+        
+      
+        
+          <a class="social-link" href="https://weibo.com/u/6377680111" target="_blank">
+            <i class="fab fa-weibo"></i>
+          </a>
+        
+      
+        
+          <a class="social-link" href="https://www.zhihu.com/people/viaoh-" target="_blank">
+            <i class="fab fa-zhihu"></i>
+          </a>
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      人生难得秋前雨，乞我虚堂自在眠
+    </div>
+    <div class="site-footer">
+      Powered by &nbsp;<a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://viaoh.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">SQL语句</h2>
+            <div class="post-date">2024-05-11</div>
+            
+            <div class="post-content" v-pre>
+              <h4 id="mysql删除表的三种用法">MySQL删除表的三种用法</h4>
+<pre><code class="language-sql">用法：
+1、当你不再需要该表时， 用 drop;
+2、当你仍要保留该表，但要删除所有记录时， 用 truncate;
+3、当你要删除部分记录或者有可能会后悔的话， 用 delete。
+
+
+删除程度可从强到弱如下排列：
+1.  drop table tb;
+    drop 是直接将表格删除，无法找回。例如删除 user 表：
+    drop table user;
+2.  truncate （table） tb;
+    truncate 是删除表中所有数据，但不能与where一起使用；
+    TRUNCATE TABLE user;
+3.  delete from tb (where);
+    delete 也是删除表中数据，但可以与where连用，删除特定行；
+    -- 删除表中所有数据
+    delete from user;
+    -- 删除指定行
+    delete from user where username ='Tom';
+
+truncate 和 delete 的区别：
+1. 事物
+   truncate删除后不记录mysql日志，因此不可以rollback，更不可以恢复数据；而 delete 是可以 rollback;
+   原因：truncate 相当于保留原mysql表的结果，重新创建了这个表，所有的状态都相当于新的，而delete的效果相当于一行行删除，所以可以rollback;
+2. 效果
+   效率上 truncate 比 delete快，而且 truncate 删除后将重建索引（新插入数据后id从0开始记起），而 delete不会删除索引 （新插入的数据将在删除数据的索引后继续增加）
+3. truncate 不会触发任何 DELETE触发器；
+4. 返回值
+   delete 操作后返回删除的记录数，而 truncate 返回的是0或者-1（成功则返回0，失败返回-1）；
+   delete 与 delete from 区别：
+   如果只针对一张表进行删除，则效果一样；如果需要联合其他表，则需要使用from ：
+   delete tb1 from tb1 m where id in (select id from tb2)
+</code></pre>
+<h4 id="去除数据库换行空格">去除数据库换行空格：</h4>
+<pre><code class="language-sql">update test
+set info = replace(replace(info,char(10),''),char(13),'')
+where info like concat('%',char(10),'%');
+</code></pre>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://viaoh.github.io/tag/5hzY3bHP5_/" class="tag">
+                    数据库
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://viaoh.github.io/post/tTVsh1r-l/">
+                  <h3 class="post-title">
+                    MySQL数据库定时删除数据
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+              
+                <div id="gitalk-container" data-aos="fade-in"></div>
+              
+
+              
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+  
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+
+      var gitalk = new Gitalk({
+        clientID: '4970b3e2cb2b185b5af7',
+        clientSecret: 'a413a9c025c85c8c7d510b5b5cbe613c47e76bdc',
+        repo: 'viaoh.github.io',
+        owner: 'viaoh',
+        admin: ['viaoh'],
+        id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+        distractionFreeMode: false  // Facebook-like distraction free mode
+      })
+
+      gitalk.render('gitalk-container')
+
+    </script>
+  
+
+  
+
+
+
+
+  </body>
+</html>

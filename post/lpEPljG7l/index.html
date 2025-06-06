@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>手机号码归属地查询 | liuyoung&#39;s blog</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://viaoh.github.io/favicon.ico?v=1749222208648">
+<link rel="stylesheet" href="https://viaoh.github.io/styles/main.css">
+
+
+  
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
+  
+
+  
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="pom.xml
+&lt;!-- 手机号归属地查询 --&gt;
+&lt;dependency&gt;
+&lt;groupId&gt;com.googlecode.libphonenumber&lt;/groupId&gt;
+			&lt;a..." />
+    <meta name="keywords" content="java工具类" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://viaoh.github.io">
+        <img src="https://viaoh.github.io/images/avatar.png?v=1749222208648" class="site-logo">
+        <h1 class="site-title">liuyoung&#39;s blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="https://viaoh.github.io/post/XuQvrNvEf" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+          <a class="social-link" href="https://github.com/viaoh" target="_blank">
+            <i class="fab fa-github"></i>
+          </a>
+        
+      
+        
+      
+        
+          <a class="social-link" href="https://weibo.com/u/6377680111" target="_blank">
+            <i class="fab fa-weibo"></i>
+          </a>
+        
+      
+        
+          <a class="social-link" href="https://www.zhihu.com/people/viaoh-" target="_blank">
+            <i class="fab fa-zhihu"></i>
+          </a>
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      人生难得秋前雨，乞我虚堂自在眠
+    </div>
+    <div class="site-footer">
+      Powered by &nbsp;<a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://viaoh.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">手机号码归属地查询</h2>
+            <div class="post-date">2024-05-11</div>
+            
+            <div class="post-content" v-pre>
+              <p>pom.xml</p>
+<pre><code class="language-xml">&lt;!-- 手机号归属地查询 --&gt;
+&lt;dependency&gt;
+&lt;groupId&gt;com.googlecode.libphonenumber&lt;/groupId&gt;
+			&lt;artifactId&gt;libphonenumber&lt;/artifactId&gt;
+			&lt;version&gt;8.7.1&lt;/version&gt;
+		&lt;/dependency&gt;
+		&lt;dependency&gt;
+			&lt;groupId&gt;com.googlecode.libphonenumber&lt;/groupId&gt;
+&lt;artifactId&gt;geocoder&lt;/artifactId&gt;
+			&lt;version&gt;2.76&lt;/version&gt;
+		&lt;/dependency&gt;
+		&lt;dependency&gt;
+			&lt;groupId&gt;com.googlecode.libphonenumber&lt;/groupId&gt;
+			&lt;artifactId&gt;carrier&lt;/artifactId&gt;
+			&lt;version&gt;1.66&lt;/version&gt;
+		&lt;/dependency&gt;
+</code></pre>
+<p>工具类</p>
+<pre><code class="language-java">package com.abjy.tool;
+
+import com.google.i18n.phonenumbers.PhoneNumberToCarrierMapper;
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import com.google.i18n.phonenumbers.Phonenumber;
+import com.google.i18n.phonenumbers.geocoding.PhoneNumberOfflineGeocoder;
+
+import java.util.Locale;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+public class PhoneUtil {
+	private static PhoneNumberUtil phoneNumberUtil = PhoneNumberUtil.getInstance();
+	private static PhoneNumberToCarrierMapper carrierMapper = PhoneNumberToCarrierMapper.getInstance();
+	private static PhoneNumberOfflineGeocoder geocoder = PhoneNumberOfflineGeocoder.getInstance();
+
+	/**
+	 * 根据国家代码和手机号 判断手机号是否有效
+	 * 
+	 * @param phoneNumber
+	 * @param countryCode
+	 * @return
+	 */
+	public static boolean checkPhoneNumber(String phoneNumber, String countryCode) {
+		int ccode = Integer.valueOf(countryCode);
+		long phone = Long.valueOf(phoneNumber);
+		Phonenumber.PhoneNumber pn = new Phonenumber.PhoneNumber();
+		pn.setCountryCode(ccode);
+		pn.setNationalNumber(phone);
+		return phoneNumberUtil.isValidNumber(pn);
+	}
+
+	/**
+	 * 根据国家代码和手机号 判断手机运营商  谷歌接口部分手机号无法识别，使用最下边的方法
+	 * 
+	 * @param phoneNumber
+	 * @param countryCode
+	 * @return
+	 */
+	public static String getCarrier(String phoneNumber, String countryCode) {
+		int ccode = Integer.valueOf(countryCode);
+		long phone = Long.valueOf(phoneNumber);
+		Phonenumber.PhoneNumber pn = new Phonenumber.PhoneNumber();
+		pn.setCountryCode(ccode);
+		pn.setNationalNumber(phone);
+		// 返回结果只有英文，自己转成成中文
+		String carrierEn = carrierMapper.getNameForNumber(pn, Locale.ENGLISH);
+		String carrierZh = &quot;&quot;;
+		carrierZh += geocoder.getDescriptionForNumber(pn, Locale.CHINESE);
+		switch (carrierEn) {
+		case &quot;China Mobile&quot;:
+			carrierZh += &quot;移动&quot;;
+			break;
+		case &quot;China Unicom&quot;:
+			carrierZh += &quot;联通&quot;;
+			break;
+		case &quot;China Telecom&quot;:
+			carrierZh += &quot;电信&quot;;
+			break;
+		default:
+			break;
+		}
+		return carrierZh;
+	}
+
+	/**
+	 *
+	 * @Description: 根据国家代码和手机号 手机归属地 @date 2015-7-13 上午11:33:18 @param @param
+	 *               phoneNumber @param @param countryCode @param @return
+	 *               参数 @throws
+	 */
+	public static String getAdd(String phoneNumber, String countryCode) {
+		int ccode = Integer.valueOf(countryCode);
+		long phone = Long.valueOf(phoneNumber);
+		Phonenumber.PhoneNumber pn = new Phonenumber.PhoneNumber();
+		pn.setCountryCode(ccode);
+		pn.setNationalNumber(phone);
+		return geocoder.getDescriptionForNumber(pn, Locale.CHINA);
+	}
+
+	/**
+	 * 获取手机号码归属地，省份+电信/联通/移动
+	 * 
+	 * @param phone
+	 * @return
+	 */
+	public static String getPhoneInfo(String phone) {
+		String result = &quot;&quot;;
+		try {
+			String uri = &quot;https://www.baifubao.com/callback?cmd=1059&amp;callback=phone&amp;phone=&quot; + phone;
+			URL url = new URL(uri);
+			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+			connection.setDoOutput(true); // 设置该连接是可以输出的
+			connection.setRequestMethod(&quot;GET&quot;); // 设置请求方式
+			connection.setRequestProperty(&quot;Content-Type&quot;, &quot;application/x-www-form-urlencoded; charset=UTF-8&quot;);
+			BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream(), &quot;utf-8&quot;));
+			String line = null;
+			StringBuilder resultString = new StringBuilder();
+			while ((line = br.readLine()) != null) { // 读取数据
+				resultString.append(line + &quot;\n&quot;);
+			}
+			connection.disconnect();
+			result = resultString.toString().split(&quot;area_operator\&quot;:\&quot;&quot;)[1];
+			result = result.split(&quot;\&quot;,&quot;)[0];
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+    // main方法
+	public static void main(String[] args) {
+	System.out.println(PhoneUtil.getCarrier(&quot;17638150415&quot;, &quot;+86&quot;));
+	System.err.println(getPhoneInfo(&quot;17634710211&quot;));
+	}
+
+}
+</code></pre>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://viaoh.github.io/tag/MJDpA1HvdV/" class="tag">
+                    java工具类
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://viaoh.github.io/post/Xno3-hcnQ/">
+                  <h3 class="post-title">
+                    时间工具类
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+              
+                <div id="gitalk-container" data-aos="fade-in"></div>
+              
+
+              
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+  
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+
+      var gitalk = new Gitalk({
+        clientID: '4970b3e2cb2b185b5af7',
+        clientSecret: 'a413a9c025c85c8c7d510b5b5cbe613c47e76bdc',
+        repo: 'viaoh.github.io',
+        owner: 'viaoh',
+        admin: ['viaoh'],
+        id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+        distractionFreeMode: false  // Facebook-like distraction free mode
+      })
+
+      gitalk.render('gitalk-container')
+
+    </script>
+  
+
+  
+
+
+
+
+  </body>
+</html>

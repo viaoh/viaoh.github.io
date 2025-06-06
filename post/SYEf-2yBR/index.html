@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" >
+
+<title>云通信短信验证码 | liuyoung&#39;s blog</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+<link rel="shortcut icon" href="https://viaoh.github.io/favicon.ico?v=1749222208648">
+<link rel="stylesheet" href="https://viaoh.github.io/styles/main.css">
+
+
+  
+    <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css" />
+  
+
+  
+
+
+<link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+
+
+    <meta name="description" content="pom.xml
+&lt;!-- 阿里云云通信短信通知接口 旧版--&gt;
+&lt;dependency&gt;
+	&lt;groupId&gt;com.aliyun&lt;/groupId&gt;
+	&lt;artifactId&gt;a..." />
+    <meta name="keywords" content="java工具类" />
+  </head>
+  <body>
+    <div id="app" class="main">
+
+      <div class="sidebar" :class="{ 'full-height': menuVisible }">
+  <div class="top-container" data-aos="fade-right">
+    <div class="top-header-container">
+      <a class="site-title-container" href="https://viaoh.github.io">
+        <img src="https://viaoh.github.io/images/avatar.png?v=1749222208648" class="site-logo">
+        <h1 class="site-title">liuyoung&#39;s blog</h1>
+      </a>
+      <div class="menu-btn" @click="menuVisible = !menuVisible">
+        <div class="line"></div>
+      </div>
+    </div>
+    <div>
+      
+        
+          <a href="/" class="site-nav">
+            首页
+          </a>
+        
+      
+        
+          <a href="/archives" class="site-nav">
+            归档
+          </a>
+        
+      
+        
+          <a href="/tags" class="site-nav">
+            标签
+          </a>
+        
+      
+        
+          <a href="https://viaoh.github.io/post/XuQvrNvEf" class="site-nav">
+            关于
+          </a>
+        
+      
+    </div>
+  </div>
+  <div class="bottom-container" data-aos="flip-up" data-aos-offset="0">
+    <div class="social-container">
+      
+        
+          <a class="social-link" href="https://github.com/viaoh" target="_blank">
+            <i class="fab fa-github"></i>
+          </a>
+        
+      
+        
+      
+        
+          <a class="social-link" href="https://weibo.com/u/6377680111" target="_blank">
+            <i class="fab fa-weibo"></i>
+          </a>
+        
+      
+        
+          <a class="social-link" href="https://www.zhihu.com/people/viaoh-" target="_blank">
+            <i class="fab fa-zhihu"></i>
+          </a>
+        
+      
+        
+      
+    </div>
+    <div class="site-description">
+      人生难得秋前雨，乞我虚堂自在眠
+    </div>
+    <div class="site-footer">
+      Powered by &nbsp;<a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a> | <a class="rss" href="https://viaoh.github.io/atom.xml" target="_blank">RSS</a>
+    </div>
+  </div>
+</div>
+
+
+      <div class="main-container">
+        <div class="content-container" data-aos="fade-up">
+          <div class="post-detail">
+            <h2 class="post-title">云通信短信验证码</h2>
+            <div class="post-date">2024-05-11</div>
+            
+            <div class="post-content" v-pre>
+              <h6 id="pomxml">pom.xml</h6>
+<pre><code class="language-xml">&lt;!-- 阿里云云通信短信通知接口 旧版--&gt;
+&lt;dependency&gt;
+	&lt;groupId&gt;com.aliyun&lt;/groupId&gt;
+	&lt;artifactId&gt;aliyun-java-sdk-core&lt;/artifactId&gt;
+	&lt;version&gt;4.1.0&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;!-- 阿里云云通信短信通知接口 新版--&gt;
+&lt;dependency&gt;
+	&lt;groupId&gt;com.aliyun&lt;/groupId&gt;
+	&lt;artifactId&gt;dysmsapi20170525&lt;/artifactId&gt;
+	&lt;version&gt;2.0.4&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<h6 id="旧版工具类">旧版工具类</h6>
+<pre><code class="language-java">import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
+
+import com.aliyuncs.CommonRequest;
+import com.aliyuncs.CommonResponse;
+import com.aliyuncs.DefaultAcsClient;
+import com.aliyuncs.IAcsClient;
+import com.aliyuncs.exceptions.ClientException;
+import com.aliyuncs.exceptions.ServerException;
+import com.aliyuncs.http.MethodType;
+import com.aliyuncs.profile.DefaultProfile;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
+public class SendSmsTool {
+	
+	public static Map&lt;String, Object&gt; SendSMS(String phone) {
+		Map&lt;String, Object&gt; map = new HashMap&lt;&gt;();
+		String code = String.valueOf(new Random().nextInt(899999) + 100000);//生成短信验证码
+        DefaultProfile profile = DefaultProfile.getProfile(&quot;default&quot;, &quot;您的AccessKey ID&quot;, &quot;您的AccessKey Secret&quot;);
+        IAcsClient client = new DefaultAcsClient(profile);
+        CommonRequest request = new CommonRequest();
+        //request.setProtocol(ProtocolType.HTTPS);
+        request.setMethod(MethodType.POST);
+        request.setDomain(&quot;dysmsapi.aliyuncs.com&quot;);
+        request.setVersion(&quot;2017-05-25&quot;);
+        request.setAction(&quot;SendSms&quot;);
+        request.putQueryParameter(&quot;PhoneNumbers&quot;, phone);
+        request.putQueryParameter(&quot;SignName&quot;, &quot;您的签名&quot;);
+        request.putQueryParameter(&quot;TemplateCode&quot;, &quot;您的模板编号&quot;);
+        request.putQueryParameter(&quot;TemplateParam&quot;, &quot;{\&quot;code\&quot;:&quot;+ code +&quot;}&quot;);
+        try {
+            CommonResponse response = client.getCommonResponse(request);
+            JsonParser jp = new JsonParser();
+    		//将json字符串转化成json对象
+            JsonObject jo = jp.parse(response.getData()).getAsJsonObject();
+            //获取message对应的值
+            String message = jo.get(&quot;Message&quot;).getAsString();
+            if (message.equals(&quot;OK&quot;)) {
+            	map.put(&quot;message&quot;, message);
+            	map.put(&quot;return_code&quot;, code);
+			}else{
+				map.put(&quot;message&quot;, message);
+			}
+        } catch (ServerException e) {
+            e.printStackTrace();
+        } catch (ClientException e) {
+            e.printStackTrace();
+        }
+		return map;
+    }
+}
+</code></pre>
+<h6 id="新版工具类">新版工具类</h6>
+<pre><code class="language-java">import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
+
+import com.aliyun.dysmsapi20170525.models.*;
+import com.aliyun.teaopenapi.models.*;
+
+public class SendSmsTool {
+
+	/**
+	 * 使用AK&amp;SK初始化账号Client
+	 * 
+	 * @param accessKeyId
+	 * @param accessKeySecret
+	 * @return Client
+	 * @throws Exception
+	 */
+	public static com.aliyun.dysmsapi20170525.Client createClient(String accessKeyId, String accessKeySecret)
+			throws Exception {
+		Config config = new Config()
+				// 您的AccessKey ID
+				.setAccessKeyId(accessKeyId)
+				// 您的AccessKey Secret
+				.setAccessKeySecret(accessKeySecret);
+		// 访问的域名
+		config.endpoint = &quot;dysmsapi.aliyuncs.com&quot;;
+		return new com.aliyun.dysmsapi20170525.Client(config);
+	}
+
+	public static Map&lt;String, String&gt; SendSMS(String phone) throws Exception {
+		Map&lt;String, String&gt; map = new HashMap&lt;&gt;();
+		String AccessKeyID = &quot;AccessKeyID&quot;;
+		String AccessKeySecret = &quot;AccessKeySecret&quot;;
+		String SignName = &quot;XXX&quot;;
+		String TemplateCode = &quot;SMS_XXXXX&quot;;
+		String code = String.valueOf(new Random().nextInt(899999) + 100000);// 生成短信验证码
+		com.aliyun.dysmsapi20170525.Client client = SendSmsTool.createClient(AccessKeyID,
+				AccessKeySecret);
+		SendSmsRequest sendSmsRequest = new SendSmsRequest().setPhoneNumbers(phone).setSignName(SignName)
+				.setTemplateCode(TemplateCode).setTemplateParam(&quot;{\&quot;code\&quot;:&quot; + code + &quot;}&quot;);
+		// 复制代码运行请自行打印 API 的返回值
+		SendSmsResponse response = client.sendSms(sendSmsRequest);
+		System.out.println(response.getBody().message);
+		if (response.getBody().message.equals(&quot;OK&quot;)) {
+			map.put(&quot;msg&quot;, &quot;success&quot;);
+			map.put(&quot;code&quot;, code);
+			map.put(&quot;returnTeacherPhone&quot;, phone);
+		} else {
+			map.put(&quot;msg&quot;, &quot;fail&quot;);
+		}
+		return map;
+	}
+}
+</code></pre>
+
+            </div>
+            
+              <div class="tag-container">
+                
+                  <a href="https://viaoh.github.io/tag/MJDpA1HvdV/" class="tag">
+                    java工具类
+                  </a>
+                
+              </div>
+            
+            
+              <div class="next-post">
+                <div class="next">下一篇</div>
+                <a href="https://viaoh.github.io/post/OQOtx_qzt/">
+                  <h3 class="post-title">
+                    邮箱发送工具类
+                  </h3>
+                </a>
+              </div>
+            
+
+            
+              
+                <div id="gitalk-container" data-aos="fade-in"></div>
+              
+
+              
+            
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+<script type="application/javascript">
+
+AOS.init();
+
+var app = new Vue({
+  el: '#app',
+  data: {
+    menuVisible: false,
+  },
+})
+
+</script>
+
+
+
+
+
+  
+    <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+    <script>
+
+      var gitalk = new Gitalk({
+        clientID: '4970b3e2cb2b185b5af7',
+        clientSecret: 'a413a9c025c85c8c7d510b5b5cbe613c47e76bdc',
+        repo: 'viaoh.github.io',
+        owner: 'viaoh',
+        admin: ['viaoh'],
+        id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+        distractionFreeMode: false  // Facebook-like distraction free mode
+      })
+
+      gitalk.render('gitalk-container')
+
+    </script>
+  
+
+  
+
+
+
+
+  </body>
+</html>
