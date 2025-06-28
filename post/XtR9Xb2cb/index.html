@@ -1,0 +1,349 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>vue相关方法 | liuyoung&#39;s blog</title>
+<link rel="shortcut icon" href="https://viaoh.github.io/favicon.ico?v=1751073181260">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://viaoh.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="vue相关方法 | liuyoung&#39;s blog - Atom Feed" href="https://viaoh.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="1、vue时间相关方法
+// 日期转字符串
+dateToString(date) {
+  var dateInfo = {
+    year: date.getFullYear(),
+    month: (date.getMonth() ..." />
+    <meta name="keywords" content="web前端" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://viaoh.github.io">
+  <img class="avatar" src="https://viaoh.github.io/images/avatar.png?v=1751073181260" alt="">
+  </a>
+  <h1 class="site-title">
+    liuyoung&#39;s blog
+  </h1>
+  <p class="site-description">
+    人生难得秋前雨，乞我虚堂自在眠
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="https://viaoh.github.io/post/XuQvrNvEf" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/liuyoung-cc/liuyoung-cc.github.io" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+    
+      
+        <a href="https://weibo.com/viaoh" target="_blank">
+          <i class="ri-weibo-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://www.zhihu.com/people/viaoh-" target="_blank">
+          <i class="ri-zhihu-line"></i>
+        </a>
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              vue相关方法
+            </h2>
+            <div class="post-info">
+              <span>
+                2024-05-11
+              </span>
+              <span>
+                4 min read
+              </span>
+              
+                <a href="https://viaoh.github.io/tag/qkVU6TJOiY/" class="post-tag">
+                  # web前端
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <h4 id="1-vue时间相关方法">1、vue时间相关方法</h4>
+<pre><code class="language-js">// 日期转字符串
+dateToString(date) {
+  var dateInfo = {
+    year: date.getFullYear(),
+    month: (date.getMonth() + 1 + &quot;&quot;).padStart(2, &quot;0&quot;),
+    date: (date.getDate() + &quot;&quot;).padStart(2, &quot;0&quot;),
+  };
+  var dateStr = dateInfo.year + &quot;-&quot; + dateInfo.month + &quot;-&quot; + dateInfo.date;
+  return dateStr;
+},
+// 获取今天日期
+getNowDate() {
+  var nowDate = new Date();
+  console.log(&quot;今天日期为：&quot; + this.dateToString(nowDate));
+},
+// 获取指定天数之前的日期
+getNumDaysBeforeDate(num) {
+  var nowDate = new Date();
+  var beforeDate = new Date(nowDate.getTime() - 24 * 60 * 60 * 1000 * num);
+  console.log(num + &quot;天之前的日期为：&quot; + this.dateToString(beforeDate);
+},
+// 获取本周
+getNowWeek() {
+  var nowDate = new Date();
+  var nowTime = nowDate.getTime();
+  var week = nowDate.getDay() || 7; // 不加 || 7.周末会变成下周一
+  var oneDayTime = 24 * 60 * 60 * 1000;
+  var MondayTime = nowTime - (week - 1) * oneDayTime; //显示周一
+  var SundayTime = nowTime + (7 - week) * oneDayTime; //显示周日
+  console.log(&quot;本周一：&quot; + this.dateToString(new Date(MondayTime));
+  console.log(&quot;本周日：&quot; + this.dateToString(new Date(SundayTime));
+},
+// 获取本月
+getNowMonth() {
+  var nowDate = new Date();
+  var nowDateStr = this.dateToString(nowDate);
+  nowDate.setDate(1);
+  console.log(&quot;本月1号日期：：&quot; + thi/2s.dateToString(new Date(nowDate));
+},
+</code></pre>
+<h4 id="2-vue-blob文件类型">2、vue blob文件类型</h4>
+<pre><code class="language-js">import axios from 'axios'
+import { getToken } from '@/utils/auth'
+
+const mimeMap = {
+  zip: 'application/zip',
+  pdf: 'application/pdf',
+  png: 'application/png',
+  jpg: 'image/jpeg',
+  jpeg: 'image/jpeg',
+  xls: 'application/vnd.ms-excel',
+  xlsx: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  csv: 'application/csv',
+  doc: 'application/msword',
+  docx: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  bmp: 'image/bmp',
+  gif: 'image/gif',
+}
+
+const baseUrl = process.env.VUE_APP_BASE_API
+export function downLoadBlob(str, type,filename) {
+  var url = baseUrl + str
+  axios({
+    method: 'get',
+    url: url,
+    responseType: 'blob',
+    headers: { 'Authorization': 'Bearer ' + getToken() }
+  }).then(res =&gt; {
+    let mimeType;
+    if(type == 'zip'){
+      mimeType = mimeMap.zip
+    }else if(type == 'pdf'){
+      mimeType = mimeMap.pdf
+    }else if(type == 'png'){
+      mimeType = mimeMap.png
+    }else if(type == 'jpg'){
+      mimeType = mimeMap.jpg
+    }else if(type == 'jpeg'){
+      mimeType = mimeMap.jpeg
+    }else if(type == 'xls'){
+      mimeType = mimeMap.xls
+    }else if(type == 'xlsx'){
+      mimeType = mimeMap.xlsx
+    }else if(type == 'csv'){
+      mimeType = mimeMap.csv
+    }else if(type == 'doc'){
+      mimeType = mimeMap.doc
+    }else if(type == 'docx'){
+      mimeType = mimeMap.docx
+    }else if(type == 'bmp'){
+      mimeType = mimeMap.bmp
+    }else if(type == 'gif'){
+      mimeType = mimeMap.gif
+    }
+    resolveBlob(res, mimeType, filename)
+
+  })
+}
+/**
+ * 解析blob响应内容并下载
+ * @param {*} res blob响应内容
+ * @param {String} mimeType MIME类型
+ */
+export function resolveBlob(res, mimeType,filename) {
+  const aLink = document.createElement('a')
+  var blob = new Blob([res.data], { type: mimeType })
+  // 视情况而定
+  // 1.从response的headers中获取filename, 后端response.setHeader(&quot;Content-disposition&quot;, &quot;attachment; filename=xxxx.docx&quot;) 设置的文件名;
+  // var patt = new RegExp('filename=([^;]+\\.[^\\.;]+);*')
+  // var contentDisposition = decodeURI(res.headers['content-disposition'])
+  // var result = patt.exec(contentDisposition)
+  // var fileName = result[1]
+  // fileName = fileName.replace(/\&quot;/g, '')
+  aLink.href = URL.createObjectURL(blob)
+  // 2.直接使用自定义文件名
+  aLink.setAttribute('download', filename) // 设置下载文件名称
+  document.body.appendChild(aLink)
+  aLink.click()
+  document.body.removeChild(aLink);
+}
+</code></pre>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#1-vue%E6%97%B6%E9%97%B4%E7%9B%B8%E5%85%B3%E6%96%B9%E6%B3%95">1、vue时间相关方法</a></li>
+<li><a href="#2-vue-blob%E6%96%87%E4%BB%B6%E7%B1%BB%E5%9E%8B">2、vue blob文件类型</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://viaoh.github.io/post/F80mUKrNo/">
+              <h3 class="post-title">
+                SQL语句
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '4970b3e2cb2b185b5af7',
+    clientSecret: 'a413a9c025c85c8c7d510b5b5cbe613c47e76bdc',
+    repo: 'viaoh.github.io',
+    owner: 'viaoh',
+    admin: ['viaoh'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  Powered by &nbsp;<a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://viaoh.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

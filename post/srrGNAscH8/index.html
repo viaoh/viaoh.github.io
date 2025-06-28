@@ -1,0 +1,245 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>使用Charles抓包微信小程序 | liuyoung&#39;s blog</title>
+<link rel="shortcut icon" href="https://viaoh.github.io/favicon.ico?v=1751073181260">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://viaoh.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="使用Charles抓包微信小程序 | liuyoung&#39;s blog - Atom Feed" href="https://viaoh.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="一、首先打开Charles，先进行Charles软件的相关设置
+1、首先需要打开windows代理，先找到代理设置：
+
+找到相关代理设置，打开弹窗
+设置代理端口为8888，并且勾选图中复选框，最后点击确认。
+
+2、设置ssl代理设置，找到s..." />
+    <meta name="keywords" content="抓包" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://viaoh.github.io">
+  <img class="avatar" src="https://viaoh.github.io/images/avatar.png?v=1751073181260" alt="">
+  </a>
+  <h1 class="site-title">
+    liuyoung&#39;s blog
+  </h1>
+  <p class="site-description">
+    人生难得秋前雨，乞我虚堂自在眠
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="https://viaoh.github.io/post/XuQvrNvEf" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/liuyoung-cc/liuyoung-cc.github.io" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+    
+      
+        <a href="https://weibo.com/viaoh" target="_blank">
+          <i class="ri-weibo-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://www.zhihu.com/people/viaoh-" target="_blank">
+          <i class="ri-zhihu-line"></i>
+        </a>
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              使用Charles抓包微信小程序
+            </h2>
+            <div class="post-info">
+              <span>
+                2025-06-27
+              </span>
+              <span>
+                1 min read
+              </span>
+              
+                <a href="https://viaoh.github.io/tag/MdliDSyxLs/" class="post-tag">
+                  # 抓包
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <p>一、首先打开Charles，先进行Charles软件的相关设置</p>
+<p>1、首先需要打开windows代理，先找到代理设置：</p>
+<figure data-type="image" tabindex="1"><img src="https://pic4.zhimg.com/v2-485eee75837f87d6c6de4f254c219cdd_1440w.webp?consumer=ZHI_MENG" alt="" loading="lazy"></figure>
+<p>找到相关代理设置，打开弹窗</p>
+<p>设置代理端口为8888，并且勾选图中复选框，最后点击确认。</p>
+<figure data-type="image" tabindex="2"><img src="https://pic4.zhimg.com/v2-ffb46ef148058b4e72348fcdd10e37ab_1440w.webp?consumer=ZHI_MENG" alt="" loading="lazy"></figure>
+<p>2、设置ssl代理设置，找到ssl代理设置。</p>
+<figure data-type="image" tabindex="3"><img src="https://pic4.zhimg.com/v2-238999f54b5de7f7d6d6091969cf3d3b_1440w.webp?consumer=ZHI_MENG" alt="" loading="lazy"></figure>
+<p>勾选启用ssl代理</p>
+<figure data-type="image" tabindex="4"><img src="https://pica.zhimg.com/v2-0c9502edf5ba4c62b966bffa2509df54_1440w.webp?consumer=ZHI_MENG" alt="" loading="lazy"></figure>
+<p>点击添加，并且按照下图输入</p>
+<figure data-type="image" tabindex="5"><img src="https://pic2.zhimg.com/v2-1eb9ea1639ecf737334bcef62d87cd3b_1440w.webp?consumer=ZHI_MENG" alt="" loading="lazy"></figure>
+<p>检查无误后，点击确认</p>
+<figure data-type="image" tabindex="6"><img src="https://pic3.zhimg.com/v2-1bab827777860c9827e4e92bf4097dd8_1440w.webp?consumer=ZHI_MENG" alt="" loading="lazy"></figure>
+<p>3、安装证书</p>
+<figure data-type="image" tabindex="7"><img src="https://picx.zhimg.com/v2-0023587318ebbd7c6cf209958b92bb35_1440w.webp?consumer=ZHI_MENG" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="8"><img src="https://pic2.zhimg.com/v2-d91d20624ac7ab9d7f509cf42c474323_1440w.webp?consumer=ZHI_MENG" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="9"><img src="https://pica.zhimg.com/v2-0ea79ab470f8e67da9f9f6e9cc2e2f00_1440w.webp?consumer=ZHI_MENG" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="10"><img src="https://pic3.zhimg.com/v2-c98c6b3ac879cb11c013831bcc77749e_1440w.webp?consumer=ZHI_MENG" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="11"><img src="https://pica.zhimg.com/v2-51848163070f5afa8eaf6e46f3f9ed9a_1440w.webp?consumer=ZHI_MENG" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="12"><img src="https://picx.zhimg.com/v2-f5aefe7a45afc528c9fd93f4dade891f_1440w.webp?consumer=ZHI_MENG" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="13"><img src="https://picx.zhimg.com/v2-54907f1ea8244c76bded4381d0679f79_1440w.webp?consumer=ZHI_MENG" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="14"><img src="https://pic4.zhimg.com/v2-99c14f2680632de5323b826e1d4de207_1440w.webp?consumer=ZHI_MENG" alt="" loading="lazy"></figure>
+<p>看到如图所示明文，则证书安装成功。</p>
+<figure data-type="image" tabindex="15"><img src="https://pic3.zhimg.com/v2-9bd7aa52f2dab186624b5aa2728d7756_1440w.webp?consumer=ZHI_MENG" alt="" loading="lazy"></figure>
+<p>二、抓包小程序</p>
+<p>注意：这里仅为抓取电脑微信小程序数据包，如要抓取手机微信小程序包，可参考另一篇文章</p>
+<p>1、打开小程序</p>
+<figure data-type="image" tabindex="16"><img src="https://pic1.zhimg.com/v2-3d2e591ce2b32f413f6408df5f7aa6c4_1440w.webp?consumer=ZHI_MENG" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="17"><img src="https://pic2.zhimg.com/v2-e104819fef8218388d54d12cfe06e2b7_1440w.webp?consumer=ZHI_MENG" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="18"><img src="https://picx.zhimg.com/v2-2add7dd72341e01e6f41e7229026a21d_1440w.webp?consumer=ZHI_MENG" alt="" loading="lazy"></figure>
+<p>查看Chrales抓取的数据包，显示如下，则代表抓取成功</p>
+<figure data-type="image" tabindex="19"><img src="https://pic4.zhimg.com/v2-517fbb54dfb810d935387839f4a337fb_1440w.webp?consumer=ZHI_MENG" alt="" loading="lazy"></figure>
+
+              </div>
+              <div class="toc-container">
+                
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://viaoh.github.io/post/Uc71gzPD7F/">
+              <h3 class="post-title">
+                QQ接口
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '4970b3e2cb2b185b5af7',
+    clientSecret: 'a413a9c025c85c8c7d510b5b5cbe613c47e76bdc',
+    repo: 'viaoh.github.io',
+    owner: 'viaoh',
+    admin: ['viaoh'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  Powered by &nbsp;<a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://viaoh.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

@@ -1,0 +1,585 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Excel导入数据示例 | liuyoung&#39;s blog</title>
+<link rel="shortcut icon" href="https://viaoh.github.io/favicon.ico?v=1751073181260">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://viaoh.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Excel导入数据示例 | liuyoung&#39;s blog - Atom Feed" href="https://viaoh.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="导入表格样例
+
+pom.xml
+&lt;!-- Excel导入 --&gt;
+&lt;dependency&gt;
+	&lt;groupId&gt;cn.afterturn&lt;/groupId&gt;
+	&lt;artifactId&g..." />
+    <meta name="keywords" content="java工具类" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://viaoh.github.io">
+  <img class="avatar" src="https://viaoh.github.io/images/avatar.png?v=1751073181260" alt="">
+  </a>
+  <h1 class="site-title">
+    liuyoung&#39;s blog
+  </h1>
+  <p class="site-description">
+    人生难得秋前雨，乞我虚堂自在眠
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="https://viaoh.github.io/post/XuQvrNvEf" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/liuyoung-cc/liuyoung-cc.github.io" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+    
+      
+        <a href="https://weibo.com/viaoh" target="_blank">
+          <i class="ri-weibo-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://www.zhihu.com/people/viaoh-" target="_blank">
+          <i class="ri-zhihu-line"></i>
+        </a>
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              Excel导入数据示例
+            </h2>
+            <div class="post-info">
+              <span>
+                2024-05-31
+              </span>
+              <span>
+                11 min read
+              </span>
+              
+                <a href="https://viaoh.github.io/tag/MJDpA1HvdV/" class="post-tag">
+                  # java工具类
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <h4 id="导入表格样例">导入表格样例</h4>
+<figure data-type="image" tabindex="1"><img src="https://s3.bmp.ovh/imgs/2024/05/31/40889df5ca9c3f88.jpg" alt="" loading="lazy"></figure>
+<h4 id="pomxml">pom.xml</h4>
+<pre><code class="language-xml">&lt;!-- Excel导入 --&gt;
+&lt;dependency&gt;
+	&lt;groupId&gt;cn.afterturn&lt;/groupId&gt;
+	&lt;artifactId&gt;easypoi-spring-boot-starter&lt;/artifactId&gt;
+	&lt;version&gt;4.4.0&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<h4 id="exceltool工具类">ExcelTool工具类</h4>
+<pre><code class="language-java">import org.apache.poi.hssf.usermodel.*;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.List;
+
+/**
+ * Excel工具类
+ */
+public class ExcelTool {
+
+    /**
+     * Excel表格导出
+     * @param response HttpServletResponse对象
+     * @param excelData Excel表格的数据，封装为List&lt;List&lt;String&gt;&gt;
+     * @param sheetName sheet的名字
+     * @param fileName 导出Excel的文件名
+     * @param columnWidth Excel表格的宽度，建议为15
+     * @throws IOException 抛IO异常
+     */
+    public static void exportExcel(HttpServletResponse response,
+                                   List&lt;List&lt;String&gt;&gt; excelData, 
+                                   String sheetName, 
+                                   String fileName, 
+                                   int columnWidth) throws IOException {
+
+        //声明一个工作簿
+        HSSFWorkbook workbook = new HSSFWorkbook();
+
+        //生成一个表格，设置表格名称
+        HSSFSheet sheet = workbook.createSheet(sheetName);
+
+        //设置表格列宽度
+        sheet.setDefaultColumnWidth(columnWidth);
+
+        //写入List&lt;List&lt;String&gt;&gt;中的数据
+        int rowIndex = 0;
+        for(List&lt;String&gt; data : excelData){
+            //创建一个row行，然后自增1
+            HSSFRow row = sheet.createRow(rowIndex++);
+
+            //遍历添加本行数据
+            for (int i = 0; i &lt; data.size(); i++) {
+                //创建一个单元格
+                HSSFCell cell = row.createCell(i);
+
+                //创建一个内容对象
+                HSSFRichTextString text = new HSSFRichTextString(data.get(i));
+
+                //将内容对象的文字内容写入到单元格中
+                cell.setCellValue(text);
+            }
+        }
+
+        //准备将Excel的输出流通过response输出到页面下载
+        //八进制输出流
+        response.setContentType(&quot;application/octet-stream&quot;);
+
+        //设置导出Excel的名称
+        response.setHeader(&quot;Content-disposition&quot;, &quot;attachment;filename=&quot; + fileName);
+
+        //刷新缓冲
+        response.flushBuffer();
+
+        //workbook将Excel写入到response的输出流中，供页面下载该Excel文件
+        workbook.write(response.getOutputStream());
+
+        //关闭workbook
+        workbook.close();
+    }
+
+}
+</code></pre>
+<h4 id="serviceimpl实现类">serviceimpl实现类</h4>
+<pre><code class="language-java">	@Override
+	public Map&lt;String, Object&gt; uploadExcelSubmit(MultipartFile file, HttpServletRequest request) {
+		// 返回结果
+		Map&lt;String, Object&gt; mapResult = new HashMap&lt;&gt;();
+		int importSuccess = 0;
+		int importFail = 0;
+		// String contentType = file.getContentType();
+		// 获取文件后缀名
+		String fileName = file.getOriginalFilename();
+		String suffix = fileName.substring(fileName.lastIndexOf(&quot;.&quot;));
+		// 实体类集合
+		List&lt;Agentstudent&gt; agentstudentList = new ArrayList&lt;&gt;();
+		// 导入失败的集合
+		List&lt;Agentstudent&gt; agentstudentFailList = new ArrayList&lt;&gt;();
+		// 合作伙伴信息
+		Integer agentId = Integer.parseInt(redis.opsForValue().get(request.getHeader(&quot;sessionId&quot;)));
+		Agent agent = agentMapper.getAgentById(agentId);
+		if (suffix.equals(&quot;.xlsx&quot;)) {
+			try {
+				XSSFWorkbook xwb = new XSSFWorkbook(file.getInputStream());
+				XSSFSheet sheetXlsx = xwb.getSheetAt(0);
+				XSSFRow row = null;
+				XSSFRow rowOne = sheetXlsx.getRow(0);
+				if (rowOne.getCell(0).getStringCellValue() == &quot;姓名&quot; &amp;&amp; rowOne.getCell(1).getStringCellValue() == &quot;身份证号&quot;
+						&amp;&amp; rowOne.getCell(2).getStringCellValue() == &quot;手机号&quot;
+						&amp;&amp; rowOne.getCell(3).getStringCellValue() == &quot;报考院校&quot;
+						&amp;&amp; rowOne.getCell(4).getStringCellValue() == &quot;报考专业&quot;
+						&amp;&amp; rowOne.getCell(5).getStringCellValue() == &quot;学习形式&quot;
+						&amp;&amp; rowOne.getCell(6).getStringCellValue() == &quot;报考层次&quot;
+						&amp;&amp; rowOne.getCell(7).getStringCellValue() == &quot;报考日期&quot;
+						&amp;&amp; rowOne.getCell(8).getStringCellValue() == &quot;考生户籍地&quot;) {
+					// 循环sesheet页中数据从第二行开始，第一行是标题
+					for (int i = 1; i &lt; sheetXlsx.getPhysicalNumberOfRows(); i++) {
+						row = sheetXlsx.getRow(i);
+						Agentstudent data = new Agentstudent();
+						SimpleDateFormat df = new SimpleDateFormat(&quot;yyyy/MM/dd&quot;);
+						data.setStudentName(row.getCell(0).getStringCellValue());
+						row.getCell(1).setCellType(CellType.STRING);
+						data.setStudentIdCard(row.getCell(1).getStringCellValue());
+						row.getCell(2).setCellType(CellType.STRING);
+						data.setStudentPhone(row.getCell(2).getStringCellValue());
+						data.setStudentSchool(row.getCell(3).getStringCellValue());
+						data.setStudentMajor(row.getCell(4).getStringCellValue());
+						data.setStudentMajorType(row.getCell(5).getStringCellValue());
+						row.getCell(6).setCellType(CellType.STRING);
+						data.setStudentType(Integer.parseInt(row.getCell(6).getStringCellValue()));
+						data.setStudentAddDate(
+								df.parse(df.format(HSSFDateUtil.getJavaDate(row.getCell(7).getNumericCellValue()))));
+						if (row.getCell(8) == null) {
+							data.setStudentArea(&quot;未填写&quot;);
+						} else {// 单元格有值时，getCell方法获获取到单元格。
+							data.setStudentArea(row.getCell(8).getStringCellValue());
+						}
+						agentstudentList.add(data);
+					}
+					Integer addYear = addyearMapper.getNowAddyear().getAddYear();
+					// 循环展示导入的数据，实际应用中应该校验并存入数据库
+					for (Agentstudent student : agentstudentList) {
+						if (agentStudentMapper.getStudentByIdCard(student.getStudentIdCard()) &gt;= 1) {
+							student.setStudentIdCard(student.getStudentIdCard() + &quot; 身份证号重复录入&quot;);
+							agentstudentFailList.add(student);
+							importFail++;
+						} else if (!IdCardTool.isIDNumber(student.getStudentIdCard())) {
+							student.setStudentIdCard(student.getStudentIdCard() + &quot; 身份证号格式错误&quot;);
+							agentstudentFailList.add(student);
+							importFail++;
+						} else {
+							student.setStudentAgentName(agent.getAgentName());
+							student.setStudentAgentId(agent.getAgentId());
+							student.setStudentYear(addYear);
+							if (agentStudentMapper.addStudent(student) &gt; 0) {
+								importSuccess++;
+							} else {
+								student.setStudentIdCard(student.getStudentIdCard() + &quot; 录入失败&quot;);
+								agentstudentFailList.add(student);
+								importFail++;
+							}
+						}
+					}
+					mapResult.put(&quot;msg&quot;, &quot;success&quot;);
+					mapResult.put(&quot;importSuccess&quot;, importSuccess);
+					mapResult.put(&quot;importFail&quot;, importFail);
+					mapResult.put(&quot;importAll&quot;, agentstudentList.size());
+					mapResult.put(&quot;agentstudentFailList&quot;, agentstudentFailList);
+				} else {
+					mapResult.put(&quot;msg&quot;, &quot;fileTypeError&quot;);
+				}
+			} catch (Exception e) {
+				mapResult.put(&quot;msg&quot;, &quot;fail&quot;);
+				e.printStackTrace();
+			}
+		} else if (suffix.equals(&quot;.xls&quot;)) {
+			try {
+				HSSFWorkbook hwb = new HSSFWorkbook(file.getInputStream()); // 根据页面index
+				HSSFSheet sheetXls = hwb.getSheetAt(0);
+				HSSFRow row = null;
+				HSSFRow rowOne = sheetXls.getRow(0);
+				if (rowOne.getCell(0).getStringCellValue() == &quot;姓名&quot; &amp;&amp; rowOne.getCell(1).getStringCellValue() == &quot;身份证号&quot;
+						&amp;&amp; rowOne.getCell(2).getStringCellValue() == &quot;手机号&quot;
+						&amp;&amp; rowOne.getCell(3).getStringCellValue() == &quot;报考院校&quot;
+						&amp;&amp; rowOne.getCell(4).getStringCellValue() == &quot;报考专业&quot;
+						&amp;&amp; rowOne.getCell(5).getStringCellValue() == &quot;学习形式&quot;
+						&amp;&amp; rowOne.getCell(6).getStringCellValue() == &quot;报考层次&quot;
+						&amp;&amp; rowOne.getCell(7).getStringCellValue() == &quot;报考日期&quot;
+						&amp;&amp; rowOne.getCell(8).getStringCellValue() == &quot;考生户籍地&quot;) {
+					// 循环sesheet页中数据从第二行开始，第一行是标题
+					for (int i = 1; i &lt; sheetXls.getPhysicalNumberOfRows(); i++) {
+						// 获取每一行数据
+						row = sheetXls.getRow(i);
+						Agentstudent data = new Agentstudent();
+						SimpleDateFormat df = new SimpleDateFormat(&quot;yyyy/MM/dd&quot;);
+						data.setStudentName(row.getCell(0).getStringCellValue());
+						row.getCell(1).setCellType(CellType.STRING);
+						data.setStudentIdCard(row.getCell(1).getStringCellValue());
+						row.getCell(2).setCellType(CellType.STRING);
+						data.setStudentPhone(row.getCell(2).getStringCellValue());
+						data.setStudentSchool(row.getCell(3).getStringCellValue());
+						data.setStudentMajor(row.getCell(4).getStringCellValue());
+						data.setStudentMajorType(row.getCell(5).getStringCellValue());
+						row.getCell(6).setCellType(CellType.STRING);
+						data.setStudentType(Integer.parseInt(row.getCell(6).getStringCellValue()));
+						data.setStudentAddDate(
+								df.parse(df.format(HSSFDateUtil.getJavaDate(row.getCell(7).getNumericCellValue()))));
+						if (row.getCell(8) == null) {
+							data.setStudentArea(&quot;未填写&quot;);
+						} else {// 单元格有值时，getCell方法获获取到单元格。
+							data.setStudentArea(row.getCell(8).getStringCellValue());
+						}
+						agentstudentList.add(data);
+					}
+					Integer addYear = addyearMapper.getNowAddyear().getAddYear();
+					// 循环展示导入的数据，实际应用中应该校验并存入数据库
+					for (Agentstudent student : agentstudentList) {
+						if (agentStudentMapper.getStudentByIdCard(student.getStudentIdCard()) &gt;= 1) {
+							student.setStudentIdCard(student.getStudentIdCard() + &quot; 身份证号重复录入&quot;);
+							agentstudentFailList.add(student);
+							importFail++;
+						} else if (!IdCardTool.isIDNumber(student.getStudentIdCard())) {
+							student.setStudentIdCard(student.getStudentIdCard() + &quot; 身份证号格式错误&quot;);
+							agentstudentFailList.add(student);
+							importFail++;
+						} else if (student.getStudentType() &lt;= 0 || student.getStudentType() &gt; 3) {
+							student.setStudentIdCard(student.getStudentIdCard() + &quot; 录入报考层次无效&quot;);
+							agentstudentFailList.add(student);
+							importFail++;
+						} else {
+							student.setStudentAgentName(agent.getAgentName());
+							student.setStudentAgentId(agent.getAgentId());
+							student.setStudentYear(addYear);
+							if (agentStudentMapper.addStudent(student) &gt; 0) {
+								importSuccess++;
+							} else {
+								student.setStudentIdCard(student.getStudentIdCard() + &quot; 录入失败&quot;);
+								agentstudentFailList.add(student);
+								importFail++;
+							}
+						}
+					}
+					mapResult.put(&quot;msg&quot;, &quot;success&quot;);
+					mapResult.put(&quot;importSuccess&quot;, importSuccess);
+					mapResult.put(&quot;importFail&quot;, importFail);
+					mapResult.put(&quot;importAll&quot;, agentstudentList.size());
+					mapResult.put(&quot;agentstudentFailList&quot;, agentstudentFailList);
+				} else {
+					mapResult.put(&quot;msg&quot;, &quot;fileTypeError&quot;);
+				}
+			} catch (Exception e) {
+				mapResult.put(&quot;msg&quot;, &quot;fail&quot;);
+				e.printStackTrace();
+			}
+		} else {
+			mapResult.put(&quot;msg&quot;, &quot;fail&quot;);
+		}
+		return mapResult;
+	}
+</code></pre>
+<h4 id="前端请求">前端请求</h4>
+<pre><code class="language-js">	// 判断上传Excel文件
+    excelFileChange() {
+      var _this = this;
+      var fileObject = document.getElementById(&quot;uploadExcelFile&quot;);
+      if (fileObject.value != &quot;&quot;) {
+        var fileSrc = fileObject.value.split(&quot;\\&quot;);
+        var fileName = fileSrc[fileSrc.length - 1];
+        var fileExt = fileName.substr(fileName.lastIndexOf(&quot;.&quot;)).toLowerCase();
+        var fileSize = Math.ceil(fileObject.files[0].size / 1024);
+        var allowExt = &quot;.xlsx|.xls|&quot;;
+        if (allowExt !== 0 &amp;&amp; allowExt.indexOf(fileExt + &quot;|&quot;) === -1) {
+          fileObject.value = &quot;&quot;;
+          _this.$alert(&quot;alert alert-danger&quot;, &quot;上传文件格式不符合要求&quot;);
+          return false;
+        } else if (fileSize &gt; 2048) {
+          fileObject.value = &quot;&quot;;
+          _this.$alert(&quot;alert alert-danger&quot;, &quot;上传的文件不能超过 2 M&quot;);
+          return false;
+        }
+      } else {
+        fileObject.value = &quot;&quot;;
+        _this.$alert(&quot;alert alert-danger&quot;, &quot;文件取消上传&quot;);
+      }
+    },
+</code></pre>
+<pre><code class="language-js">	// 上传excel提交
+    uploadExcelSubmit() {
+      var _this = this;
+      var fileObject = document.getElementById(&quot;uploadExcelFile&quot;);
+      if (fileObject.value === &quot;&quot; || fileObject.value == null) {
+        _this.$alert(&quot;alert alert-danger&quot;, &quot;请选择要上传的附件&quot;);
+        return false;
+      } else {
+        var formdata = new FormData();
+        // 上传的文件
+        formdata.append(&quot;file&quot;, fileObject.files[0]);
+        _this.$loading(true, &quot;数据导入中，请勿关闭此页面......&quot;);
+        _this
+          .$http({
+            headers: {
+              &quot;Content-Type&quot;: &quot;multipart/form-databoundary&quot;,
+            },
+            method: &quot;post&quot;,
+            url: &quot;/api/partnet/agentstudent/uploadExcelSubmit&quot;,
+            data: formdata,
+          })
+          .then(
+            (res) =&gt; {
+              if (res.status == 200) {
+                if (res.data.msg == &quot;success&quot;) {
+                  fileObject.value = &quot;&quot;;
+                  _this.agentstudentFailList = res.data.agentstudentFailList;
+                  _this.agentGetStudentList();
+                  alert(
+                    &quot;导入总数据 &quot; +
+                      res.data.importAll +
+                      &quot; 条，成功 &quot; +
+                      res.data.importSuccess +
+                      &quot; 条，失败 &quot; +
+                      res.data.importFail +
+                      &quot; 条&quot;
+                  );
+                } else if (res.data.msg == &quot;fileTypeError&quot;) {
+                  fileObject.value = &quot;&quot;;
+                  alert(&quot;导入失败，请与模板文件保持一致&quot;);
+                } else {
+                  _this.$alert(&quot;alert alert-danger&quot;, &quot;文件导入失败&quot;);
+                }
+              } else {
+                _this.$alert(&quot;alert alert-danger&quot;, &quot;服务器错误&quot;);
+              }
+              _this.$loading(false);
+            },
+            (err) =&gt; {
+              if (err.status === 403) {
+                var agentLoginInfo = {
+                  agentIsLogin: false,
+                  agentRole: 1,
+                  agentName: &quot;&quot;,
+                };
+                _this.$store.commit(&quot;changeAgentLoginInfo&quot;, agentLoginInfo);
+                _this.$router.push(&quot;/login.html&quot;);
+                _this.$alert(&quot;alert alert-danger&quot;, &quot;请重新登录&quot;);
+              } else {
+                _this.$alert(&quot;alert alert-danger&quot;, &quot;出错了，请稍后再试&quot;);
+              }
+              _this.$loading(false);
+            }
+          );
+      }
+    },
+</code></pre>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#%E5%AF%BC%E5%85%A5%E8%A1%A8%E6%A0%BC%E6%A0%B7%E4%BE%8B">导入表格样例</a></li>
+<li><a href="#pomxml">pom.xml</a></li>
+<li><a href="#exceltool%E5%B7%A5%E5%85%B7%E7%B1%BB">ExcelTool工具类</a></li>
+<li><a href="#serviceimpl%E5%AE%9E%E7%8E%B0%E7%B1%BB">serviceimpl实现类</a></li>
+<li><a href="#%E5%89%8D%E7%AB%AF%E8%AF%B7%E6%B1%82">前端请求</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://viaoh.github.io/post/sqnsjjd4y/">
+              <h3 class="post-title">
+                解决方案
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '4970b3e2cb2b185b5af7',
+    clientSecret: 'a413a9c025c85c8c7d510b5b5cbe613c47e76bdc',
+    repo: 'viaoh.github.io',
+    owner: 'viaoh',
+    admin: ['viaoh'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  Powered by &nbsp;<a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://viaoh.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>
