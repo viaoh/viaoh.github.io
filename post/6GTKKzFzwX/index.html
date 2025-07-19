@@ -1,0 +1,285 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Fiddler+雷电模拟器里的APP抓包 | liuyoung&#39;s blog</title>
+<link rel="shortcut icon" href="https://viaoh.github.io/favicon.ico?v=1752909686292">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://viaoh.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Fiddler+雷电模拟器里的APP抓包 | liuyoung&#39;s blog - Atom Feed" href="https://viaoh.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="常用的抓包工具有fiddler、wireshark、httpwatch、 firebug、F12/等。抓包抓的是协议，fiddler抓的是HTTP、HTTPS协议，wireshark抓的是其他协议。fiddler、wireshark可以修改..." />
+    <meta name="keywords" content="抓包" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://viaoh.github.io">
+  <img class="avatar" src="https://viaoh.github.io/images/avatar.png?v=1752909686292" alt="">
+  </a>
+  <h1 class="site-title">
+    liuyoung&#39;s blog
+  </h1>
+  <p class="site-description">
+    人生难得秋前雨，乞我虚堂自在眠
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="https://viaoh.github.io/post/XuQvrNvEf" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/liuyoung-cc/liuyoung-cc.github.io" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+    
+      
+        <a href="https://weibo.com/viaoh" target="_blank">
+          <i class="ri-weibo-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://www.zhihu.com/people/viaoh-" target="_blank">
+          <i class="ri-zhihu-line"></i>
+        </a>
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              Fiddler+雷电模拟器里的APP抓包
+            </h2>
+            <div class="post-info">
+              <span>
+                2025-06-27
+              </span>
+              <span>
+                4 min read
+              </span>
+              
+                <a href="https://viaoh.github.io/tag/MdliDSyxLs/" class="post-tag">
+                  # 抓包
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <p>常用的抓包工具有fiddler、wireshark、httpwatch、 firebug、F12/等。抓包抓的是协议，fiddler抓的是HTTP、HTTPS协议，wireshark抓的是其他协议。fiddler、wireshark可以修改接口的参数和返回值，常用的F12调试工具只可以查看接口的参数和响应值。</p>
+<ul>
+<li>fiddler最适合，在APP测试的时候抓包；</li>
+<li>wireshare适合对整个流量进行抓取；</li>
+<li>burpsuite最大的特点是抓包改包</li>
+</ul>
+<p>0x01 Fiddler原理</p>
+<p>Fiddler是以代理WEB服务器的形式工作的,浏览器与服务器之间通过建立TCP连接以HTTP协议进行通信，浏览器默认通过自己发送HTTP请求到服务器，它使用代理地址:127.0.0.1, 端口:8888. 当Fiddler开启会自动设置代理， 退出的时候它会自动注销代理，这样就不会影响别的程序。不过如果Fiddler非正常退出，这时候因为Fiddler没有自动注销，会造成网页无法访问。解决的办法是重新启动下Fiddler.</p>
+<figure data-type="image" tabindex="1"><img src="https://pic4.zhimg.com/v2-29d858f306b6578800a52f13220d91df.webp" alt="" loading="lazy"></figure>
+<p>0X02 安装应用</p>
+<p><strong>1.下载最新版Fiddler,强烈建议在官网下载：</strong> <a href="https://www.telerik.com/download/fiddler">https://www.telerik.com/download/fiddler</a></p>
+<figure data-type="image" tabindex="2"><img src="https://pica.zhimg.com/v2-818c2e99407df6dee549c6a6ccd89fe5.webp" alt="" loading="lazy"></figure>
+<p><strong>2. 正常傻瓜式安装，</strong><br>
+下一步，下一步，安装完毕后，先不用急于打开软件。</p>
+<p><strong>3.下载并安装Fiddler证书生成器：</strong><br>
+<a href="http://www.telerik.com/docs/default-source/fiddler/addons/fiddlercertmaker.exe?sfvrsn=2">http://www.telerik.com/docs/default-source/fiddler/addons/fiddlercertmaker.exe?sfvrsn=2</a></p>
+<p><strong>4.打开Fiddler进行设置</strong><br>
+点击工具栏中的Tools—&gt;Options<br>
+<img src="https://pica.zhimg.com/v2-944cfb36644f2f8bcb610864932d60f9.webp" alt="" loading="lazy"></p>
+<p><strong>5、点击HTTPS</strong>，勾选Decrypt HTTPS traffic和Ignore server certificate(unsafe)</p>
+<figure data-type="image" tabindex="3"><img src="https://pica.zhimg.com/v2-47e48cf1e3ad4d65c64aaad687761281.webp" alt="" loading="lazy"></figure>
+<p><strong>6、点击Actions</strong>，点击Export Root Certificate to Desktop<br>
+<img src="https://picx.zhimg.com/v2-138c9b211fa3f2d0c6f5558075de60e5.webp" alt="" loading="lazy"></p>
+<p>【注】此时电脑上会生成 一个证书<br>
+<img src="https://picx.zhimg.com/v2-161e1e27cf9e3bae927816a4619dfbf8.webp" alt="" loading="lazy"></p>
+<p><strong>7、https设置及connections设置，勾选选择项</strong><br>
+<img src="https://pic4.zhimg.com/v2-37d7a7446fb79028b5aed8342631e540.webp" alt="" loading="lazy"></p>
+<figure data-type="image" tabindex="4"><img src="https://pic4.zhimg.com/v2-47a617e194e998e3a53c678c35408457.webp" alt="" loading="lazy"></figure>
+<p><strong>8、安装雷电模拟器</strong><br>
+<strong><a href="https://cloud.tencent.com/developer/tools/blog-entry?target=https%3A%2F%2Fwww.ldmnq.com%2F&amp;objectId=2220183&amp;objectType=1&amp;isNewArticle=undefined">https://www.ldmnq.com/</a></strong><br>
+<img src="https://pica.zhimg.com/v2-7f3df1de8ebb49c15fe5aac8edb2c72b.webp" alt="" loading="lazy"></p>
+<p><strong>9、安装好后，桌面双击打开雷电模拟器，点击设置</strong><br>
+<img src="https://pic1.zhimg.com/v2-d9399fda5ed5bdd1f06b5724d6c0012f.webp" alt="" loading="lazy"></p>
+<p><strong>10、安装好后，桌面双击打开雷电模拟器，点击设置</strong><br>
+<img src="https://pic2.zhimg.com/v2-01720ff7a5e9688e640dcf484527ec78.webp" alt="" loading="lazy"></p>
+<p><strong>11、选择网络设置，勾选桥接模式，点击安装驱动，点击确定，点击保存设置</strong><br>
+<img src="https://picx.zhimg.com/v2-2619bf596e95737a83ec515bb17aa04d.webp" alt="" loading="lazy"></p>
+<figure data-type="image" tabindex="5"><img src="https://picx.zhimg.com/v2-0eb44e88e233c3e908146492f242afff.webp" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="6"><img src="https://pic2.zhimg.com/v2-aae8ba9e2156363c42a973c4301a8d69.webp" alt="" loading="lazy"></figure>
+<p><strong>12、打开模拟器，设置代理。找到系统应用，点击设置，点击无线网络WLAN—&gt;左键常按点击已连接网络—&gt;修改网络</strong><br>
+<img src="https://pic2.zhimg.com/v2-f137773a12e8aad39cd92e03171eb74b.webp" alt="" loading="lazy"></p>
+<figure data-type="image" tabindex="7"><img src="https://picx.zhimg.com/v2-d102e0bd6cbf042f624e320fde332386.webp" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="8"><img src="https://pic2.zhimg.com/v2-5dbd5bf7cc1c4428b4adb9088c113f27.webp" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="9"><img src="https://pic4.zhimg.com/v2-4c3789c6e4c839ee62daa65425d9c0b1.webp" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="10"><img src="https://pic2.zhimg.com/v2-a2fd6b69bf6dd9f34bad9f9d8bd232ca.webp" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="11"><img src="https://pic2.zhimg.com/v2-6b3643e0c07ec6ce1a1d6416301cafda.webp" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="12"><img src="https://pic3.zhimg.com/v2-0d15e57d61ee21a8adaac7704c502604.webp" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="13"><img src="https://pic4.zhimg.com/v2-beebb48cbf01f356d5d3c782bc7b56c0.webp" alt="" loading="lazy"></figure>
+<p><strong>13、将步骤6导出的证书FiddlerRoot.cer文件导入至模拟器</strong><br>
+<img src="https://picx.zhimg.com/v2-7bafb2d0fd203e0ca182c47b01632b7d.webp" alt="" loading="lazy"></p>
+<figure data-type="image" tabindex="14"><img src="https://pic1.zhimg.com/v2-535b8ade670dd3f3a23f8b30b3aae57b.webp" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="15"><img src="https://pic4.zhimg.com/v2-0e973e558369b0b9291368db1a47e57c.webp" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="16"><img src="https://pic2.zhimg.com/80/v2-66b542d2b73ecfda2b9cec91015d851d_720w.webp" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="17"><img src="https://pic1.zhimg.com/v2-15af09b0c642d020a1df44d1a078be23.webp" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="18"><img src="https://pic3.zhimg.com/v2-34ff90ae2e0223b72225d1f2276ce03b.webp" alt="" loading="lazy"></figure>
+<p><strong>点击完成导入</strong><br>
+<img src="https://pic4.zhimg.com/80/v2-813f0bddca2c3e800601a22648fa9779_720w.webp" alt="" loading="lazy"></p>
+<p><strong>14、在模拟器中打开系统应用—&gt;设置—&gt;安全—&gt;从SD卡安装。找到FiddlerRoot.cer文件，按提示导入即可，注意在此过程需要名称和解锁图案等，自行即可</strong></p>
+<p>设置-安全-为证书命名<br>
+<img src="https://pic2.zhimg.com/v2-0cdf732cae8b7af78b9cdf878b36b29b.webp" alt="" loading="lazy"></p>
+<figure data-type="image" tabindex="19"><img src="https://pic1.zhimg.com/v2-44e0b0bea0d1d2b89209c9da74190d91.webp" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="20"><img src="https://pic1.zhimg.com/v2-df0a4aff604bd4014e5ae55c51a2fa35.webp" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="21"><img src="https://picx.zhimg.com/80/v2-9b11467ff0fe2a9c8de145af2b444f6f_720w.webp" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="22"><img src="https://picx.zhimg.com/v2-c3e3a4c25196b1920ec4a12656eb7a0c.webp" alt="" loading="lazy"></figure>
+<p>或者另一种方法安装证书：<br>
+在雷电模拟器里打开浏览器，访问刚才设置的本机IP加端口，便可自动下载证书进行安装<br>
+流程如下<br>
+手机端(客户端)设置<br>
+保证Fiddler和手机在同一局域网下，设置手机代理服务器地址为Fiddler服务器地址即可。<br>
+<img src="https://pic4.zhimg.com/80/v2-61bf7429b9e899dfe256c90757908205_720w.webp" alt="" loading="lazy"></p>
+<p>设置代理服务器<br>
+当使用https协议时，需要下载证书(根据需要)<br>
+在手机浏览器访问Fiddler服务器—下载证书—安装证书（设置→安全→凭据存储→从sd卡安装）<br>
+<img src="https://pic1.zhimg.com/v2-e3d89d7680122c38f9d3c29172192fb6.webp" alt="" loading="lazy"></p>
+<p>下载证书</p>
+<p><strong>15、打开fiddler，重启模拟器，输入设置的密码，按回车键，打开需要抓包的APP，就可以在电脑上进行APP抓包了</strong><br>
+<img src="https://picx.zhimg.com/v2-c407729b4dbbc40e6e2985ed5ac74977.webp" alt="" loading="lazy"></p>
+<p><strong>常用图标含义</strong><br>
+<img src="https://picx.zhimg.com/v2-5482d5b836bf84a9f774efed3bdeaa2f.webp" alt="" loading="lazy"></p>
+
+              </div>
+              <div class="toc-container">
+                
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://viaoh.github.io/post/srrGNAscH8/">
+              <h3 class="post-title">
+                使用Charles抓包微信小程序
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '4970b3e2cb2b185b5af7',
+    clientSecret: 'a413a9c025c85c8c7d510b5b5cbe613c47e76bdc',
+    repo: 'viaoh.github.io',
+    owner: 'viaoh',
+    admin: ['viaoh'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  Powered by &nbsp;<a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://viaoh.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

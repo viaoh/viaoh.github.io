@@ -1,0 +1,710 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>JSON数据解析 | liuyoung&#39;s blog</title>
+<link rel="shortcut icon" href="https://viaoh.github.io/favicon.ico?v=1752909686292">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://viaoh.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="JSON数据解析 | liuyoung&#39;s blog - Atom Feed" href="https://viaoh.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="package com.example.demo;
+
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileOutputStrea..." />
+    <meta name="keywords" content="java工具类" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://viaoh.github.io">
+  <img class="avatar" src="https://viaoh.github.io/images/avatar.png?v=1752909686292" alt="">
+  </a>
+  <h1 class="site-title">
+    liuyoung&#39;s blog
+  </h1>
+  <p class="site-description">
+    人生难得秋前雨，乞我虚堂自在眠
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="https://viaoh.github.io/post/XuQvrNvEf" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/liuyoung-cc/liuyoung-cc.github.io" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+    
+      
+        <a href="https://weibo.com/viaoh" target="_blank">
+          <i class="ri-weibo-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://www.zhihu.com/people/viaoh-" target="_blank">
+          <i class="ri-zhihu-line"></i>
+        </a>
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              JSON数据解析
+            </h2>
+            <div class="post-info">
+              <span>
+                2025-07-19
+              </span>
+              <span>
+                14 min read
+              </span>
+              
+                <a href="https://viaoh.github.io/tag/MJDpA1HvdV/" class="post-tag">
+                  # java工具类
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <pre><code class="language-java">package com.example.demo;
+
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
+
+@RunWith(SpringRunner.class)
+@SpringBootTest
+public class DemoApplicationTests {
+
+	@Test
+	public static void main(String[] args) {
+        String inputFilePath = &quot;D:\\题库.txt&quot;;
+        String outputFilePath = &quot;D:\\题库.xlsx&quot;;
+        try {
+            List&lt;Question&gt; questions = parseTxtFile(inputFilePath);
+            createExcelFile(questions, outputFilePath);
+            System.out.println(&quot;转换成功！生成文件: &quot; + outputFilePath);
+        } catch (IOException e) {
+            System.err.println(&quot;处理文件时出错: &quot; + e.getMessage());
+        }
+    }
+
+    private static List&lt;Question&gt; parseTxtFile(String filePath) throws IOException {
+        List&lt;Question&gt; questions = new ArrayList&lt;&gt;();
+        
+        InputStream inputStream=new FileInputStream(filePath);
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream,&quot;UTF-8&quot;));
+        
+        String line;
+        Question currentQuestion = null;
+        
+        while ((line = reader.readLine()) != null) {
+            line = line.trim();
+            if (line.startsWith(&quot;题干：&quot;)) {
+                // 新题目开始
+                if (currentQuestion != null) {
+                    questions.add(currentQuestion);
+                }
+                currentQuestion = new Question();
+                currentQuestion.setQuestion(line.substring(3).trim());
+            } else if (line.startsWith(&quot;A：&quot;)) {
+                currentQuestion.setOptionA(line.substring(2).trim());
+            } else if (line.startsWith(&quot;B：&quot;)) {
+                currentQuestion.setOptionB(line.substring(2).trim());
+            } else if (line.startsWith(&quot;C：&quot;)) {
+                currentQuestion.setOptionC(line.substring(2).trim());
+            } else if (line.startsWith(&quot;D：&quot;)) {
+                currentQuestion.setOptionD(line.substring(2).trim());
+            } else if (line.startsWith(&quot;E：&quot;)) {
+                currentQuestion.setOptionE(line.substring(2).trim());
+            } else if (line.startsWith(&quot;F：&quot;)) {
+                currentQuestion.setOptionF(line.substring(2).trim());
+            } else if (line.startsWith(&quot;G：&quot;)) {
+                currentQuestion.setOptionG(line.substring(2).trim());
+            } else if (line.startsWith(&quot;答案：&quot;)) {
+                currentQuestion.setAnswer(line.substring(3).trim());
+            } else if (line.startsWith(&quot;题目解析：&quot;)) {
+                currentQuestion.setAnalysis(line.substring(5).trim());
+            } else if (line.startsWith(&quot;题目类型：&quot;)) {
+                currentQuestion.setQuestionType(line.substring(5).trim());
+            }
+        }
+        
+        // 添加最后一个问题
+        if (currentQuestion != null) {
+            questions.add(currentQuestion);
+        }
+        
+        reader.close();
+        return questions;
+    }
+
+    private static void createExcelFile(List&lt;Question&gt; questions, String filePath) throws IOException {
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet(&quot;题库&quot;);
+        // 创建表头
+        Row headerRow = sheet.createRow(0);
+        String[] headers = {&quot;题目&quot;, &quot;选项A&quot;, &quot;选项B&quot;, &quot;选项C&quot;, &quot;选项D&quot;,&quot;选项E&quot;,&quot;选项F&quot;,&quot;选项G&quot;, &quot;答案&quot;, &quot;题目解析&quot;,&quot;题目类型&quot;};
+        for (int i = 0; i &lt; headers.length; i++) {
+            Cell cell = headerRow.createCell(i);
+            cell.setCellValue(headers[i]);
+        }
+        // 填充数据
+        int rowNum = 1;
+        for (Question q : questions) {
+            Row row = sheet.createRow(rowNum++);
+            row.createCell(0).setCellValue(q.getQuestion());
+            row.createCell(1).setCellValue(q.getOptionA());
+            row.createCell(2).setCellValue(q.getOptionB());
+            row.createCell(3).setCellValue(q.getOptionC());
+            row.createCell(4).setCellValue(q.getOptionD());
+            row.createCell(5).setCellValue(q.getOptionE());
+            row.createCell(6).setCellValue(q.getOptionF());
+            row.createCell(7).setCellValue(q.getOptionG());
+            row.createCell(8).setCellValue(q.getAnswer());
+            row.createCell(9).setCellValue(q.getAnalysis());
+            row.createCell(10).setCellValue(q.getQuestionType());
+        }
+        
+        // 自动调整列宽
+        for (int i = 0; i &lt; headers.length; i++) {
+            sheet.autoSizeColumn(i);
+        }
+        
+        // 写入文件
+        try (FileOutputStream outputStream = new FileOutputStream(filePath)) {
+            workbook.write(outputStream);
+        }
+        workbook.close();
+    }
+
+    static class Question {
+        private String question;
+        private String optionA;
+        private String optionB;
+        private String optionC;
+        private String optionD;
+        private String optionE;
+        private String optionF;
+        private String optionG;
+        private String answer;
+        private String analysis;
+        private String questionType;
+        // 省略getter和setter方法
+        public String getQuestion() { return question; }
+        public void setQuestion(String question) { this.question = question; }
+        public String getOptionA() { return optionA; }
+        public void setOptionA(String optionA) { this.optionA = optionA; }
+        public String getOptionB() { return optionB; }
+        public void setOptionB(String optionB) { this.optionB = optionB; }
+        public String getOptionC() { return optionC; }
+        public void setOptionC(String optionC) { this.optionC = optionC; }
+        public String getOptionD() { return optionD; }
+        public void setOptionD(String optionD) { this.optionD = optionD; }
+        public String getOptionE() { return optionE; }
+        public void setOptionE(String optionE) { this.optionE = optionE; }
+        public String getOptionF() { return optionF; }
+        public void setOptionF(String optionF) { this.optionF = optionF; }
+        public String getOptionG() { return optionG; }
+        public void setOptionG(String optionG) { this.optionG = optionG; }
+        public String getAnswer() { return answer; }
+        public void setAnswer(String answer) { this.answer = answer; }
+        public String getAnalysis() { return analysis; }
+        public void setAnalysis(String analysis) { this.analysis = analysis; }
+        public String getQuestionType() { return questionType; }
+        public void setQuestionType(String questionType) { this.questionType = questionType; }
+    }
+
+}
+</code></pre>
+<pre><code class="language-java">package test;
+/**
+ * JSON转TXT文本：睿达一点通小程序
+ */
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Map;
+
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
+
+public class JsonTest {
+
+	public static void jsonLoop(Object object) {
+		if (object instanceof JSONObject) {
+			JSONObject jsonObject = (JSONObject) object;
+			for (Map.Entry&lt;String, Object&gt; entry : jsonObject.entrySet()) {
+				Object o = entry.getValue();
+				String questionType = &quot;&quot;;
+				String description = &quot;&quot;;
+				String option = &quot;&quot;;
+				String answer = &quot;&quot;;
+				String analysis = &quot;&quot;;
+					switch (entry.getKey().toString()) {
+					case &quot;type&quot;:
+						if (!entry.getValue().equals(&quot;&quot;)) {
+							switch (Integer.parseInt(entry.getValue().toString())) {
+							case 1:
+								questionType = &quot;题目类型：单选题&quot; + &quot;\n&quot;;
+								break;
+							case 2:
+								questionType = &quot;题目类型：多选题&quot; + &quot;\n&quot;;
+								break;	
+							case 3:
+								questionType = &quot;题目类型：判断题&quot; + &quot;\n&quot;;
+								break;
+				            case 4:
+				            	questionType = &quot;题目类型：序号四&quot; + &quot;\n&quot;;
+								break;
+				            case 5:
+				            	questionType = &quot;题目类型：序号五&quot; + &quot;\n&quot;;
+								break;
+							}
+						}
+						break;
+					case &quot;description&quot;:
+						if (!entry.getValue().equals(&quot;&quot;)) {
+							description += &quot;题干：&quot; + entry.getValue().toString() + &quot;\n&quot;;
+						}
+						break;
+					case &quot;option&quot;:
+						if (!entry.getValue().equals(&quot;&quot;)) {
+							JSONObject jsonObject2 = JSONObject.parseObject(entry.getValue().toString());
+					        for (Map.Entry&lt;String, Object&gt; entry2 : jsonObject2.entrySet()) {
+					            switch (entry2.getKey().toString()) {
+								case &quot;a&quot;:
+									if (!entry2.getValue().equals(&quot;&quot;)) {
+										option += &quot;A：&quot; + entry2.getValue().toString() + &quot;\n&quot;;
+									}
+									break;
+								case &quot;b&quot;:
+									if (!entry2.getValue().equals(&quot;&quot;)) {
+										option += &quot;B：&quot; + entry2.getValue().toString() + &quot;\n&quot;;
+									}
+									break;	
+								case &quot;c&quot;:
+									if (!entry2.getValue().equals(&quot;&quot;)) {
+										option += &quot;C：&quot; + entry2.getValue().toString() + &quot;\n&quot;;
+									}
+									break;
+								
+					            case &quot;d&quot;:
+									if (!entry2.getValue().equals(&quot;&quot;)) {
+										option += &quot;D：&quot; + entry2.getValue().toString() + &quot;\n&quot;;
+									}
+									break;
+					            case &quot;e&quot;:
+									if (!entry2.getValue().equals(&quot;&quot;)) {
+										option += &quot;E：&quot; + entry2.getValue().toString() + &quot;\n&quot;;
+									}
+									break;
+					            case &quot;f&quot;:
+									if (!entry2.getValue().equals(&quot;&quot;)) {
+										option += &quot;F：&quot; + entry2.getValue().toString() + &quot;\n&quot;;
+									}
+									break;
+					            case &quot;g&quot;:
+									if (!entry2.getValue().equals(&quot;&quot;)) {
+										option += &quot;G：&quot; + entry2.getValue().toString() + &quot;\n&quot;;
+									}
+									break;
+					            case &quot;panduan&quot;:
+										option += &quot;A：\n&quot;;
+										option += &quot;B：\n&quot;;
+										option += &quot;C：\n&quot;;
+										option += &quot;D：\n&quot;;
+										option += &quot;E：\n&quot;;
+										option += &quot;F：\n&quot;;
+										option += &quot;G：\n&quot;;
+									break;
+								}
+					            
+					        }
+						}
+						break;	
+					case &quot;answer&quot;:
+						if (!entry.getValue().equals(&quot;&quot;)) {
+							JSONObject jsonObject2 = JSONObject.parseObject(entry.getValue().toString());
+					        for (Map.Entry&lt;String, Object&gt; entry2 : jsonObject2.entrySet()) {
+					            switch (entry2.getKey().toString()) {
+								case &quot;answer&quot;:
+									if (!entry2.getValue().equals(&quot;&quot;)) {
+										answer += &quot;答案：&quot; + entry2.getValue().toString().replaceAll(&quot;[^a-zA-Z]&quot;, &quot;&quot;).toUpperCase() + &quot;\n&quot;;
+									}
+									break;
+								case &quot;analysis&quot;:
+									if (!entry2.getValue().equals(&quot;&quot;)) {
+										analysis += &quot;题目解析：&quot; + entry2.getValue().toString() + &quot;\n&quot;;
+									}
+									break;	
+								}
+					        }
+						}
+						break;
+					}
+					try {
+						// 创建FileWriter对象，指定文件路径和是否追加内容
+						FileWriter writer = new FileWriter(&quot;D:\\题库.txt&quot;, true); // 第二个参数为true表示追加内容
+						writer.write(questionType + description + option + answer + analysis); // 写入数据ExcelTool.java
+						writer.close(); // 关闭流
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				if (o instanceof String) {
+						
+					
+				} else {
+					jsonLoop(o);
+				}
+			}
+		}
+		if (object instanceof JSONArray){
+			JSONArray jsonArray = (JSONArray) object;
+			for (int i = 0; i &lt; jsonArray.size(); i++) {
+				jsonLoop(jsonArray.get(i));
+			}
+		}
+	}
+
+	public static void main(String[] args) throws IOException {
+		String jsonStr = new String(Files.readAllBytes(Paths.get(&quot;D:\\题库.json&quot;)), StandardCharsets.UTF_8);
+		JSONObject jsonObject = JSON.parseObject(jsonStr);
+		//JSONArray jsonArray = JSONArray.parseArray(jsonStr);
+		jsonLoop(jsonObject);
+		System.err.println(&quot;读取完成&quot;);
+	}
+}
+</code></pre>
+<pre><code class="language-java">package test;
+
+/**
+ * JSON转TXT文本：易知课堂网页端
+ */
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Map;
+
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
+
+public class JsonTest2 {
+
+	public static void jsonLoop(Object object) {
+		if (object instanceof JSONObject) {
+			JSONObject jsonObject = (JSONObject) object;
+			for (Map.Entry&lt;String, Object&gt; entry : jsonObject.entrySet()) {
+				Object o = entry.getValue();
+				//System.err.println(entry.getKey());
+				String questionType = &quot;&quot;;
+				String description = &quot;&quot;;
+				String option = &quot;&quot;;
+				String answer = &quot;&quot;;
+				String analysis = &quot;&quot;;
+					switch (entry.getKey().toString()) {
+					case &quot;question_type&quot;:
+						if (!entry.getValue().equals(&quot;&quot;)) {
+							switch (Integer.parseInt(entry.getValue().toString())) {
+							case 1:
+								questionType = &quot;题目类型:单选题&quot; + &quot;\n&quot;;
+								break;
+							case 2:
+								questionType = &quot;题目类型:多选题&quot; + &quot;\n&quot;;
+								break;	
+							case 3:
+								questionType = &quot;题目类型:判断题&quot; + &quot;\n&quot;;
+								break;
+				            case 4:
+				            	questionType = &quot;题目类型:序号四&quot; + &quot;\n&quot;;
+								break;
+				            case 5:
+				            	questionType = &quot;题目类型:序号五&quot; + &quot;\n&quot;;
+								break;
+							}
+						}
+						break;
+					case &quot;question&quot;:
+						if (!entry.getValue().equals(&quot;&quot;)) {
+							System.err.println(entry.getValue().toString());
+							description += &quot;题干:&quot; + entry.getValue().toString() + &quot;\n&quot;;
+						}
+						break;
+					case &quot;options&quot;:
+						if (!entry.getValue().equals(&quot;&quot;)) {
+							JSONArray jsonArray = JSONArray.parseArray(entry.getValue().toString());
+								for (int i = 0; i &lt; jsonArray.size(); i++) {
+						            switch (i) {
+						            
+									case 0:
+										if (!jsonArray.get(i).equals(&quot;&quot;)) {
+											JSONObject optionObject = JSONObject.parseObject(jsonArray.get(i).toString());
+											String optionTxt = optionObject.get(&quot;option&quot;).toString();
+											option += &quot;A.&quot; + optionTxt.toString() + &quot;\n&quot;;
+											Integer isRight = (Integer) optionObject.get(&quot;is_right&quot;);
+											if (isRight == 1) {
+												answer += &quot;正确答案:A&quot;+ &quot;\n&quot;;
+											}
+										}
+										break;
+									case 1:
+										if (!jsonArray.get(i).equals(&quot;&quot;)) {
+											JSONObject optionObject = JSONObject.parseObject(jsonArray.get(i).toString());
+											String optionTxt = optionObject.get(&quot;option&quot;).toString();
+											option += &quot;B.&quot; + optionTxt.toString() + &quot;\n&quot;;
+											Integer isRight = (Integer) optionObject.get(&quot;is_right&quot;);
+											if (isRight == 1) {
+												answer += &quot;正确答案:B&quot;+ &quot;\n&quot;;
+											}
+										}
+										break;	
+									case 2:
+										if (!jsonArray.get(i).equals(&quot;&quot;)) {
+											JSONObject optionObject = JSONObject.parseObject(jsonArray.get(i).toString());
+											String optionTxt = optionObject.get(&quot;option&quot;).toString();
+											option += &quot;C.&quot; + optionTxt.toString() + &quot;\n&quot;;
+											Integer isRight = (Integer) optionObject.get(&quot;is_right&quot;);
+											if (isRight == 1) {
+												answer += &quot;正确答案:C&quot;+ &quot;\n&quot;;
+											}
+										}
+										break;
+									case 3:
+										if (!jsonArray.get(i).equals(&quot;&quot;)) {
+											JSONObject optionObject = JSONObject.parseObject(jsonArray.get(i).toString());
+											String optionTxt = optionObject.get(&quot;option&quot;).toString();
+											option += &quot;D.&quot; + optionTxt.toString() + &quot;\n&quot;;
+											Integer isRight = (Integer) optionObject.get(&quot;is_right&quot;);
+											if (isRight == 1) {
+												answer += &quot;正确答案:D&quot;+ &quot;\n&quot;;
+											}
+										}
+										break;
+									case 4:
+										if (!jsonArray.get(i).equals(&quot;&quot;)) {
+											JSONObject optionObject = JSONObject.parseObject(jsonArray.get(i).toString());
+											String optionTxt = optionObject.get(&quot;option&quot;).toString();
+											option += &quot;E.&quot; + optionTxt.toString() + &quot;\n&quot;;
+											Integer isRight = (Integer) optionObject.get(&quot;is_right&quot;);
+											if (isRight == 1) {
+												answer += &quot;正确答案:E&quot;+ &quot;\n&quot;;
+											}
+										}
+										break;
+									case 5:
+										if (!jsonArray.get(i).equals(&quot;&quot;)) {
+											JSONObject optionObject = JSONObject.parseObject(jsonArray.get(i).toString());
+											String optionTxt = optionObject.get(&quot;option&quot;).toString();
+											option += &quot;F.&quot; + optionTxt.toString() + &quot;\n&quot;;
+											Integer isRight = (Integer) optionObject.get(&quot;is_right&quot;);
+											if (isRight == 1) {
+												answer += &quot;正确答案:F&quot;+ &quot;\n&quot;;
+											}
+										}
+										break;
+								}
+								}
+						}
+						break;	
+					case &quot;office_explain&quot;:
+						if (!entry.getValue().equals(&quot;&quot;)) {
+							analysis += &quot;解题思路:&quot; + entry.getValue().toString() + &quot;\n&quot;;
+						}
+						break;
+					}
+					try {
+						// 创建FileWriter对象，指定文件路径和是否追加内容
+						FileWriter writer = new FileWriter(&quot;D:\\题库.txt&quot;, true); // 第二个参数为true表示追加内容
+						writer.write(description + option + answer + analysis + questionType); // 写入数据ExcelTool.java
+						writer.close(); // 关闭流
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				if (o instanceof String) {
+						
+					
+				} else {
+					jsonLoop(o);
+				}
+			}
+		}
+		if (object instanceof JSONArray){
+			JSONArray jsonArray = (JSONArray) object;
+			for (int i = 0; i &lt; jsonArray.size(); i++) {
+				jsonLoop(jsonArray.get(i));
+			}
+		}
+	}
+
+	public static void main(String[] args) throws IOException {
+		String jsonStr = new String(Files.readAllBytes(Paths.get(&quot;D:\\题库.json&quot;)), StandardCharsets.UTF_8);
+		JSONObject jsonObject = JSON.parseObject(jsonStr);
+		//JSONArray jsonArray = JSONArray.parseArray(jsonStr);
+		jsonLoop(jsonObject);
+		System.err.println(&quot;读取完成&quot;);
+	}
+}
+</code></pre>
+
+              </div>
+              <div class="toc-container">
+                
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://viaoh.github.io/post/6GTKKzFzwX/">
+              <h3 class="post-title">
+                Fiddler+雷电模拟器里的APP抓包
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '4970b3e2cb2b185b5af7',
+    clientSecret: 'a413a9c025c85c8c7d510b5b5cbe613c47e76bdc',
+    repo: 'viaoh.github.io',
+    owner: 'viaoh',
+    admin: ['viaoh'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  Powered by &nbsp;<a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://viaoh.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

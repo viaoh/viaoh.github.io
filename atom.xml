@@ -1,0 +1,1350 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://viaoh.github.io</id>
+    <title>liuyoung&apos;s blog</title>
+    <updated>2025-07-19T07:27:42.637Z</updated>
+    <generator>https://github.com/jpmonette/feed</generator>
+    <link rel="alternate" href="https://viaoh.github.io"/>
+    <link rel="self" href="https://viaoh.github.io/atom.xml"/>
+    <subtitle>人生难得秋前雨，乞我虚堂自在眠</subtitle>
+    <logo>https://viaoh.github.io/images/avatar.png</logo>
+    <icon>https://viaoh.github.io/favicon.ico</icon>
+    <rights>All rights reserved 2025, liuyoung&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[JSON数据解析]]></title>
+        <id>https://viaoh.github.io/post/iGmJlvMSWw/</id>
+        <link href="https://viaoh.github.io/post/iGmJlvMSWw/">
+        </link>
+        <updated>2025-07-19T07:18:44.000Z</updated>
+        <content type="html"><![CDATA[<pre><code class="language-java">package com.example.demo;
+
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
+
+@RunWith(SpringRunner.class)
+@SpringBootTest
+public class DemoApplicationTests {
+
+	@Test
+	public static void main(String[] args) {
+        String inputFilePath = &quot;D:\\题库.txt&quot;;
+        String outputFilePath = &quot;D:\\题库.xlsx&quot;;
+        try {
+            List&lt;Question&gt; questions = parseTxtFile(inputFilePath);
+            createExcelFile(questions, outputFilePath);
+            System.out.println(&quot;转换成功！生成文件: &quot; + outputFilePath);
+        } catch (IOException e) {
+            System.err.println(&quot;处理文件时出错: &quot; + e.getMessage());
+        }
+    }
+
+    private static List&lt;Question&gt; parseTxtFile(String filePath) throws IOException {
+        List&lt;Question&gt; questions = new ArrayList&lt;&gt;();
+        
+        InputStream inputStream=new FileInputStream(filePath);
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream,&quot;UTF-8&quot;));
+        
+        String line;
+        Question currentQuestion = null;
+        
+        while ((line = reader.readLine()) != null) {
+            line = line.trim();
+            if (line.startsWith(&quot;题干：&quot;)) {
+                // 新题目开始
+                if (currentQuestion != null) {
+                    questions.add(currentQuestion);
+                }
+                currentQuestion = new Question();
+                currentQuestion.setQuestion(line.substring(3).trim());
+            } else if (line.startsWith(&quot;A：&quot;)) {
+                currentQuestion.setOptionA(line.substring(2).trim());
+            } else if (line.startsWith(&quot;B：&quot;)) {
+                currentQuestion.setOptionB(line.substring(2).trim());
+            } else if (line.startsWith(&quot;C：&quot;)) {
+                currentQuestion.setOptionC(line.substring(2).trim());
+            } else if (line.startsWith(&quot;D：&quot;)) {
+                currentQuestion.setOptionD(line.substring(2).trim());
+            } else if (line.startsWith(&quot;E：&quot;)) {
+                currentQuestion.setOptionE(line.substring(2).trim());
+            } else if (line.startsWith(&quot;F：&quot;)) {
+                currentQuestion.setOptionF(line.substring(2).trim());
+            } else if (line.startsWith(&quot;G：&quot;)) {
+                currentQuestion.setOptionG(line.substring(2).trim());
+            } else if (line.startsWith(&quot;答案：&quot;)) {
+                currentQuestion.setAnswer(line.substring(3).trim());
+            } else if (line.startsWith(&quot;题目解析：&quot;)) {
+                currentQuestion.setAnalysis(line.substring(5).trim());
+            } else if (line.startsWith(&quot;题目类型：&quot;)) {
+                currentQuestion.setQuestionType(line.substring(5).trim());
+            }
+        }
+        
+        // 添加最后一个问题
+        if (currentQuestion != null) {
+            questions.add(currentQuestion);
+        }
+        
+        reader.close();
+        return questions;
+    }
+
+    private static void createExcelFile(List&lt;Question&gt; questions, String filePath) throws IOException {
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet(&quot;题库&quot;);
+        // 创建表头
+        Row headerRow = sheet.createRow(0);
+        String[] headers = {&quot;题目&quot;, &quot;选项A&quot;, &quot;选项B&quot;, &quot;选项C&quot;, &quot;选项D&quot;,&quot;选项E&quot;,&quot;选项F&quot;,&quot;选项G&quot;, &quot;答案&quot;, &quot;题目解析&quot;,&quot;题目类型&quot;};
+        for (int i = 0; i &lt; headers.length; i++) {
+            Cell cell = headerRow.createCell(i);
+            cell.setCellValue(headers[i]);
+        }
+        // 填充数据
+        int rowNum = 1;
+        for (Question q : questions) {
+            Row row = sheet.createRow(rowNum++);
+            row.createCell(0).setCellValue(q.getQuestion());
+            row.createCell(1).setCellValue(q.getOptionA());
+            row.createCell(2).setCellValue(q.getOptionB());
+            row.createCell(3).setCellValue(q.getOptionC());
+            row.createCell(4).setCellValue(q.getOptionD());
+            row.createCell(5).setCellValue(q.getOptionE());
+            row.createCell(6).setCellValue(q.getOptionF());
+            row.createCell(7).setCellValue(q.getOptionG());
+            row.createCell(8).setCellValue(q.getAnswer());
+            row.createCell(9).setCellValue(q.getAnalysis());
+            row.createCell(10).setCellValue(q.getQuestionType());
+        }
+        
+        // 自动调整列宽
+        for (int i = 0; i &lt; headers.length; i++) {
+            sheet.autoSizeColumn(i);
+        }
+        
+        // 写入文件
+        try (FileOutputStream outputStream = new FileOutputStream(filePath)) {
+            workbook.write(outputStream);
+        }
+        workbook.close();
+    }
+
+    static class Question {
+        private String question;
+        private String optionA;
+        private String optionB;
+        private String optionC;
+        private String optionD;
+        private String optionE;
+        private String optionF;
+        private String optionG;
+        private String answer;
+        private String analysis;
+        private String questionType;
+        // 省略getter和setter方法
+        public String getQuestion() { return question; }
+        public void setQuestion(String question) { this.question = question; }
+        public String getOptionA() { return optionA; }
+        public void setOptionA(String optionA) { this.optionA = optionA; }
+        public String getOptionB() { return optionB; }
+        public void setOptionB(String optionB) { this.optionB = optionB; }
+        public String getOptionC() { return optionC; }
+        public void setOptionC(String optionC) { this.optionC = optionC; }
+        public String getOptionD() { return optionD; }
+        public void setOptionD(String optionD) { this.optionD = optionD; }
+        public String getOptionE() { return optionE; }
+        public void setOptionE(String optionE) { this.optionE = optionE; }
+        public String getOptionF() { return optionF; }
+        public void setOptionF(String optionF) { this.optionF = optionF; }
+        public String getOptionG() { return optionG; }
+        public void setOptionG(String optionG) { this.optionG = optionG; }
+        public String getAnswer() { return answer; }
+        public void setAnswer(String answer) { this.answer = answer; }
+        public String getAnalysis() { return analysis; }
+        public void setAnalysis(String analysis) { this.analysis = analysis; }
+        public String getQuestionType() { return questionType; }
+        public void setQuestionType(String questionType) { this.questionType = questionType; }
+    }
+
+}
+</code></pre>
+<pre><code class="language-java">package test;
+/**
+ * JSON转TXT文本：睿达一点通小程序
+ */
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Map;
+
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
+
+public class JsonTest {
+
+	public static void jsonLoop(Object object) {
+		if (object instanceof JSONObject) {
+			JSONObject jsonObject = (JSONObject) object;
+			for (Map.Entry&lt;String, Object&gt; entry : jsonObject.entrySet()) {
+				Object o = entry.getValue();
+				String questionType = &quot;&quot;;
+				String description = &quot;&quot;;
+				String option = &quot;&quot;;
+				String answer = &quot;&quot;;
+				String analysis = &quot;&quot;;
+					switch (entry.getKey().toString()) {
+					case &quot;type&quot;:
+						if (!entry.getValue().equals(&quot;&quot;)) {
+							switch (Integer.parseInt(entry.getValue().toString())) {
+							case 1:
+								questionType = &quot;题目类型：单选题&quot; + &quot;\n&quot;;
+								break;
+							case 2:
+								questionType = &quot;题目类型：多选题&quot; + &quot;\n&quot;;
+								break;	
+							case 3:
+								questionType = &quot;题目类型：判断题&quot; + &quot;\n&quot;;
+								break;
+				            case 4:
+				            	questionType = &quot;题目类型：序号四&quot; + &quot;\n&quot;;
+								break;
+				            case 5:
+				            	questionType = &quot;题目类型：序号五&quot; + &quot;\n&quot;;
+								break;
+							}
+						}
+						break;
+					case &quot;description&quot;:
+						if (!entry.getValue().equals(&quot;&quot;)) {
+							description += &quot;题干：&quot; + entry.getValue().toString() + &quot;\n&quot;;
+						}
+						break;
+					case &quot;option&quot;:
+						if (!entry.getValue().equals(&quot;&quot;)) {
+							JSONObject jsonObject2 = JSONObject.parseObject(entry.getValue().toString());
+					        for (Map.Entry&lt;String, Object&gt; entry2 : jsonObject2.entrySet()) {
+					            switch (entry2.getKey().toString()) {
+								case &quot;a&quot;:
+									if (!entry2.getValue().equals(&quot;&quot;)) {
+										option += &quot;A：&quot; + entry2.getValue().toString() + &quot;\n&quot;;
+									}
+									break;
+								case &quot;b&quot;:
+									if (!entry2.getValue().equals(&quot;&quot;)) {
+										option += &quot;B：&quot; + entry2.getValue().toString() + &quot;\n&quot;;
+									}
+									break;	
+								case &quot;c&quot;:
+									if (!entry2.getValue().equals(&quot;&quot;)) {
+										option += &quot;C：&quot; + entry2.getValue().toString() + &quot;\n&quot;;
+									}
+									break;
+								
+					            case &quot;d&quot;:
+									if (!entry2.getValue().equals(&quot;&quot;)) {
+										option += &quot;D：&quot; + entry2.getValue().toString() + &quot;\n&quot;;
+									}
+									break;
+					            case &quot;e&quot;:
+									if (!entry2.getValue().equals(&quot;&quot;)) {
+										option += &quot;E：&quot; + entry2.getValue().toString() + &quot;\n&quot;;
+									}
+									break;
+					            case &quot;f&quot;:
+									if (!entry2.getValue().equals(&quot;&quot;)) {
+										option += &quot;F：&quot; + entry2.getValue().toString() + &quot;\n&quot;;
+									}
+									break;
+					            case &quot;g&quot;:
+									if (!entry2.getValue().equals(&quot;&quot;)) {
+										option += &quot;G：&quot; + entry2.getValue().toString() + &quot;\n&quot;;
+									}
+									break;
+					            case &quot;panduan&quot;:
+										option += &quot;A：\n&quot;;
+										option += &quot;B：\n&quot;;
+										option += &quot;C：\n&quot;;
+										option += &quot;D：\n&quot;;
+										option += &quot;E：\n&quot;;
+										option += &quot;F：\n&quot;;
+										option += &quot;G：\n&quot;;
+									break;
+								}
+					            
+					        }
+						}
+						break;	
+					case &quot;answer&quot;:
+						if (!entry.getValue().equals(&quot;&quot;)) {
+							JSONObject jsonObject2 = JSONObject.parseObject(entry.getValue().toString());
+					        for (Map.Entry&lt;String, Object&gt; entry2 : jsonObject2.entrySet()) {
+					            switch (entry2.getKey().toString()) {
+								case &quot;answer&quot;:
+									if (!entry2.getValue().equals(&quot;&quot;)) {
+										answer += &quot;答案：&quot; + entry2.getValue().toString().replaceAll(&quot;[^a-zA-Z]&quot;, &quot;&quot;).toUpperCase() + &quot;\n&quot;;
+									}
+									break;
+								case &quot;analysis&quot;:
+									if (!entry2.getValue().equals(&quot;&quot;)) {
+										analysis += &quot;题目解析：&quot; + entry2.getValue().toString() + &quot;\n&quot;;
+									}
+									break;	
+								}
+					        }
+						}
+						break;
+					}
+					try {
+						// 创建FileWriter对象，指定文件路径和是否追加内容
+						FileWriter writer = new FileWriter(&quot;D:\\题库.txt&quot;, true); // 第二个参数为true表示追加内容
+						writer.write(questionType + description + option + answer + analysis); // 写入数据ExcelTool.java
+						writer.close(); // 关闭流
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				if (o instanceof String) {
+						
+					
+				} else {
+					jsonLoop(o);
+				}
+			}
+		}
+		if (object instanceof JSONArray){
+			JSONArray jsonArray = (JSONArray) object;
+			for (int i = 0; i &lt; jsonArray.size(); i++) {
+				jsonLoop(jsonArray.get(i));
+			}
+		}
+	}
+
+	public static void main(String[] args) throws IOException {
+		String jsonStr = new String(Files.readAllBytes(Paths.get(&quot;D:\\题库.json&quot;)), StandardCharsets.UTF_8);
+		JSONObject jsonObject = JSON.parseObject(jsonStr);
+		//JSONArray jsonArray = JSONArray.parseArray(jsonStr);
+		jsonLoop(jsonObject);
+		System.err.println(&quot;读取完成&quot;);
+	}
+}
+</code></pre>
+<pre><code class="language-java">package test;
+
+/**
+ * JSON转TXT文本：易知课堂网页端
+ */
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Map;
+
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
+
+public class JsonTest2 {
+
+	public static void jsonLoop(Object object) {
+		if (object instanceof JSONObject) {
+			JSONObject jsonObject = (JSONObject) object;
+			for (Map.Entry&lt;String, Object&gt; entry : jsonObject.entrySet()) {
+				Object o = entry.getValue();
+				//System.err.println(entry.getKey());
+				String questionType = &quot;&quot;;
+				String description = &quot;&quot;;
+				String option = &quot;&quot;;
+				String answer = &quot;&quot;;
+				String analysis = &quot;&quot;;
+					switch (entry.getKey().toString()) {
+					case &quot;question_type&quot;:
+						if (!entry.getValue().equals(&quot;&quot;)) {
+							switch (Integer.parseInt(entry.getValue().toString())) {
+							case 1:
+								questionType = &quot;题目类型:单选题&quot; + &quot;\n&quot;;
+								break;
+							case 2:
+								questionType = &quot;题目类型:多选题&quot; + &quot;\n&quot;;
+								break;	
+							case 3:
+								questionType = &quot;题目类型:判断题&quot; + &quot;\n&quot;;
+								break;
+				            case 4:
+				            	questionType = &quot;题目类型:序号四&quot; + &quot;\n&quot;;
+								break;
+				            case 5:
+				            	questionType = &quot;题目类型:序号五&quot; + &quot;\n&quot;;
+								break;
+							}
+						}
+						break;
+					case &quot;question&quot;:
+						if (!entry.getValue().equals(&quot;&quot;)) {
+							System.err.println(entry.getValue().toString());
+							description += &quot;题干:&quot; + entry.getValue().toString() + &quot;\n&quot;;
+						}
+						break;
+					case &quot;options&quot;:
+						if (!entry.getValue().equals(&quot;&quot;)) {
+							JSONArray jsonArray = JSONArray.parseArray(entry.getValue().toString());
+								for (int i = 0; i &lt; jsonArray.size(); i++) {
+						            switch (i) {
+						            
+									case 0:
+										if (!jsonArray.get(i).equals(&quot;&quot;)) {
+											JSONObject optionObject = JSONObject.parseObject(jsonArray.get(i).toString());
+											String optionTxt = optionObject.get(&quot;option&quot;).toString();
+											option += &quot;A.&quot; + optionTxt.toString() + &quot;\n&quot;;
+											Integer isRight = (Integer) optionObject.get(&quot;is_right&quot;);
+											if (isRight == 1) {
+												answer += &quot;正确答案:A&quot;+ &quot;\n&quot;;
+											}
+										}
+										break;
+									case 1:
+										if (!jsonArray.get(i).equals(&quot;&quot;)) {
+											JSONObject optionObject = JSONObject.parseObject(jsonArray.get(i).toString());
+											String optionTxt = optionObject.get(&quot;option&quot;).toString();
+											option += &quot;B.&quot; + optionTxt.toString() + &quot;\n&quot;;
+											Integer isRight = (Integer) optionObject.get(&quot;is_right&quot;);
+											if (isRight == 1) {
+												answer += &quot;正确答案:B&quot;+ &quot;\n&quot;;
+											}
+										}
+										break;	
+									case 2:
+										if (!jsonArray.get(i).equals(&quot;&quot;)) {
+											JSONObject optionObject = JSONObject.parseObject(jsonArray.get(i).toString());
+											String optionTxt = optionObject.get(&quot;option&quot;).toString();
+											option += &quot;C.&quot; + optionTxt.toString() + &quot;\n&quot;;
+											Integer isRight = (Integer) optionObject.get(&quot;is_right&quot;);
+											if (isRight == 1) {
+												answer += &quot;正确答案:C&quot;+ &quot;\n&quot;;
+											}
+										}
+										break;
+									case 3:
+										if (!jsonArray.get(i).equals(&quot;&quot;)) {
+											JSONObject optionObject = JSONObject.parseObject(jsonArray.get(i).toString());
+											String optionTxt = optionObject.get(&quot;option&quot;).toString();
+											option += &quot;D.&quot; + optionTxt.toString() + &quot;\n&quot;;
+											Integer isRight = (Integer) optionObject.get(&quot;is_right&quot;);
+											if (isRight == 1) {
+												answer += &quot;正确答案:D&quot;+ &quot;\n&quot;;
+											}
+										}
+										break;
+									case 4:
+										if (!jsonArray.get(i).equals(&quot;&quot;)) {
+											JSONObject optionObject = JSONObject.parseObject(jsonArray.get(i).toString());
+											String optionTxt = optionObject.get(&quot;option&quot;).toString();
+											option += &quot;E.&quot; + optionTxt.toString() + &quot;\n&quot;;
+											Integer isRight = (Integer) optionObject.get(&quot;is_right&quot;);
+											if (isRight == 1) {
+												answer += &quot;正确答案:E&quot;+ &quot;\n&quot;;
+											}
+										}
+										break;
+									case 5:
+										if (!jsonArray.get(i).equals(&quot;&quot;)) {
+											JSONObject optionObject = JSONObject.parseObject(jsonArray.get(i).toString());
+											String optionTxt = optionObject.get(&quot;option&quot;).toString();
+											option += &quot;F.&quot; + optionTxt.toString() + &quot;\n&quot;;
+											Integer isRight = (Integer) optionObject.get(&quot;is_right&quot;);
+											if (isRight == 1) {
+												answer += &quot;正确答案:F&quot;+ &quot;\n&quot;;
+											}
+										}
+										break;
+								}
+								}
+						}
+						break;	
+					case &quot;office_explain&quot;:
+						if (!entry.getValue().equals(&quot;&quot;)) {
+							analysis += &quot;解题思路:&quot; + entry.getValue().toString() + &quot;\n&quot;;
+						}
+						break;
+					}
+					try {
+						// 创建FileWriter对象，指定文件路径和是否追加内容
+						FileWriter writer = new FileWriter(&quot;D:\\题库.txt&quot;, true); // 第二个参数为true表示追加内容
+						writer.write(description + option + answer + analysis + questionType); // 写入数据ExcelTool.java
+						writer.close(); // 关闭流
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				if (o instanceof String) {
+						
+					
+				} else {
+					jsonLoop(o);
+				}
+			}
+		}
+		if (object instanceof JSONArray){
+			JSONArray jsonArray = (JSONArray) object;
+			for (int i = 0; i &lt; jsonArray.size(); i++) {
+				jsonLoop(jsonArray.get(i));
+			}
+		}
+	}
+
+	public static void main(String[] args) throws IOException {
+		String jsonStr = new String(Files.readAllBytes(Paths.get(&quot;D:\\题库.json&quot;)), StandardCharsets.UTF_8);
+		JSONObject jsonObject = JSON.parseObject(jsonStr);
+		//JSONArray jsonArray = JSONArray.parseArray(jsonStr);
+		jsonLoop(jsonObject);
+		System.err.println(&quot;读取完成&quot;);
+	}
+}
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Fiddler+雷电模拟器里的APP抓包]]></title>
+        <id>https://viaoh.github.io/post/6GTKKzFzwX/</id>
+        <link href="https://viaoh.github.io/post/6GTKKzFzwX/">
+        </link>
+        <updated>2025-06-27T13:47:58.000Z</updated>
+        <content type="html"><![CDATA[<p>常用的抓包工具有fiddler、wireshark、httpwatch、 firebug、F12/等。抓包抓的是协议，fiddler抓的是HTTP、HTTPS协议，wireshark抓的是其他协议。fiddler、wireshark可以修改接口的参数和返回值，常用的F12调试工具只可以查看接口的参数和响应值。</p>
+<ul>
+<li>fiddler最适合，在APP测试的时候抓包；</li>
+<li>wireshare适合对整个流量进行抓取；</li>
+<li>burpsuite最大的特点是抓包改包</li>
+</ul>
+<p>0x01 Fiddler原理</p>
+<p>Fiddler是以代理WEB服务器的形式工作的,浏览器与服务器之间通过建立TCP连接以HTTP协议进行通信，浏览器默认通过自己发送HTTP请求到服务器，它使用代理地址:127.0.0.1, 端口:8888. 当Fiddler开启会自动设置代理， 退出的时候它会自动注销代理，这样就不会影响别的程序。不过如果Fiddler非正常退出，这时候因为Fiddler没有自动注销，会造成网页无法访问。解决的办法是重新启动下Fiddler.</p>
+<figure data-type="image" tabindex="1"><img src="https://pic4.zhimg.com/v2-29d858f306b6578800a52f13220d91df.webp" alt="" loading="lazy"></figure>
+<p>0X02 安装应用</p>
+<p><strong>1.下载最新版Fiddler,强烈建议在官网下载：</strong> <a href="https://www.telerik.com/download/fiddler">https://www.telerik.com/download/fiddler</a></p>
+<figure data-type="image" tabindex="2"><img src="https://pica.zhimg.com/v2-818c2e99407df6dee549c6a6ccd89fe5.webp" alt="" loading="lazy"></figure>
+<p><strong>2. 正常傻瓜式安装，</strong><br>
+下一步，下一步，安装完毕后，先不用急于打开软件。</p>
+<p><strong>3.下载并安装Fiddler证书生成器：</strong><br>
+<a href="http://www.telerik.com/docs/default-source/fiddler/addons/fiddlercertmaker.exe?sfvrsn=2">http://www.telerik.com/docs/default-source/fiddler/addons/fiddlercertmaker.exe?sfvrsn=2</a></p>
+<p><strong>4.打开Fiddler进行设置</strong><br>
+点击工具栏中的Tools—&gt;Options<br>
+<img src="https://pica.zhimg.com/v2-944cfb36644f2f8bcb610864932d60f9.webp" alt="" loading="lazy"></p>
+<p><strong>5、点击HTTPS</strong>，勾选Decrypt HTTPS traffic和Ignore server certificate(unsafe)</p>
+<figure data-type="image" tabindex="3"><img src="https://pica.zhimg.com/v2-47e48cf1e3ad4d65c64aaad687761281.webp" alt="" loading="lazy"></figure>
+<p><strong>6、点击Actions</strong>，点击Export Root Certificate to Desktop<br>
+<img src="https://picx.zhimg.com/v2-138c9b211fa3f2d0c6f5558075de60e5.webp" alt="" loading="lazy"></p>
+<p>【注】此时电脑上会生成 一个证书<br>
+<img src="https://picx.zhimg.com/v2-161e1e27cf9e3bae927816a4619dfbf8.webp" alt="" loading="lazy"></p>
+<p><strong>7、https设置及connections设置，勾选选择项</strong><br>
+<img src="https://pic4.zhimg.com/v2-37d7a7446fb79028b5aed8342631e540.webp" alt="" loading="lazy"></p>
+<figure data-type="image" tabindex="4"><img src="https://pic4.zhimg.com/v2-47a617e194e998e3a53c678c35408457.webp" alt="" loading="lazy"></figure>
+<p><strong>8、安装雷电模拟器</strong><br>
+<strong><a href="https://cloud.tencent.com/developer/tools/blog-entry?target=https%3A%2F%2Fwww.ldmnq.com%2F&amp;objectId=2220183&amp;objectType=1&amp;isNewArticle=undefined">https://www.ldmnq.com/</a></strong><br>
+<img src="https://pica.zhimg.com/v2-7f3df1de8ebb49c15fe5aac8edb2c72b.webp" alt="" loading="lazy"></p>
+<p><strong>9、安装好后，桌面双击打开雷电模拟器，点击设置</strong><br>
+<img src="https://pic1.zhimg.com/v2-d9399fda5ed5bdd1f06b5724d6c0012f.webp" alt="" loading="lazy"></p>
+<p><strong>10、安装好后，桌面双击打开雷电模拟器，点击设置</strong><br>
+<img src="https://pic2.zhimg.com/v2-01720ff7a5e9688e640dcf484527ec78.webp" alt="" loading="lazy"></p>
+<p><strong>11、选择网络设置，勾选桥接模式，点击安装驱动，点击确定，点击保存设置</strong><br>
+<img src="https://picx.zhimg.com/v2-2619bf596e95737a83ec515bb17aa04d.webp" alt="" loading="lazy"></p>
+<figure data-type="image" tabindex="5"><img src="https://picx.zhimg.com/v2-0eb44e88e233c3e908146492f242afff.webp" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="6"><img src="https://pic2.zhimg.com/v2-aae8ba9e2156363c42a973c4301a8d69.webp" alt="" loading="lazy"></figure>
+<p><strong>12、打开模拟器，设置代理。找到系统应用，点击设置，点击无线网络WLAN—&gt;左键常按点击已连接网络—&gt;修改网络</strong><br>
+<img src="https://pic2.zhimg.com/v2-f137773a12e8aad39cd92e03171eb74b.webp" alt="" loading="lazy"></p>
+<figure data-type="image" tabindex="7"><img src="https://picx.zhimg.com/v2-d102e0bd6cbf042f624e320fde332386.webp" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="8"><img src="https://pic2.zhimg.com/v2-5dbd5bf7cc1c4428b4adb9088c113f27.webp" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="9"><img src="https://pic4.zhimg.com/v2-4c3789c6e4c839ee62daa65425d9c0b1.webp" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="10"><img src="https://pic2.zhimg.com/v2-a2fd6b69bf6dd9f34bad9f9d8bd232ca.webp" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="11"><img src="https://pic2.zhimg.com/v2-6b3643e0c07ec6ce1a1d6416301cafda.webp" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="12"><img src="https://pic3.zhimg.com/v2-0d15e57d61ee21a8adaac7704c502604.webp" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="13"><img src="https://pic4.zhimg.com/v2-beebb48cbf01f356d5d3c782bc7b56c0.webp" alt="" loading="lazy"></figure>
+<p><strong>13、将步骤6导出的证书FiddlerRoot.cer文件导入至模拟器</strong><br>
+<img src="https://picx.zhimg.com/v2-7bafb2d0fd203e0ca182c47b01632b7d.webp" alt="" loading="lazy"></p>
+<figure data-type="image" tabindex="14"><img src="https://pic1.zhimg.com/v2-535b8ade670dd3f3a23f8b30b3aae57b.webp" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="15"><img src="https://pic4.zhimg.com/v2-0e973e558369b0b9291368db1a47e57c.webp" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="16"><img src="https://pic2.zhimg.com/80/v2-66b542d2b73ecfda2b9cec91015d851d_720w.webp" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="17"><img src="https://pic1.zhimg.com/v2-15af09b0c642d020a1df44d1a078be23.webp" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="18"><img src="https://pic3.zhimg.com/v2-34ff90ae2e0223b72225d1f2276ce03b.webp" alt="" loading="lazy"></figure>
+<p><strong>点击完成导入</strong><br>
+<img src="https://pic4.zhimg.com/80/v2-813f0bddca2c3e800601a22648fa9779_720w.webp" alt="" loading="lazy"></p>
+<p><strong>14、在模拟器中打开系统应用—&gt;设置—&gt;安全—&gt;从SD卡安装。找到FiddlerRoot.cer文件，按提示导入即可，注意在此过程需要名称和解锁图案等，自行即可</strong></p>
+<p>设置-安全-为证书命名<br>
+<img src="https://pic2.zhimg.com/v2-0cdf732cae8b7af78b9cdf878b36b29b.webp" alt="" loading="lazy"></p>
+<figure data-type="image" tabindex="19"><img src="https://pic1.zhimg.com/v2-44e0b0bea0d1d2b89209c9da74190d91.webp" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="20"><img src="https://pic1.zhimg.com/v2-df0a4aff604bd4014e5ae55c51a2fa35.webp" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="21"><img src="https://picx.zhimg.com/80/v2-9b11467ff0fe2a9c8de145af2b444f6f_720w.webp" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="22"><img src="https://picx.zhimg.com/v2-c3e3a4c25196b1920ec4a12656eb7a0c.webp" alt="" loading="lazy"></figure>
+<p>或者另一种方法安装证书：<br>
+在雷电模拟器里打开浏览器，访问刚才设置的本机IP加端口，便可自动下载证书进行安装<br>
+流程如下<br>
+手机端(客户端)设置<br>
+保证Fiddler和手机在同一局域网下，设置手机代理服务器地址为Fiddler服务器地址即可。<br>
+<img src="https://pic4.zhimg.com/80/v2-61bf7429b9e899dfe256c90757908205_720w.webp" alt="" loading="lazy"></p>
+<p>设置代理服务器<br>
+当使用https协议时，需要下载证书(根据需要)<br>
+在手机浏览器访问Fiddler服务器—下载证书—安装证书（设置→安全→凭据存储→从sd卡安装）<br>
+<img src="https://pic1.zhimg.com/v2-e3d89d7680122c38f9d3c29172192fb6.webp" alt="" loading="lazy"></p>
+<p>下载证书</p>
+<p><strong>15、打开fiddler，重启模拟器，输入设置的密码，按回车键，打开需要抓包的APP，就可以在电脑上进行APP抓包了</strong><br>
+<img src="https://picx.zhimg.com/v2-c407729b4dbbc40e6e2985ed5ac74977.webp" alt="" loading="lazy"></p>
+<p><strong>常用图标含义</strong><br>
+<img src="https://picx.zhimg.com/v2-5482d5b836bf84a9f774efed3bdeaa2f.webp" alt="" loading="lazy"></p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[使用Charles抓包微信小程序]]></title>
+        <id>https://viaoh.github.io/post/srrGNAscH8/</id>
+        <link href="https://viaoh.github.io/post/srrGNAscH8/">
+        </link>
+        <updated>2025-06-27T13:41:36.000Z</updated>
+        <content type="html"><![CDATA[<p>一、首先打开Charles，先进行Charles软件的相关设置</p>
+<p>1、首先需要打开windows代理，先找到代理设置：</p>
+<figure data-type="image" tabindex="1"><img src="https://pic4.zhimg.com/v2-485eee75837f87d6c6de4f254c219cdd_1440w.webp?consumer=ZHI_MENG" alt="" loading="lazy"></figure>
+<p>找到相关代理设置，打开弹窗</p>
+<p>设置代理端口为8888，并且勾选图中复选框，最后点击确认。</p>
+<figure data-type="image" tabindex="2"><img src="https://pic4.zhimg.com/v2-ffb46ef148058b4e72348fcdd10e37ab_1440w.webp?consumer=ZHI_MENG" alt="" loading="lazy"></figure>
+<p>2、设置ssl代理设置，找到ssl代理设置。</p>
+<figure data-type="image" tabindex="3"><img src="https://pic4.zhimg.com/v2-238999f54b5de7f7d6d6091969cf3d3b_1440w.webp?consumer=ZHI_MENG" alt="" loading="lazy"></figure>
+<p>勾选启用ssl代理</p>
+<figure data-type="image" tabindex="4"><img src="https://pica.zhimg.com/v2-0c9502edf5ba4c62b966bffa2509df54_1440w.webp?consumer=ZHI_MENG" alt="" loading="lazy"></figure>
+<p>点击添加，并且按照下图输入</p>
+<figure data-type="image" tabindex="5"><img src="https://pic2.zhimg.com/v2-1eb9ea1639ecf737334bcef62d87cd3b_1440w.webp?consumer=ZHI_MENG" alt="" loading="lazy"></figure>
+<p>检查无误后，点击确认</p>
+<figure data-type="image" tabindex="6"><img src="https://pic3.zhimg.com/v2-1bab827777860c9827e4e92bf4097dd8_1440w.webp?consumer=ZHI_MENG" alt="" loading="lazy"></figure>
+<p>3、安装证书</p>
+<figure data-type="image" tabindex="7"><img src="https://picx.zhimg.com/v2-0023587318ebbd7c6cf209958b92bb35_1440w.webp?consumer=ZHI_MENG" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="8"><img src="https://pic2.zhimg.com/v2-d91d20624ac7ab9d7f509cf42c474323_1440w.webp?consumer=ZHI_MENG" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="9"><img src="https://pica.zhimg.com/v2-0ea79ab470f8e67da9f9f6e9cc2e2f00_1440w.webp?consumer=ZHI_MENG" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="10"><img src="https://pic3.zhimg.com/v2-c98c6b3ac879cb11c013831bcc77749e_1440w.webp?consumer=ZHI_MENG" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="11"><img src="https://pica.zhimg.com/v2-51848163070f5afa8eaf6e46f3f9ed9a_1440w.webp?consumer=ZHI_MENG" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="12"><img src="https://picx.zhimg.com/v2-f5aefe7a45afc528c9fd93f4dade891f_1440w.webp?consumer=ZHI_MENG" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="13"><img src="https://picx.zhimg.com/v2-54907f1ea8244c76bded4381d0679f79_1440w.webp?consumer=ZHI_MENG" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="14"><img src="https://pic4.zhimg.com/v2-99c14f2680632de5323b826e1d4de207_1440w.webp?consumer=ZHI_MENG" alt="" loading="lazy"></figure>
+<p>看到如图所示明文，则证书安装成功。</p>
+<figure data-type="image" tabindex="15"><img src="https://pic3.zhimg.com/v2-9bd7aa52f2dab186624b5aa2728d7756_1440w.webp?consumer=ZHI_MENG" alt="" loading="lazy"></figure>
+<p>二、抓包小程序</p>
+<p>注意：这里仅为抓取电脑微信小程序数据包，如要抓取手机微信小程序包，可参考另一篇文章</p>
+<p>1、打开小程序</p>
+<figure data-type="image" tabindex="16"><img src="https://pic1.zhimg.com/v2-3d2e591ce2b32f413f6408df5f7aa6c4_1440w.webp?consumer=ZHI_MENG" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="17"><img src="https://pic2.zhimg.com/v2-e104819fef8218388d54d12cfe06e2b7_1440w.webp?consumer=ZHI_MENG" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="18"><img src="https://picx.zhimg.com/v2-2add7dd72341e01e6f41e7229026a21d_1440w.webp?consumer=ZHI_MENG" alt="" loading="lazy"></figure>
+<p>查看Chrales抓取的数据包，显示如下，则代表抓取成功</p>
+<figure data-type="image" tabindex="19"><img src="https://pic4.zhimg.com/v2-517fbb54dfb810d935387839f4a337fb_1440w.webp?consumer=ZHI_MENG" alt="" loading="lazy"></figure>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[QQ接口]]></title>
+        <id>https://viaoh.github.io/post/Uc71gzPD7F/</id>
+        <link href="https://viaoh.github.io/post/Uc71gzPD7F/">
+        </link>
+        <updated>2024-12-17T14:27:41.000Z</updated>
+        <content type="html"><![CDATA[<p><strong>1、获取QQ头像：</strong><br>
+http://q2.qlogo.cn/headimg_dl?dst_uin=QQ号码&amp;spec=100</p>
+<p><strong>2、获取QQ昵称：</strong><br>
+http://users.qzone.qq.com/fcg-bin/cgi_get_portrait.fcg?uins=QQ号码</p>
+<p><strong>3、获取QQ群头像：</strong><br>
+http://p.qlogo.cn/gh/QQ群号码/QQ群号码/100/</p>
+<p><strong>4、获取QQ秀接口：</strong><br>
+http://qqshow-user.tencent.com/QQ号/10/00</p>
+<p><strong>5、百度文字转语音合成接口：</strong><br>
+http://tts.baidu.com/text2audio?lan=zh&amp;ie=UTF-8&amp;spd=2&amp;text=要转换的文字<br>
+lan=zh：语言是中文，如果改为lan=en，则语言是英文。<br>
+ie=UTF-8：文字格式。<br>
+spd=2：语速，可以是1-9的数字，数字越大，语速越快。<br>
+text=**：这个就是你要转换的文字。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[成绩单]]></title>
+        <id>https://viaoh.github.io/post/BOgj-ybOJ/</id>
+        <link href="https://viaoh.github.io/post/BOgj-ybOJ/">
+        </link>
+        <updated>2024-07-10T02:58:58.000Z</updated>
+        <content type="html"><![CDATA[<p><strong>2023年河南省考</strong><br>
+进面分数线：59.45   最高分：61.55<br>
+<img src="https://s3.bmp.ovh/imgs/2024/05/10/16381ca87c17efc2.jpg" alt="" loading="lazy"><br>
+<strong>2023上半年事业单位联考</strong><br>
+进面分数线：194.5   最高分：203.5<br>
+<img src="https://s3.bmp.ovh/imgs/2024/05/10/4fb6b652f2fead34.png" alt="" loading="lazy"><br>
+<strong>2023下半年陕西事业单位</strong><br>
+进面分数线：210.1<br>
+<img src="https://s3.bmp.ovh/imgs/2024/05/10/32f49a7278c50a50.jpg" alt="" loading="lazy"><br>
+<img src="https://pic.imgdb.cn/item/66bc8e63d9c307b7e9ba355b.jpg" alt="" loading="lazy"><br>
+<strong>2024年国考</strong><br>
+进面分数线：135.7<br>
+<img src="https://s3.bmp.ovh/imgs/2024/05/10/222e264a05090883.jpg" alt="" loading="lazy"><br>
+<strong>2024年陕西省考</strong><br>
+进面分数线：201.5<br>
+<img src="https://s3.bmp.ovh/imgs/2024/06/01/d77ec2c0ad392144.jpg" alt="" loading="lazy"><br>
+<strong>2024年上半年事业单位联考</strong><br>
+进面分数线：206.5   最高分：225.5<br>
+<img src="https://s3.bmp.ovh/imgs/2024/05/10/dd0360ecf0c7c7ed.jpg" alt="" loading="lazy"><br>
+<strong>2024年四川省三支一扶</strong><br>
+进面分数线：66   最高分：72<br>
+<img src="https://pic.imgdb.cn/item/66bc928ed9c307b7e9c43bc5.jpg" alt="" loading="lazy"><br>
+<strong>2024年三门峡市陕州区事业单位</strong><br>
+进面分数线：72.35   最高分：76.52<br>
+<img src="https://pic.imgdb.cn/item/66bc9021d9c307b7e9c03579.png" alt="" loading="lazy"><br>
+<strong>2024年下半年陕西事业单位</strong><br>
+进面分数线：206.5   最高分：216<br>
+<img src="https://s3.bmp.ovh/imgs/2024/11/05/a5db523f7c2d77c1.jpg" alt="" loading="lazy"><br>
+<img src="https://s3.bmp.ovh/imgs/2024/11/05/89206d63563830cd.jpg" alt="" loading="lazy"><br>
+<strong>2025年河南省考</strong><br>
+进面分数线：62.8   最高分：64.6<br>
+<img src="https://s3.bmp.ovh/imgs/2025/06/05/7ae8c24dd28d7726.png" alt="" loading="lazy"><br>
+<strong>2025年上半年事业单位联考</strong><br>
+进面分数线：197.5   最高分：？？？<br>
+<img src="https://s3.bmp.ovh/imgs/2025/06/05/8871186f4294c039.png" alt="" loading="lazy"></p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Word中的特殊格式符号]]></title>
+        <id>https://viaoh.github.io/post/kb1qw4MBX/</id>
+        <link href="https://viaoh.github.io/post/kb1qw4MBX/">
+        </link>
+        <updated>2024-06-07T08:47:03.000Z</updated>
+        <content type="html"><![CDATA[<pre><code>1、段落标记 ^p
+2、制表符 ^t
+3、任意字符 ^?
+4、任意数字 ^#
+5、任意字母 ^$
+6、脱字号 ^^
+7、分节符 ^%
+8、段落符号 ^v
+9、分栏符 ^n
+10、省略号 ^i
+11、全角省略号 ^j
+12、长划线 ^+
+13、1/4长划线 ^q
+14、短划线 ^=
+15、无宽可选分隔符 ^x
+16、无宽非分隔符 ^z
+17、尾注标记 ^e
+18、域 ^d
+19、脚注标记 ^f
+20、图形 ^g
+21、手动换行符 ^1
+22、手动分页符 ^m
+23、不间断连字符 ^~
+24、不间断空格 ^s
+25、可选连字符 ^-
+26、分节符 ^b
+27、空白区域 ^w
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Excel导入数据示例]]></title>
+        <id>https://viaoh.github.io/post/fjFmIKkI7/</id>
+        <link href="https://viaoh.github.io/post/fjFmIKkI7/">
+        </link>
+        <updated>2024-05-31T07:08:46.000Z</updated>
+        <content type="html"><![CDATA[<h4 id="导入表格样例">导入表格样例</h4>
+<figure data-type="image" tabindex="1"><img src="https://s3.bmp.ovh/imgs/2024/05/31/40889df5ca9c3f88.jpg" alt="" loading="lazy"></figure>
+<h4 id="pomxml">pom.xml</h4>
+<pre><code class="language-xml">&lt;!-- Excel导入 --&gt;
+&lt;dependency&gt;
+	&lt;groupId&gt;cn.afterturn&lt;/groupId&gt;
+	&lt;artifactId&gt;easypoi-spring-boot-starter&lt;/artifactId&gt;
+	&lt;version&gt;4.4.0&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<h4 id="exceltool工具类">ExcelTool工具类</h4>
+<pre><code class="language-java">import org.apache.poi.hssf.usermodel.*;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.List;
+
+/**
+ * Excel工具类
+ */
+public class ExcelTool {
+
+    /**
+     * Excel表格导出
+     * @param response HttpServletResponse对象
+     * @param excelData Excel表格的数据，封装为List&lt;List&lt;String&gt;&gt;
+     * @param sheetName sheet的名字
+     * @param fileName 导出Excel的文件名
+     * @param columnWidth Excel表格的宽度，建议为15
+     * @throws IOException 抛IO异常
+     */
+    public static void exportExcel(HttpServletResponse response,
+                                   List&lt;List&lt;String&gt;&gt; excelData, 
+                                   String sheetName, 
+                                   String fileName, 
+                                   int columnWidth) throws IOException {
+
+        //声明一个工作簿
+        HSSFWorkbook workbook = new HSSFWorkbook();
+
+        //生成一个表格，设置表格名称
+        HSSFSheet sheet = workbook.createSheet(sheetName);
+
+        //设置表格列宽度
+        sheet.setDefaultColumnWidth(columnWidth);
+
+        //写入List&lt;List&lt;String&gt;&gt;中的数据
+        int rowIndex = 0;
+        for(List&lt;String&gt; data : excelData){
+            //创建一个row行，然后自增1
+            HSSFRow row = sheet.createRow(rowIndex++);
+
+            //遍历添加本行数据
+            for (int i = 0; i &lt; data.size(); i++) {
+                //创建一个单元格
+                HSSFCell cell = row.createCell(i);
+
+                //创建一个内容对象
+                HSSFRichTextString text = new HSSFRichTextString(data.get(i));
+
+                //将内容对象的文字内容写入到单元格中
+                cell.setCellValue(text);
+            }
+        }
+
+        //准备将Excel的输出流通过response输出到页面下载
+        //八进制输出流
+        response.setContentType(&quot;application/octet-stream&quot;);
+
+        //设置导出Excel的名称
+        response.setHeader(&quot;Content-disposition&quot;, &quot;attachment;filename=&quot; + fileName);
+
+        //刷新缓冲
+        response.flushBuffer();
+
+        //workbook将Excel写入到response的输出流中，供页面下载该Excel文件
+        workbook.write(response.getOutputStream());
+
+        //关闭workbook
+        workbook.close();
+    }
+
+}
+</code></pre>
+<h4 id="serviceimpl实现类">serviceimpl实现类</h4>
+<pre><code class="language-java">	@Override
+	public Map&lt;String, Object&gt; uploadExcelSubmit(MultipartFile file, HttpServletRequest request) {
+		// 返回结果
+		Map&lt;String, Object&gt; mapResult = new HashMap&lt;&gt;();
+		int importSuccess = 0;
+		int importFail = 0;
+		// String contentType = file.getContentType();
+		// 获取文件后缀名
+		String fileName = file.getOriginalFilename();
+		String suffix = fileName.substring(fileName.lastIndexOf(&quot;.&quot;));
+		// 实体类集合
+		List&lt;Agentstudent&gt; agentstudentList = new ArrayList&lt;&gt;();
+		// 导入失败的集合
+		List&lt;Agentstudent&gt; agentstudentFailList = new ArrayList&lt;&gt;();
+		// 合作伙伴信息
+		Integer agentId = Integer.parseInt(redis.opsForValue().get(request.getHeader(&quot;sessionId&quot;)));
+		Agent agent = agentMapper.getAgentById(agentId);
+		if (suffix.equals(&quot;.xlsx&quot;)) {
+			try {
+				XSSFWorkbook xwb = new XSSFWorkbook(file.getInputStream());
+				XSSFSheet sheetXlsx = xwb.getSheetAt(0);
+				XSSFRow row = null;
+				XSSFRow rowOne = sheetXlsx.getRow(0);
+				if (rowOne.getCell(0).getStringCellValue() == &quot;姓名&quot; &amp;&amp; rowOne.getCell(1).getStringCellValue() == &quot;身份证号&quot;
+						&amp;&amp; rowOne.getCell(2).getStringCellValue() == &quot;手机号&quot;
+						&amp;&amp; rowOne.getCell(3).getStringCellValue() == &quot;报考院校&quot;
+						&amp;&amp; rowOne.getCell(4).getStringCellValue() == &quot;报考专业&quot;
+						&amp;&amp; rowOne.getCell(5).getStringCellValue() == &quot;学习形式&quot;
+						&amp;&amp; rowOne.getCell(6).getStringCellValue() == &quot;报考层次&quot;
+						&amp;&amp; rowOne.getCell(7).getStringCellValue() == &quot;报考日期&quot;
+						&amp;&amp; rowOne.getCell(8).getStringCellValue() == &quot;考生户籍地&quot;) {
+					// 循环sesheet页中数据从第二行开始，第一行是标题
+					for (int i = 1; i &lt; sheetXlsx.getPhysicalNumberOfRows(); i++) {
+						row = sheetXlsx.getRow(i);
+						Agentstudent data = new Agentstudent();
+						SimpleDateFormat df = new SimpleDateFormat(&quot;yyyy/MM/dd&quot;);
+						data.setStudentName(row.getCell(0).getStringCellValue());
+						row.getCell(1).setCellType(CellType.STRING);
+						data.setStudentIdCard(row.getCell(1).getStringCellValue());
+						row.getCell(2).setCellType(CellType.STRING);
+						data.setStudentPhone(row.getCell(2).getStringCellValue());
+						data.setStudentSchool(row.getCell(3).getStringCellValue());
+						data.setStudentMajor(row.getCell(4).getStringCellValue());
+						data.setStudentMajorType(row.getCell(5).getStringCellValue());
+						row.getCell(6).setCellType(CellType.STRING);
+						data.setStudentType(Integer.parseInt(row.getCell(6).getStringCellValue()));
+						data.setStudentAddDate(
+								df.parse(df.format(HSSFDateUtil.getJavaDate(row.getCell(7).getNumericCellValue()))));
+						if (row.getCell(8) == null) {
+							data.setStudentArea(&quot;未填写&quot;);
+						} else {// 单元格有值时，getCell方法获获取到单元格。
+							data.setStudentArea(row.getCell(8).getStringCellValue());
+						}
+						agentstudentList.add(data);
+					}
+					Integer addYear = addyearMapper.getNowAddyear().getAddYear();
+					// 循环展示导入的数据，实际应用中应该校验并存入数据库
+					for (Agentstudent student : agentstudentList) {
+						if (agentStudentMapper.getStudentByIdCard(student.getStudentIdCard()) &gt;= 1) {
+							student.setStudentIdCard(student.getStudentIdCard() + &quot; 身份证号重复录入&quot;);
+							agentstudentFailList.add(student);
+							importFail++;
+						} else if (!IdCardTool.isIDNumber(student.getStudentIdCard())) {
+							student.setStudentIdCard(student.getStudentIdCard() + &quot; 身份证号格式错误&quot;);
+							agentstudentFailList.add(student);
+							importFail++;
+						} else {
+							student.setStudentAgentName(agent.getAgentName());
+							student.setStudentAgentId(agent.getAgentId());
+							student.setStudentYear(addYear);
+							if (agentStudentMapper.addStudent(student) &gt; 0) {
+								importSuccess++;
+							} else {
+								student.setStudentIdCard(student.getStudentIdCard() + &quot; 录入失败&quot;);
+								agentstudentFailList.add(student);
+								importFail++;
+							}
+						}
+					}
+					mapResult.put(&quot;msg&quot;, &quot;success&quot;);
+					mapResult.put(&quot;importSuccess&quot;, importSuccess);
+					mapResult.put(&quot;importFail&quot;, importFail);
+					mapResult.put(&quot;importAll&quot;, agentstudentList.size());
+					mapResult.put(&quot;agentstudentFailList&quot;, agentstudentFailList);
+				} else {
+					mapResult.put(&quot;msg&quot;, &quot;fileTypeError&quot;);
+				}
+			} catch (Exception e) {
+				mapResult.put(&quot;msg&quot;, &quot;fail&quot;);
+				e.printStackTrace();
+			}
+		} else if (suffix.equals(&quot;.xls&quot;)) {
+			try {
+				HSSFWorkbook hwb = new HSSFWorkbook(file.getInputStream()); // 根据页面index
+				HSSFSheet sheetXls = hwb.getSheetAt(0);
+				HSSFRow row = null;
+				HSSFRow rowOne = sheetXls.getRow(0);
+				if (rowOne.getCell(0).getStringCellValue() == &quot;姓名&quot; &amp;&amp; rowOne.getCell(1).getStringCellValue() == &quot;身份证号&quot;
+						&amp;&amp; rowOne.getCell(2).getStringCellValue() == &quot;手机号&quot;
+						&amp;&amp; rowOne.getCell(3).getStringCellValue() == &quot;报考院校&quot;
+						&amp;&amp; rowOne.getCell(4).getStringCellValue() == &quot;报考专业&quot;
+						&amp;&amp; rowOne.getCell(5).getStringCellValue() == &quot;学习形式&quot;
+						&amp;&amp; rowOne.getCell(6).getStringCellValue() == &quot;报考层次&quot;
+						&amp;&amp; rowOne.getCell(7).getStringCellValue() == &quot;报考日期&quot;
+						&amp;&amp; rowOne.getCell(8).getStringCellValue() == &quot;考生户籍地&quot;) {
+					// 循环sesheet页中数据从第二行开始，第一行是标题
+					for (int i = 1; i &lt; sheetXls.getPhysicalNumberOfRows(); i++) {
+						// 获取每一行数据
+						row = sheetXls.getRow(i);
+						Agentstudent data = new Agentstudent();
+						SimpleDateFormat df = new SimpleDateFormat(&quot;yyyy/MM/dd&quot;);
+						data.setStudentName(row.getCell(0).getStringCellValue());
+						row.getCell(1).setCellType(CellType.STRING);
+						data.setStudentIdCard(row.getCell(1).getStringCellValue());
+						row.getCell(2).setCellType(CellType.STRING);
+						data.setStudentPhone(row.getCell(2).getStringCellValue());
+						data.setStudentSchool(row.getCell(3).getStringCellValue());
+						data.setStudentMajor(row.getCell(4).getStringCellValue());
+						data.setStudentMajorType(row.getCell(5).getStringCellValue());
+						row.getCell(6).setCellType(CellType.STRING);
+						data.setStudentType(Integer.parseInt(row.getCell(6).getStringCellValue()));
+						data.setStudentAddDate(
+								df.parse(df.format(HSSFDateUtil.getJavaDate(row.getCell(7).getNumericCellValue()))));
+						if (row.getCell(8) == null) {
+							data.setStudentArea(&quot;未填写&quot;);
+						} else {// 单元格有值时，getCell方法获获取到单元格。
+							data.setStudentArea(row.getCell(8).getStringCellValue());
+						}
+						agentstudentList.add(data);
+					}
+					Integer addYear = addyearMapper.getNowAddyear().getAddYear();
+					// 循环展示导入的数据，实际应用中应该校验并存入数据库
+					for (Agentstudent student : agentstudentList) {
+						if (agentStudentMapper.getStudentByIdCard(student.getStudentIdCard()) &gt;= 1) {
+							student.setStudentIdCard(student.getStudentIdCard() + &quot; 身份证号重复录入&quot;);
+							agentstudentFailList.add(student);
+							importFail++;
+						} else if (!IdCardTool.isIDNumber(student.getStudentIdCard())) {
+							student.setStudentIdCard(student.getStudentIdCard() + &quot; 身份证号格式错误&quot;);
+							agentstudentFailList.add(student);
+							importFail++;
+						} else if (student.getStudentType() &lt;= 0 || student.getStudentType() &gt; 3) {
+							student.setStudentIdCard(student.getStudentIdCard() + &quot; 录入报考层次无效&quot;);
+							agentstudentFailList.add(student);
+							importFail++;
+						} else {
+							student.setStudentAgentName(agent.getAgentName());
+							student.setStudentAgentId(agent.getAgentId());
+							student.setStudentYear(addYear);
+							if (agentStudentMapper.addStudent(student) &gt; 0) {
+								importSuccess++;
+							} else {
+								student.setStudentIdCard(student.getStudentIdCard() + &quot; 录入失败&quot;);
+								agentstudentFailList.add(student);
+								importFail++;
+							}
+						}
+					}
+					mapResult.put(&quot;msg&quot;, &quot;success&quot;);
+					mapResult.put(&quot;importSuccess&quot;, importSuccess);
+					mapResult.put(&quot;importFail&quot;, importFail);
+					mapResult.put(&quot;importAll&quot;, agentstudentList.size());
+					mapResult.put(&quot;agentstudentFailList&quot;, agentstudentFailList);
+				} else {
+					mapResult.put(&quot;msg&quot;, &quot;fileTypeError&quot;);
+				}
+			} catch (Exception e) {
+				mapResult.put(&quot;msg&quot;, &quot;fail&quot;);
+				e.printStackTrace();
+			}
+		} else {
+			mapResult.put(&quot;msg&quot;, &quot;fail&quot;);
+		}
+		return mapResult;
+	}
+</code></pre>
+<h4 id="前端请求">前端请求</h4>
+<pre><code class="language-js">	// 判断上传Excel文件
+    excelFileChange() {
+      var _this = this;
+      var fileObject = document.getElementById(&quot;uploadExcelFile&quot;);
+      if (fileObject.value != &quot;&quot;) {
+        var fileSrc = fileObject.value.split(&quot;\\&quot;);
+        var fileName = fileSrc[fileSrc.length - 1];
+        var fileExt = fileName.substr(fileName.lastIndexOf(&quot;.&quot;)).toLowerCase();
+        var fileSize = Math.ceil(fileObject.files[0].size / 1024);
+        var allowExt = &quot;.xlsx|.xls|&quot;;
+        if (allowExt !== 0 &amp;&amp; allowExt.indexOf(fileExt + &quot;|&quot;) === -1) {
+          fileObject.value = &quot;&quot;;
+          _this.$alert(&quot;alert alert-danger&quot;, &quot;上传文件格式不符合要求&quot;);
+          return false;
+        } else if (fileSize &gt; 2048) {
+          fileObject.value = &quot;&quot;;
+          _this.$alert(&quot;alert alert-danger&quot;, &quot;上传的文件不能超过 2 M&quot;);
+          return false;
+        }
+      } else {
+        fileObject.value = &quot;&quot;;
+        _this.$alert(&quot;alert alert-danger&quot;, &quot;文件取消上传&quot;);
+      }
+    },
+</code></pre>
+<pre><code class="language-js">	// 上传excel提交
+    uploadExcelSubmit() {
+      var _this = this;
+      var fileObject = document.getElementById(&quot;uploadExcelFile&quot;);
+      if (fileObject.value === &quot;&quot; || fileObject.value == null) {
+        _this.$alert(&quot;alert alert-danger&quot;, &quot;请选择要上传的附件&quot;);
+        return false;
+      } else {
+        var formdata = new FormData();
+        // 上传的文件
+        formdata.append(&quot;file&quot;, fileObject.files[0]);
+        _this.$loading(true, &quot;数据导入中，请勿关闭此页面......&quot;);
+        _this
+          .$http({
+            headers: {
+              &quot;Content-Type&quot;: &quot;multipart/form-databoundary&quot;,
+            },
+            method: &quot;post&quot;,
+            url: &quot;/api/partnet/agentstudent/uploadExcelSubmit&quot;,
+            data: formdata,
+          })
+          .then(
+            (res) =&gt; {
+              if (res.status == 200) {
+                if (res.data.msg == &quot;success&quot;) {
+                  fileObject.value = &quot;&quot;;
+                  _this.agentstudentFailList = res.data.agentstudentFailList;
+                  _this.agentGetStudentList();
+                  alert(
+                    &quot;导入总数据 &quot; +
+                      res.data.importAll +
+                      &quot; 条，成功 &quot; +
+                      res.data.importSuccess +
+                      &quot; 条，失败 &quot; +
+                      res.data.importFail +
+                      &quot; 条&quot;
+                  );
+                } else if (res.data.msg == &quot;fileTypeError&quot;) {
+                  fileObject.value = &quot;&quot;;
+                  alert(&quot;导入失败，请与模板文件保持一致&quot;);
+                } else {
+                  _this.$alert(&quot;alert alert-danger&quot;, &quot;文件导入失败&quot;);
+                }
+              } else {
+                _this.$alert(&quot;alert alert-danger&quot;, &quot;服务器错误&quot;);
+              }
+              _this.$loading(false);
+            },
+            (err) =&gt; {
+              if (err.status === 403) {
+                var agentLoginInfo = {
+                  agentIsLogin: false,
+                  agentRole: 1,
+                  agentName: &quot;&quot;,
+                };
+                _this.$store.commit(&quot;changeAgentLoginInfo&quot;, agentLoginInfo);
+                _this.$router.push(&quot;/login.html&quot;);
+                _this.$alert(&quot;alert alert-danger&quot;, &quot;请重新登录&quot;);
+              } else {
+                _this.$alert(&quot;alert alert-danger&quot;, &quot;出错了，请稍后再试&quot;);
+              }
+              _this.$loading(false);
+            }
+          );
+      }
+    },
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[解决方案]]></title>
+        <id>https://viaoh.github.io/post/sqnsjjd4y/</id>
+        <link href="https://viaoh.github.io/post/sqnsjjd4y/">
+        </link>
+        <updated>2024-05-11T07:42:10.000Z</updated>
+        <content type="html"><![CDATA[<p>edge浏览器安装扩展插件报错</p>
+<pre><code class="language-sql">1、将记事本以管理员身份运行
+
+2、文件—&gt;打开C:\Windows\System32\drivers\etc\hosts
+
+3、在hosts文件里面最后面，添加（不需要添加井号）：
+
+131.253.33.219 edge.microsoft.com
+
+131.253.33.219 msedgeextensions.sf.tlu.dl.delivery.mp.microsoft.com
+</code></pre>
+<p>不清除数据卸载微信</p>
+<pre><code class="language-sql">adb devices  //检测adb连接状态
+
+adb shell pm uninstall -k com.tencent.mm  //不清除数据卸载微信
+</code></pre>
+<p>快捷方式修复.bat</p>
+<pre><code class="language-sql">rem 关闭explorer.exe
+
+taskkill /f /im explorer.exe
+
+attrib -s -h -i %userprofile%\AppData\Local\IconCache.db
+
+del %userprofile%\AppData\Local\IconCache.db /a
+
+attrib +h +s %userprofile%\AppData\Local\IconCache.db
+
+rem 打开explorer
+
+start explorer
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[指定路径执行指定命令]]></title>
+        <id>https://viaoh.github.io/post/QiGBPxk_U/</id>
+        <link href="https://viaoh.github.io/post/QiGBPxk_U/">
+        </link>
+        <updated>2024-05-11T07:26:46.000Z</updated>
+        <content type="html"><![CDATA[<pre><code class="language-js">cmd /k &quot;cd /d E:/dev/workspace/java/studentmanage&amp;&amp;mvn assembly:assembly&quot;
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[正则表达式]]></title>
+        <id>https://viaoh.github.io/post/phrRmI429/</id>
+        <link href="https://viaoh.github.io/post/phrRmI429/">
+        </link>
+        <updated>2024-05-11T07:23:57.000Z</updated>
+        <content type="html"><![CDATA[<h4 id="一-常用正则表达式">一、常用正则表达式</h4>
+<h6 id="1-校验数字的表达式">1、校验数字的表达式</h6>
+<pre><code class="language-sql">//数字：
+^[0-9]*$
+//n位的数字：
+^\d{n}$
+//至少n位的数字：
+^\d{n,}$
+//m-n位的数字：
+^\d{m,n}$
+//零和非零开头的数字：
+^(0|[1-9][0-9]*)$
+//非零开头的最多带两位小数的数字：
+^([1-9][0-9]*)+(\.[0-9]{1,2})?$
+//带1-2位小数的正数或负数：
+^(\-)?\d+(\.\d{1,2})$
+//正数、负数、和小数：
+^(\-|\+)?\d+(\.\d+)?$
+//有两位小数的正实数：
+^[0-9]+(\.[0-9]{2})?$
+//有1~3位小数的正实数：
+^[0-9]+(\.[0-9]{1,3})?$
+//非零的正整数：
+^[1-9]\d*$ 或 ^([1-9][0-9]*){1,3}$ 或 ^\+?[1-9][0-9]*$
+//非零的负整数：
+^\-[1-9][]0-9&quot;*$ 或 ^-[1-9]\d*$
+//非负整数：
+^\d+$ 或 ^[1-9]\d*|0$
+//非正整数：
+^-[1-9]\d*|0$ 或 ^((-\d+)|(0+))$
+//非负浮点数：
+^\d+(\.\d+)?$ 或 ^[1-9]\d*\.\d*|0\.\d*[1-9]\d*|0?\.0+|0$
+//非正浮点数：
+^((-\d+(\.\d+)?)|(0+(\.0+)?))$ 或 ^(-([1-9]\d*\.\d*|0\.\d*[1-9]\d*))|0?\.0+|0$
+//正浮点数：
+^[1-9]\d*\.\d*|0\.\d*[1-9]\d*$ 或 ^(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*))$
+//负浮点数：
+^-([1-9]\d*\.\d*|0\.\d*[1-9]\d*)$ 或 ^(-(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*)))$
+//浮点数：
+^(-?\d+)(\.\d+)?$ 或 ^-?([1-9]\d*\.\d*|0\.\d*[1-9]\d*|0?\.0+|0)$
+</code></pre>
+<h6 id="2-校验字符的表达式">2、校验字符的表达式</h6>
+<pre><code class="language-sql">//汉字：
+^[\u4e00-\u9fa5]{0,}$
+//英文和数字：
+^[A-Za-z0-9]+$ 或 ^[A-Za-z0-9]{4,40}$
+//长度为3-20的所有字符：
+^.{3,20}$
+//由26个英文字母组成的字符串：
+^[A-Za-z]+$
+//由26个大写英文字母组成的字符串：
+^[A-Z]+$
+//由26个小写英文字母组成的字符串：
+^[a-z]+$
+//由数字和26个英文字母组成的字符串：
+^[A-Za-z0-9]+$
+//由数字、26个英文字母或者下划线组成的字符串：
+^\w+$ 或 ^\w{3,20}$
+//中文、英文、数字包括下划线：
+^[\u4E00-\u9FA5A-Za-z0-9_]+$
+//中文、英文、数字但不包括下划线等符号：
+^[\u4E00-\u9FA5A-Za-z0-9]+$ 或 ^[\u4E00-\u9FA5A-Za-z0-9]{2,20}$
+//可以输入含有^%&amp;',;=?$\&quot;等字符：
+[^%&amp;',;=?$\x22]+
+//禁止输入含有~的字符：
+[^~\x22]+
+</code></pre>
+<h6 id="3-特殊需求表达式">3、特殊需求表达式</h6>
+<pre><code class="language-sql">//Email地址：
+^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$
+//域名：
+[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+\.?
+//InternetURL：
+[a-zA-z]+://[^\s]* 或 ^http://([\w-]+\.)+[\w-]+(/[\w-./?%&amp;=]*)?$
+//手机号码：
+^(13[0-9]|14[5|7]|15[0|1|2|3|4|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\d{8}$
+//电话号码(&quot;XXX-XXXXXXX&quot;、&quot;XXXX-XXXXXXXX&quot;、&quot;XXX-XXXXXXX&quot;、&quot;XXX-XXXXXXXX&quot;、&quot;XXXXXXX&quot;和&quot;XXXXXXXX)：
+^(\(\d{3,4}-)|\d{3.4}-)?\d{7,8}$
+//国内电话号码(0511-4405222、021-87888822)：
+\d{3}-\d{8}|\d{4}-\d{7}
+//电话号码正则表达式（支持手机号码，3-4位区号，7-8位直播号码，1－4位分机号）: 
+((\d{11})|^((\d{7,8})|(\d{4}|\d{3})-(\d{7,8})|(\d{4}|\d{3})-(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1})|(\d{7,8})-(\d{4}|\d{3}|\d{2}|\d{1}))$)
+//身份证号(15位、18位数字)，最后一位是校验位，可能为数字或字符X：
+(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)
+//帐号是否合法(字母开头，允许5-16字节，允许字母数字下划线)：
+^[a-zA-Z][a-zA-Z0-9_]{4,15}$
+//密码(以字母开头，长度在6~18之间，只能包含字母、数字和下划线)：
+^[a-zA-Z]\w{5,17}$
+//强密码(必须包含大小写字母和数字的组合，不能使用特殊字符，长度在 8-10 之间)：
+^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[a-zA-Z0-9]{8,10}$
+//强密码(必须包含大小写字母和数字的组合，可以使用特殊字符，长度在8-10之间)：
+^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,10}$
+//日期格式：
+^\d{4}-\d{1,2}-\d{1,2}
+//一年的12个月(01～09和1～12)：
+^(0?[1-9]|1[0-2])$
+//一个月的31天(01～09和1～31)：
+^((0?[1-9])|((1|2)[0-9])|30|31)$
+//钱的输入格式：
+//有四种钱的表示形式我们可以接受:&quot;10000.00&quot; 和 &quot;10,000.00&quot;, 和没有 &quot;分&quot; 的 &quot;10000&quot; 和 &quot;10,000&quot;：
+^[1-9][0-9]*$
+//这表示任意一个不以0开头的数字,但是,这也意味着一个字符&quot;0&quot;不通过,所以我们采用下面的形式：
+^(0|[1-9][0-9]*)$
+//一个0或者一个不以0开头的数字.我们还可以允许开头有一个负号：
+^(0|-?[1-9][0-9]*)$
+//这表示一个0或者一个可能为负的开头不为0的数字.让用户以0开头好了.把负号的也去掉,因为钱总不能是负的吧。下面我们要加的是说明可能的小数部分：
+^[0-9]+(.[0-9]+)?$
+//必须说明的是,小数点后面至少应该有1位数,所以&quot;10.&quot;是不通过的,但是 &quot;10&quot; 和 &quot;10.2&quot; 是通过的：
+^[0-9]+(.[0-9]{2})?$
+//这样我们规定小数点后面必须有两位,如果你认为太苛刻了,可以这样：
+^[0-9]+(.[0-9]{1,2})?$
+//这样就允许用户只写一位小数.下面我们该考虑数字中的逗号了,我们可以这样：
+^[0-9]{1,3}(,[0-9]{3})*(.[0-9]{1,2})?$
+//1到3个数字,后面跟着任意个 逗号+3个数字,逗号成为可选,而不是必须：
+^([0-9]+|[0-9]{1,3}(,[0-9]{3})*)(.[0-9]{1,2})?$
+//备注：这就是最终结果了,别忘了&quot;+&quot;可以用&quot;*&quot;替代如果你觉得空字符串也可以接受的话(奇怪,为什么?)最后,别忘了在用函数时去掉去掉那个反斜杠,一般的错误都在这里
+//xml文件：
+^([a-zA-Z]+-?)+[a-zA-Z0-9]+\\.[x|X][m|M][l|L]$
+//中文字符的正则表达式：
+[\u4e00-\u9fa5]
+//双字节字符：
+[^\x00-\xff] (包括汉字在内，可以用来计算字符串的长度(一个双字节字符长度计2，ASCII字符计1))
+//空白行的正则表达式：
+\n\s*\r (可以用来删除空白行)
+//HTML标记的正则表达式：
+&lt;(\S*?)[^&gt;]*&gt;.*?|&lt;.*? /&gt; ( 
+//首尾空白字符的正则表达式，可以用来删除行首行尾的空白字符(包括空格、制表符、换页符等等)，非常有用的表达式
+^\s*|\s*$或(^\s*)|(\s*$) 
+//腾讯QQ号： (腾讯QQ号从10000开始)
+[1-9][0-9]{4,}
+//中国邮政编码：(中国邮政编码为6位数字)
+[1-9]\d{5}(?!\d) 
+//IPv4地址：
+((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})(\.((2(5[0-5]|[0-4]\d))|[0-1]?\d{1,2})){3}
+</code></pre>
+<h4 id="二-js使用正则表达式">二、JS使用正则表达式</h4>
+<pre><code class="language-sql">var r = /^\+?[1-9][0-9]*$/;　　//正整数
+var str = &quot;123&quot;;
+var flag=r.test(str); //如果判断为正整数，则flag为true
+</code></pre>
+<h4 id="三-java使用正则表达式">三、java使用正则表达式</h4>
+<pre><code class="language-java">String content = &quot;I am noob &quot; +&quot;from runoob.com.&quot;;
+String pattern = &quot;.*runoob.*&quot;;
+boolean isMatch = Pattern.matches(pattern, content);
+System.out.println(&quot;字符串中是否包含了 'runoob' 子字符串? &quot; + isMatch);
+// 字符串中是否包含了 'runoob' 子字符串? true
+</code></pre>
+<h4 id="四-正则表达式中需要转义的字符">四、正则表达式中需要转义的字符</h4>
+<pre><code class="language-sql">$
+匹配输入字符串的结尾位置。如果设置了 RegExp 对象的 Multiline 属性，则 $ 也匹配 ‘\n' 或 ‘\r'。要匹配 $ 字符本身，请使用 \$。
+ 
+( )
+标记一个子表达式的开始和结束位置。子表达式可以获取供以后使用。要匹配这些字符，请使用 。
+ 
+*
+匹配前面的子表达式零次或多次。要匹配 * 字符，请使用 \*。
+ 
++
+匹配前面的子表达式一次或多次。要匹配 + 字符，请使用 \+。
+ 
+.
+匹配除换行符 \n之外的任何单字符。要匹配 .，请使用 \。
+ 
+[ ]
+标记一个中括号表达式的开始。要匹配 [，请使用 \[。
+ 
+?
+匹配前面的子表达式零次或一次，或指明一个非贪婪限定符。要匹配 ? 字符，请使用 \?。
+ 
+\
+将下一个字符标记为或特殊字符、或原义字符、或向后引用、或八进制转义符。例如， ‘n' 匹配字符 ‘n'。'\n' 匹配换行符。序列 ‘\\' 匹配 “\”，而 ‘\(' 则匹配 “(”。
+ 
+^
+匹配输入字符串的开始位置，除非在方括号表达式中使用，此时它表示不接受该字符集合。要匹配 ^ 字符本身，请使用 \^。
+ 
+{ }
+标记限定符表达式的开始。要匹配 {，请使用 \{。
+ 
+|
+指明两项之间的一个选择。要匹配 |，请使用 \|。
+</code></pre>
+]]></content>
+    </entry>
+</feed>

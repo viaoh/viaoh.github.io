@@ -1,0 +1,359 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>云通信短信验证码 | liuyoung&#39;s blog</title>
+<link rel="shortcut icon" href="https://viaoh.github.io/favicon.ico?v=1752909686292">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://viaoh.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="云通信短信验证码 | liuyoung&#39;s blog - Atom Feed" href="https://viaoh.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="pom.xml
+&lt;!-- 阿里云云通信短信通知接口 旧版--&gt;
+&lt;dependency&gt;
+	&lt;groupId&gt;com.aliyun&lt;/groupId&gt;
+	&lt;artifactId&gt;a..." />
+    <meta name="keywords" content="java工具类" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://viaoh.github.io">
+  <img class="avatar" src="https://viaoh.github.io/images/avatar.png?v=1752909686292" alt="">
+  </a>
+  <h1 class="site-title">
+    liuyoung&#39;s blog
+  </h1>
+  <p class="site-description">
+    人生难得秋前雨，乞我虚堂自在眠
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          归档
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="https://viaoh.github.io/post/XuQvrNvEf" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+        <a href="https://github.com/liuyoung-cc/liuyoung-cc.github.io" target="_blank">
+          <i class="ri-github-line"></i>
+        </a>
+      
+    
+      
+    
+      
+        <a href="https://weibo.com/viaoh" target="_blank">
+          <i class="ri-weibo-line"></i>
+        </a>
+      
+    
+      
+        <a href="https://www.zhihu.com/people/viaoh-" target="_blank">
+          <i class="ri-zhihu-line"></i>
+        </a>
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              云通信短信验证码
+            </h2>
+            <div class="post-info">
+              <span>
+                2024-05-11
+              </span>
+              <span>
+                4 min read
+              </span>
+              
+                <a href="https://viaoh.github.io/tag/MJDpA1HvdV/" class="post-tag">
+                  # java工具类
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <h6 id="pomxml">pom.xml</h6>
+<pre><code class="language-xml">&lt;!-- 阿里云云通信短信通知接口 旧版--&gt;
+&lt;dependency&gt;
+	&lt;groupId&gt;com.aliyun&lt;/groupId&gt;
+	&lt;artifactId&gt;aliyun-java-sdk-core&lt;/artifactId&gt;
+	&lt;version&gt;4.1.0&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;!-- 阿里云云通信短信通知接口 新版--&gt;
+&lt;dependency&gt;
+	&lt;groupId&gt;com.aliyun&lt;/groupId&gt;
+	&lt;artifactId&gt;dysmsapi20170525&lt;/artifactId&gt;
+	&lt;version&gt;2.0.4&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<h6 id="旧版工具类">旧版工具类</h6>
+<pre><code class="language-java">import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
+
+import com.aliyuncs.CommonRequest;
+import com.aliyuncs.CommonResponse;
+import com.aliyuncs.DefaultAcsClient;
+import com.aliyuncs.IAcsClient;
+import com.aliyuncs.exceptions.ClientException;
+import com.aliyuncs.exceptions.ServerException;
+import com.aliyuncs.http.MethodType;
+import com.aliyuncs.profile.DefaultProfile;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
+public class SendSmsTool {
+	
+	public static Map&lt;String, Object&gt; SendSMS(String phone) {
+		Map&lt;String, Object&gt; map = new HashMap&lt;&gt;();
+		String code = String.valueOf(new Random().nextInt(899999) + 100000);//生成短信验证码
+        DefaultProfile profile = DefaultProfile.getProfile(&quot;default&quot;, &quot;您的AccessKey ID&quot;, &quot;您的AccessKey Secret&quot;);
+        IAcsClient client = new DefaultAcsClient(profile);
+        CommonRequest request = new CommonRequest();
+        //request.setProtocol(ProtocolType.HTTPS);
+        request.setMethod(MethodType.POST);
+        request.setDomain(&quot;dysmsapi.aliyuncs.com&quot;);
+        request.setVersion(&quot;2017-05-25&quot;);
+        request.setAction(&quot;SendSms&quot;);
+        request.putQueryParameter(&quot;PhoneNumbers&quot;, phone);
+        request.putQueryParameter(&quot;SignName&quot;, &quot;您的签名&quot;);
+        request.putQueryParameter(&quot;TemplateCode&quot;, &quot;您的模板编号&quot;);
+        request.putQueryParameter(&quot;TemplateParam&quot;, &quot;{\&quot;code\&quot;:&quot;+ code +&quot;}&quot;);
+        try {
+            CommonResponse response = client.getCommonResponse(request);
+            JsonParser jp = new JsonParser();
+    		//将json字符串转化成json对象
+            JsonObject jo = jp.parse(response.getData()).getAsJsonObject();
+            //获取message对应的值
+            String message = jo.get(&quot;Message&quot;).getAsString();
+            if (message.equals(&quot;OK&quot;)) {
+            	map.put(&quot;message&quot;, message);
+            	map.put(&quot;return_code&quot;, code);
+			}else{
+				map.put(&quot;message&quot;, message);
+			}
+        } catch (ServerException e) {
+            e.printStackTrace();
+        } catch (ClientException e) {
+            e.printStackTrace();
+        }
+		return map;
+    }
+}
+</code></pre>
+<h6 id="新版工具类">新版工具类</h6>
+<pre><code class="language-java">import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
+
+import com.aliyun.dysmsapi20170525.models.*;
+import com.aliyun.teaopenapi.models.*;
+
+public class SendSmsTool {
+
+	/**
+	 * 使用AK&amp;SK初始化账号Client
+	 * 
+	 * @param accessKeyId
+	 * @param accessKeySecret
+	 * @return Client
+	 * @throws Exception
+	 */
+	public static com.aliyun.dysmsapi20170525.Client createClient(String accessKeyId, String accessKeySecret)
+			throws Exception {
+		Config config = new Config()
+				// 您的AccessKey ID
+				.setAccessKeyId(accessKeyId)
+				// 您的AccessKey Secret
+				.setAccessKeySecret(accessKeySecret);
+		// 访问的域名
+		config.endpoint = &quot;dysmsapi.aliyuncs.com&quot;;
+		return new com.aliyun.dysmsapi20170525.Client(config);
+	}
+
+	public static Map&lt;String, String&gt; SendSMS(String phone) throws Exception {
+		Map&lt;String, String&gt; map = new HashMap&lt;&gt;();
+		String AccessKeyID = &quot;AccessKeyID&quot;;
+		String AccessKeySecret = &quot;AccessKeySecret&quot;;
+		String SignName = &quot;XXX&quot;;
+		String TemplateCode = &quot;SMS_XXXXX&quot;;
+		String code = String.valueOf(new Random().nextInt(899999) + 100000);// 生成短信验证码
+		com.aliyun.dysmsapi20170525.Client client = SendSmsTool.createClient(AccessKeyID,
+				AccessKeySecret);
+		SendSmsRequest sendSmsRequest = new SendSmsRequest().setPhoneNumbers(phone).setSignName(SignName)
+				.setTemplateCode(TemplateCode).setTemplateParam(&quot;{\&quot;code\&quot;:&quot; + code + &quot;}&quot;);
+		// 复制代码运行请自行打印 API 的返回值
+		SendSmsResponse response = client.sendSms(sendSmsRequest);
+		System.out.println(response.getBody().message);
+		if (response.getBody().message.equals(&quot;OK&quot;)) {
+			map.put(&quot;msg&quot;, &quot;success&quot;);
+			map.put(&quot;code&quot;, code);
+			map.put(&quot;returnTeacherPhone&quot;, phone);
+		} else {
+			map.put(&quot;msg&quot;, &quot;fail&quot;);
+		}
+		return map;
+	}
+}
+</code></pre>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#pomxml">pom.xml</a></li>
+<li><a href="#%E6%97%A7%E7%89%88%E5%B7%A5%E5%85%B7%E7%B1%BB">旧版工具类</a></li>
+<li><a href="#%E6%96%B0%E7%89%88%E5%B7%A5%E5%85%B7%E7%B1%BB">新版工具类</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://viaoh.github.io/post/OQOtx_qzt/">
+              <h3 class="post-title">
+                邮箱发送工具类
+              </h3>
+            </a>
+          </div>
+        
+
+        
+          
+            <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+
+<div id="gitalk-container"></div>
+
+<script>
+
+  var gitalk = new Gitalk({
+    clientID: '4970b3e2cb2b185b5af7',
+    clientSecret: 'a413a9c025c85c8c7d510b5b5cbe613c47e76bdc',
+    repo: 'viaoh.github.io',
+    owner: 'viaoh',
+    admin: ['viaoh'],
+    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
+    distractionFreeMode: false  // Facebook-like distraction free mode
+  })
+
+  gitalk.render('gitalk-container')
+
+</script>
+
+          
+
+          
+        
+
+        <div class="site-footer">
+  Powered by &nbsp;<a href="https://github.com/getgridea/gridea" target="_blank">Gridea</a>
+  <a class="rss" href="https://viaoh.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>
