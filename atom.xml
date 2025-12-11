@@ -1,0 +1,5041 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://viaoh.github.io</id>
+    <title>liuyoung&apos;s blog</title>
+    <updated>2025-12-11T13:25:47.587Z</updated>
+    <generator>https://github.com/jpmonette/feed</generator>
+    <link rel="alternate" href="https://viaoh.github.io"/>
+    <link rel="self" href="https://viaoh.github.io/atom.xml"/>
+    <subtitle>Windy City Rose</subtitle>
+    <logo>https://viaoh.github.io/images/avatar.png</logo>
+    <icon>https://viaoh.github.io/favicon.ico</icon>
+    <rights>All rights reserved 2025, liuyoung&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[（9月18日更新）Docker 国内镜像源加速列表]]></title>
+        <id>https://viaoh.github.io/post/HoVv5q9zHi/</id>
+        <link href="https://viaoh.github.io/post/HoVv5q9zHi/">
+        </link>
+        <updated>2025-09-24T04:36:41.000Z</updated>
+        <content type="html"><![CDATA[<p>国内从 Docker Hub 拉取镜像有时会遇到困难或拉取失败，但可以配置国内镜像源加速镜像拉取。但许多曾经常用的国内镜像站（包括各种云服务商和高校镜像站）已经无法使用。因此，本人开始搜索并汇总了目前可用的镜像站和镜像加速地址，并计划定期测试它们的可用性，并更新这个列表。</p>
+<ul>
+<li>9月18日确认可用 <a href="https://docker.1ms.run/">https://docker.1ms.run</a>（<strong>免费/拉取速度快/稳定/企业级保障</strong>，支持各大NAS厂商：群晖 ，极空间等。<strong>主流服务已内置该镜像源：宝塔，IStore，linuxmirrors， 爱快等</strong>，来自各厂商的认同）</li>
+</ul>
+<p><strong>主流 Docker Hub 镜像加速站清单（长期维护）</strong></p>
+<table>
+<thead>
+<tr>
+<th>地址</th>
+<th>运营方</th>
+<th>类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://docker.1ms.run/">https://docker.1ms.run</a></td>
+<td>毫秒镜像(木雷坞公司)</td>
+<td>Cloudflare、境内CDN</td>
+<td>提供在线技术支持、长期维护、完整文档、活跃社区，远程协助。</td>
+</tr>
+<tr>
+<td><a href="https://mirror.ccs.tencentyun.com/">https://mirror.ccs.tencentyun.com</a></td>
+<td>腾讯云</td>
+<td>境内CDN</td>
+<td>仅腾讯云服务器内推荐使用</td>
+</tr>
+<tr>
+<td><a href="https://docker.m.daocloud.io/">https://docker.m.daocloud.io</a></td>
+<td>DaoCloud</td>
+<td>云服务器转发</td>
+<td>白名单 &amp; 限流</td>
+</tr>
+<tr>
+<td><a href="https://docker.1panel.live/">https://docker.1panel.live</a></td>
+<td>1Panel</td>
+<td>Cloudflare</td>
+<td>部分地区可能无法访问</td>
+</tr>
+<tr>
+<td><a href="https://hub.rat.dev/">https://hub.rat.dev</a></td>
+<td>耗子面板</td>
+<td>使用毫秒镜像</td>
+<td>部分地区可能无法访问</td>
+</tr>
+<tr>
+<td><a href="https://docker.1panel.dev/">https://docker.1panel.dev</a></td>
+<td>1Panel 核心用户无名驱动</td>
+<td>Cloudflare</td>
+<td>部分地区可能无法访问</td>
+</tr>
+<tr>
+<td><a href="https://docker.anye.in/">https://docker.anye.in</a></td>
+<td>1Panel 核心用户 Anye 驱动</td>
+<td>Cloudflare</td>
+<td>部分地区可能无法访问</td>
+</tr>
+<tr>
+<td><a href="https://docker.amingg.com/">https://docker.amingg.com</a></td>
+<td>爱铭网络</td>
+<td>Cloudflare</td>
+<td>部分地区可能无法访问</td>
+</tr>
+<tr>
+<td><a href="https://docker.367231.xyz/">https://docker.367231.xyz</a></td>
+<td>1Panel 核心用户 GXL 驱动</td>
+<td>Cloudflare</td>
+<td>部分地区可能无法访问</td>
+</tr>
+</tbody>
+</table>
+<h2 id="传统的docker-镜像加速配置方法"><strong>传统的Docker 镜像加速配置方法</strong></h2>
+<ol>
+<li>从上面选一个或多个地址</li>
+<li>执行以下命令，注意替换地址</li>
+</ol>
+<pre><code class="language-bash">sudo mkdir -p /etc/docker
+sudo tee /etc/docker/daemon.json &lt;&lt;EOF
+{
+    &quot;registry-mirrors&quot;: [
+        &quot;https://docker.1ms.run&quot;
+    ]
+}
+EOF
+sudo systemctl daemon-reload
+sudo systemctl restart docker
+</code></pre>
+<h3 id="验证镜像加速是否生效"><strong>验证镜像加速是否生效</strong></h3>
+<pre><code class="language-bash">docker pull docker.1ms.run/library/mysql
+</code></pre>
+<h3 id="一个命令完成所有"><strong>一个命令完成所有</strong></h3>
+<h3 id="安装docker并配置镜像加速">安装Docker并配置镜像加速</h3>
+<pre><code class="language-text">bash &lt;(curl -f -s --connect-timeout 10 --retry 3 https://linuxmirrors.cn/docker.sh) --source mirrors.tencent.com/docker-ce --source-registry docker.1ms.run --protocol https --install-latested true --close-firewall false --ignore-backup-tips
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[windows 远程桌面删除登录IP和用户信息记录]]></title>
+        <id>https://viaoh.github.io/post/43WtI8Lt1k/</id>
+        <link href="https://viaoh.github.io/post/43WtI8Lt1k/">
+        </link>
+        <updated>2025-09-22T09:20:35.000Z</updated>
+        <content type="html"><![CDATA[<h3 id="1删除登录用户凭据"><strong>1.删除登录用户凭据</strong></h3>
+<figure data-type="image" tabindex="1"><img src="https://pica.zhimg.com/80/v2-b81a63885d35dc17f6fe70d4f6942edd_720w.png" alt="img" loading="lazy"></figure>
+<p>打开控制面板凭据管理器——–windows凭据，找到要删除的登录用户</p>
+<figure data-type="image" tabindex="2"><img src="https://pic1.zhimg.com/80/v2-3a1ef1dc628dbdc9e4a6095c5d64ae1f_720w.png" alt="img" loading="lazy"></figure>
+<figure data-type="image" tabindex="3"><img src="https://pic-private.zhihu.com/v2-1c44f1fa5d65e0231d36e1d52da33e93~resize:1440:q75.png?source=1f5c5e47&amp;expiration=1758536674&amp;auth_key=1758536674-0-0-b4be711b20206c12a7726d578b10c862&amp;protocol=v2&amp;sampling=False&amp;animatedImagePlayCount=1&amp;overTime=60&amp;incremental=False&amp;sceneCode=article_draft_web&amp;animatedImageAutoPlay=False&amp;retryCount=3&amp;precoder=False&amp;draft_token=1953509978800357674" alt="img" loading="lazy"></figure>
+<p>这样登录的<a href="https://so.csdn.net/so/search?q=%E7%94%A8%E6%88%B7%E4%BF%A1%E6%81%AF&amp;spm=1001.2101.3001.7020">用户信息</a>就没有了</p>
+<h3 id="2删除登录地址信息"><strong>2.删除登录地址信息</strong></h3>
+<p><a href="https://so.csdn.net/so/search?q=%E6%89%93%E5%BC%80%E6%B3%A8%E5%86%8C%E8%A1%A8&amp;spm=1001.2101.3001.7020">打开注册表</a>管理器*（快捷键”win+r”，输入regedit）</p>
+<p><a href="https://so.csdn.net/so/search?q=%E8%AE%A1%E7%AE%97%E6%9C%BA&amp;spm=1001.2101.3001.7020">计算机</a>\HKEY_CURRENT_USER\Software\Microsoft\Terminal Server Client\Default</p>
+<figure data-type="image" tabindex="4"><img src="https://pica.zhimg.com/80/v2-f702647b65ba80e1cfa7e9c51604c99b_720w.png" alt="img" loading="lazy"></figure>
+<figure data-type="image" tabindex="5"><img src="https://pica.zhimg.com/80/v2-570c18f80c1bbede5753375d32194133_720w.png" alt="img" loading="lazy"></figure>
+<p>再次重新打开远程桌面，就看不到任何的登录信息了</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Win11系统远程桌面连接问题]]></title>
+        <id>https://viaoh.github.io/post/7nZEOIzXbg/</id>
+        <link href="https://viaoh.github.io/post/7nZEOIzXbg/">
+        </link>
+        <updated>2025-09-21T20:05:37.000Z</updated>
+        <content type="html"><![CDATA[<p>【出现问题】</p>
+<p>远程桌面提示密码过期等信息，无法连接。</p>
+<p>【问题原因】</p>
+<p><a href="https://so.csdn.net/so/search?q=%E7%B3%BB%E7%BB%9F%E8%AE%BE%E7%BD%AE&amp;spm=1001.2101.3001.7020">系统设置</a>问题。</p>
+<p>【解决方案】</p>
+<p>1、右击此电脑，打开属性&gt;高级系统设置&gt;远程&gt;远程桌面      选择“允许<a href="https://so.csdn.net/so/search?q=%E8%BF%9C%E7%A8%8B%E8%BF%9E%E6%8E%A5&amp;spm=1001.2101.3001.7020">远程连接</a>到此计算机”      不勾选“仅允许运行使用网络级别身份验证的远程桌面的计算机连接（建议）”。</p>
+<figure data-type="image" tabindex="1"><img src="https://picx.zhimg.com/80/v2-fce87ebcf1278eb52ec9ece990f9df73_720w.png" alt="img" loading="lazy"></figure>
+<p>2、右键单击“开始”按钮，选择“运行”，输入gpedit.msc，打开“本底组策略编辑器”。      依次选择 计算机配置&gt;管理模板&gt;Windows组件&gt;远程桌面服务&gt;远程桌面会话主机&gt;安全</p>
+<figure data-type="image" tabindex="2"><img src="https://picx.zhimg.com/80/v2-80b92697af4daa1e6fd131d86d127f73_720w.png" alt="img" loading="lazy"></figure>
+<p>3、双击“远程（RDP）连接要求使用指定的安全层”，选择“已启用”，安全层选择“RCP”。</p>
+<figure data-type="image" tabindex="3"><img src="https://picx.zhimg.com/80/v2-58435e96a92f4bcaed3796830364f71a_720w.png" alt="img" loading="lazy"></figure>
+<p>4、重启电脑或更新策略。      右键单击“开始”按钮，选择“运行”，输入cmd，打开命令行。      执行 gpupdate命令，更新组策略。</p>
+<figure data-type="image" tabindex="4"><img src="https://pic1.zhimg.com/80/v2-d806db8b184618baeb1a861a32af3744_720w.png" alt="img" loading="lazy"></figure>
+<p>【备注说明】</p>
+<p>d=====(￣▽￣*)b</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[IntelliJ IDEA 2020.2 破解版（附永久破解激活方法）]]></title>
+        <id>https://viaoh.github.io/post/d01CVJdU_d/</id>
+        <link href="https://viaoh.github.io/post/d01CVJdU_d/">
+        </link>
+        <updated>2025-09-13T10:38:05.000Z</updated>
+        <content type="html"><![CDATA[<p>对于Java学习者和开发者而言，IDEA是很多人最常用的软件了，也是站长一直推荐大家使用的，在百度、腾讯、阿里巴巴等一线互联网公司也是被重度使用的工具了，深受程序员和开发者的喜爱了。 jetbrains公司发布了Java的最强编辑器IntelliJ IDEA 2020.2。本次更新提供了重大的性能和可用性改进，包括更快的启动，主题和键盘映射插件的更容易安装，增强的VCS工作流以及增加了对微服务框架，MongoDB等的支持。 IntelliJ IDEA被认为是当前Java开发效率最快的IDE工具，比eclipse不知道高哪去了。它整合了开发过程中实用的众多功能，几乎可以不用鼠标可以方便的完成你要做的任何事情，最大程度的加快开发的速度。简单而又功能强大。与其他的一些繁冗而复杂的IDE工具有鲜明的对比。 不多哔哔了，直接进入主题！</p>
+<figure data-type="image" tabindex="1"><img src="https://pica.zhimg.com/80/v2-cc748f01fba07b7f3bf55359f179f69d_720w.png" alt="" loading="lazy"></figure>
+<p>安装破解教程（原创） 1.先下载安装包，然后安装，一路next即可，这里直接附上官网安装包下载地址： <a href="https://download.jetbrains.com/idea/ideaIU-2020.2.3.exe?_ga=2.264306831.1489878717.1603972199-2094421438.1596698041">https://download.jetbrains.com/idea/ideaIU-2020.2.3.exe?_ga=2.264306831.1489878717.1603972199-2094421438.1596698041</a> 点击下载，静心等待其下载完毕即可。 2.下载完成后，双击 ideaIU-2020.2.3.exe,打开安装软件； PS: 如果电脑上之前有安装老版本的 IDEA, 会提示卸载，小伙伴们按照提示，先卸载掉老版本的 IDEA。 安装目录默认为 C:\Program Files\JetBrains\IntelliJ IDEA 2020.2, 这里笔者选择的是默认路径，一路默认安装即可； 勾选自己想要创建的桌面快捷方式，笔者的操作系统是 64 位的，所以勾选的 64 位快捷方式：</p>
+<figure data-type="image" tabindex="2"><img src="https://pic1.zhimg.com/80/v2-6fcf245e4c73c994fbf6d16af0f6a08f_720w.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="3"><img src="https://picx.zhimg.com/80/v2-785f1b6f963e453d54bc133028f6277c_720w.png" alt="" loading="lazy"></figure>
+<ol start="3">
+<li>安装完成后，勾选 Run IntelliJ IDEA，点击 finish 运行软件:</li>
+</ol>
+<figure data-type="image" tabindex="4"><img src="https://pic1.zhimg.com/80/v2-d203b8a6f505a3b922a27c33fceedb1c_720w.png" alt="" loading="lazy"></figure>
+<ol start="4">
+<li>会先弹出一个注册框，勾选 Evaluate for free, 点击 Evaluate，然后再进入主界面；</li>
+</ol>
+<figure data-type="image" tabindex="5"><img src="https://pic1.zhimg.com/80/v2-103f3075cac264461ab0311e2ebb1820_720w.png" alt="" loading="lazy"></figure>
+<p>先下载破解补丁，然后解压： 破解补丁下载地址：<a href="https://wwsp.lanzouw.com/iK81a19zcy7e">IDEA永久激活补丁.zip - 蓝奏云</a> 注意，如果没有弹出上面的界面，可执行破解补丁重置30天试用期脚本，打开reset_script文件夹后，有对应系统的执行脚本，执行即可（双击执行）：</p>
+<figure data-type="image" tabindex="6"><img src="https://picx.zhimg.com/80/v2-c10b0fd97c4e6af2caf7d395c2ade4e4_720w.png" alt="" loading="lazy"></figure>
+<p>windows系统：reset_jetbrains_eval_windows.vbs linux/mac系统：reset_jetbrains_eval_mac_linux.sh 5. 记得安装成功之后先打开IDEA主界面哦，然后将网盘中最新的 IDEA 破解补丁 BetterIntelliJ.zip拖入 IDEA 界面中，如下图所示： 如果有出现拖不进去的情况，请重启 IDEA ，新建一个Java 项目，再次试试</p>
+<figure data-type="image" tabindex="7"><img src="https://picx.zhimg.com/80/v2-ad4ed9c22fe2c7da807a37ec6698547e_720w.png" alt="" loading="lazy"></figure>
+<ol start="6">
+<li>拖入补丁后会弹框，点击 restart 重启 idea： 7.激活后补丁不要移动，不要删除~ 补丁安装成功后，先打开IDEA软件，点击register，然后需要输入激活补丁key.txt里面的激活码到activation code里面激活即可，两个步骤缺一不可，否则会激活失败~</li>
+</ol>
+<figure data-type="image" tabindex="8"><img src="https://picx.zhimg.com/80/v2-d7eb5e3378815c37b7b7354ddef9a9b4_720w.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="9"><img src="https://picx.zhimg.com/80/v2-86a9820e23567ea599b105fabd03d8bf_720w.png" alt="" loading="lazy"></figure>
+<p>点击activate，重启 IDEA 即可； 8. 重启IDE，搞定，完美破解（激活到2099年~perfect）。</p>
+<p><img src="https://picx.zhimg.com/80/v2-26b423b0587156ad301037aa72cad633_720w.png" alt="" loading="lazy"><br>
+此方法和破解补丁同样适用于以下版本：<br>
+以下IDE版本实测可成功激活：<br>
+IntelliJ IDEA 2020.2.3及以下<br>
+AppCode 2019.3.7及以下<br>
+CLion 2019.3.5及以下<br>
+DataGrip 2020.2.3及以下<br>
+GoLand 2020.2.3及以下<br>
+PhpStorm 2020.2.3及以下<br>
+PyCharm 2020.2.3及以下<br>
+Rider 2019.3.4及以下<br>
+RubyMine 2019.3.4及以下<br>
+WebStorm 2020.2.3及以下</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[WPS宏多个docx文档批量替换文本]]></title>
+        <id>https://viaoh.github.io/post/hRey3Ee7Kl/</id>
+        <link href="https://viaoh.github.io/post/hRey3Ee7Kl/">
+        </link>
+        <updated>2025-09-13T10:37:17.000Z</updated>
+        <content type="html"><![CDATA[<pre><code class="language-vb">Sub BatchMultipleReplaceInDocuments()
+    Dim strFolder As String
+    Dim strFile As String
+    Dim doc As Document
+    Dim fDialog As FileDialog
+    Dim i As Integer, j As Integer
+    Dim replaceList(1 To 10, 1 To 2) As String ' 最多10个替换对
+    
+    ' 设置替换列表 - 您可以在这里添加更多的查找/替换对
+    replaceList(1, 1) = &quot;A、&quot;  ' 查找
+    replaceList(1, 2) = &quot;A.&quot;  ' 替换
+    
+    replaceList(2, 1) = &quot;B、&quot;
+    replaceList(2, 2) = &quot;B.&quot;
+    
+    replaceList(3, 1) = &quot;C、&quot;
+    replaceList(3, 2) = &quot;C.&quot;
+    
+    replaceList(4, 1) = &quot;D、&quot;
+    replaceList(4, 2) = &quot;D.&quot;
+    
+    replaceList(5, 1) = &quot;E、&quot;
+    replaceList(5, 2) = &quot;E.&quot;
+    
+    replaceList(6, 1) = &quot;F、&quot;
+    replaceList(6, 2) = &quot;F.&quot;
+    
+    replaceList(7, 1) = &quot;G、&quot;
+    replaceList(7, 2) = &quot;G.&quot;
+    
+    replaceList(8, 1) = &quot;答案：&quot;
+    replaceList(8, 2) = &quot;正确答案:&quot;
+    
+    replaceList(9, 1) = &quot;解析：&quot;
+    replaceList(9, 2) = &quot;解题思路:&quot;
+    
+    ' 选择文件夹对话框
+    Set fDialog = Application.FileDialog(msoFileDialogFolderPicker)
+    With fDialog
+        .Title = &quot;选择包含Word文档的文件夹&quot;
+        .AllowMultiSelect = False
+        If .Show &lt;&gt; -1 Then Exit Sub
+        strFolder = .SelectedItems(1)
+    End With
+    
+    If Right(strFolder, 1) &lt;&gt; &quot;\&quot; Then strFolder = strFolder &amp; &quot;\&quot;
+    
+    strFile = Dir(strFolder &amp; &quot;*.doc*&quot;)
+    Application.StatusBar = &quot;正在处理文档...&quot;
+    
+    Do While strFile &lt;&gt; &quot;&quot;
+        On Error Resume Next
+        Set doc = Documents.Open(strFolder &amp; strFile)
+        
+        If Err.Number = 0 Then
+            ' 执行所有替换操作
+            For j = 1 To UBound(replaceList)
+                If replaceList(j, 1) &lt;&gt; &quot;&quot; Then
+                    With doc.Content.Find
+                        .Text = replaceList(j, 1)
+                        .Replacement.Text = replaceList(j, 2)
+                        .Wrap = wdFindContinue
+                        .Execute Replace:=wdReplaceAll
+                    End With
+                End If
+            Next j
+            
+            doc.Save
+            doc.Close
+            i = i + 1
+            Application.StatusBar = &quot;已处理 &quot; &amp; i &amp; &quot; 个文档，当前处理: &quot; &amp; strFile
+        Else
+            MsgBox &quot;无法打开文件: &quot; &amp; strFile, vbExclamation
+            Err.Clear
+        End If
+        
+        strFile = Dir()
+    Loop
+    
+    Application.StatusBar = False
+    MsgBox &quot;处理完成！共处理了 &quot; &amp; i &amp; &quot; 个文档。&quot;, vbInformation
+End Sub
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Python基本代码]]></title>
+        <id>https://viaoh.github.io/post/wXJDiLgYXY/</id>
+        <link href="https://viaoh.github.io/post/wXJDiLgYXY/">
+        </link>
+        <updated>2025-09-13T10:36:38.000Z</updated>
+        <content type="html"><![CDATA[<p><strong>安装包依赖检查</strong></p>
+<pre><code class="language-python">import sys
+import os
+import subprocess
+import platform
+import importlib.util
+import site
+
+# 国内镜像源配置
+MIRROR_SOURCES = {
+    &quot;1&quot;: &quot;https://pypi.tuna.tsinghua.edu.cn/simple&quot;,  # 清华大学
+    &quot;2&quot;: &quot;https://mirrors.aliyun.com/pypi/simple&quot;,    # 阿里云
+    &quot;3&quot;: &quot;https://pypi.mirrors.ustc.edu.cn/simple&quot;,   # 中国科技大学
+    &quot;4&quot;: &quot;https://pypi.doubanio.com/simple&quot;,          # 豆瓣
+    &quot;5&quot;: &quot;https://mirrors.bfsu.edu.cn/pypi/web/simple&quot;,# 北京外国语大学
+    &quot;0&quot;: None  # 默认官方源
+}
+
+def get_interpreter_info():
+    &quot;&quot;&quot;获取当前Python解释器信息（增强版）&quot;&quot;&quot;
+    # 获取解释器路径（这是最可靠的路径）
+    interpreter_path = sys.executable
+    
+    # 更可靠的虚拟环境检测方法
+    is_venv = False
+    env_type = &quot;系统环境&quot;
+    
+    # 方法1：检查标准虚拟环境标志
+    if hasattr(sys, 'base_prefix') and sys.prefix != sys.base_prefix:
+        is_venv = True
+        env_type = &quot;标准虚拟环境&quot;
+    
+    # 方法2：检查virtualenv创建的环境
+    elif hasattr(sys, 'real_prefix'):
+        is_venv = True
+        env_type = &quot;virtualenv环境&quot;
+    
+    # 方法3：检查conda环境
+    elif 'CONDA_PREFIX' in os.environ and 'CONDA_DEFAULT_ENV' in os.environ:
+        is_venv = True
+        env_type = f&quot;Conda环境 ({os.environ['CONDA_DEFAULT_ENV']})&quot;
+    
+    # 方法4：检查环境变量（通用方法）
+    elif 'VIRTUAL_ENV' in os.environ:
+        is_venv = True
+        env_type = &quot;虚拟环境&quot;
+        # 更新解释器路径为虚拟环境的路径
+        venv_path = os.environ['VIRTUAL_ENV']
+        if platform.system() == &quot;Windows&quot;:
+            interpreter_path = os.path.join(venv_path, 'Scripts', 'python.exe')
+        else:
+            interpreter_path = os.path.join(venv_path, 'bin', 'python')
+    
+    # 方法5：检查当前路径下的venv目录（常见情况）
+    if not is_venv:
+        current_dir = os.getcwd()
+        venv_dirs = ['.venv', 'venv', 'env']
+        for venv_dir in venv_dirs:
+            venv_path = os.path.join(current_dir, venv_dir)
+            if os.path.exists(venv_path):
+                # 检查是否是有效的虚拟环境
+                if platform.system() == &quot;Windows&quot;:
+                    python_path = os.path.join(venv_path, 'Scripts', 'python.exe')
+                else:
+                    python_path = os.path.join(venv_path, 'bin', 'python')
+                
+                if os.path.exists(python_path):
+                    is_venv = True
+                    env_type = &quot;本地虚拟环境&quot;
+                    interpreter_path = python_path
+                    break
+    
+    # 获取Python版本
+    python_version = platform.python_version()
+    
+    return {
+        &quot;path&quot;: interpreter_path,
+        &quot;is_venv&quot;: is_venv,
+        &quot;env_type&quot;: env_type,
+        &quot;version&quot;: python_version
+    }
+
+def confirm_continue():
+    &quot;&quot;&quot;确认是否继续执行&quot;&quot;&quot;
+    print(&quot;\n&quot; + &quot;=&quot;*50)
+    print(&quot;警告：当前在虚拟环境中操作&quot;)
+    print(&quot;=&quot;*50)
+    choice = input(&quot;是否要继续在当前环境安装包? (y/n): &quot;).strip().lower()
+    return choice == 'y'
+
+def select_mirror():
+    &quot;&quot;&quot;让用户选择镜像源&quot;&quot;&quot;
+    print(&quot;\n请选择PyPI镜像源(输入序号):&quot;)
+    print(&quot;0. 官方源 (默认)&quot;)
+    print(&quot;1. 清华大学&quot;)
+    print(&quot;2. 阿里云&quot;)
+    print(&quot;3. 中国科技大学&quot;)
+    print(&quot;4. 豆瓣&quot;)
+    print(&quot;5. 北京外国语大学&quot;)
+    
+    choice = input(&quot;请输入选项 (0-5, 默认为0): &quot;).strip()
+    return MIRROR_SOURCES.get(choice, None)
+
+def get_user_packages():
+    &quot;&quot;&quot;获取用户输入的依赖包列表&quot;&quot;&quot;
+    print(&quot;\n请输入需要检查/安装的依赖包 (多个包用空格分隔)&quot;)
+    print(&quot;示例: pandas numpy openpyxl&quot;)
+    user_input = input(&quot;或直接回车使用默认包: &quot;).strip()
+    
+    # 使用默认包列表如果用户未输入
+    default_packages = ['pandas', 'openpyxl', 'numpy']
+    return default_packages if not user_input else user_input.split()
+
+def check_and_install(packages, mirror=None):
+    &quot;&quot;&quot;检查并安装缺失的包&quot;&quot;&quot;
+    missing_packages = []
+    
+    # 检查哪些包未安装
+    for package in packages:
+        try:
+            __import__(package)
+            print(f&quot;✓ {package} 已安装&quot;)
+        except ImportError:
+            print(f&quot;✗ {package} 未安装&quot;)
+            missing_packages.append(package)
+    
+    # 安装缺失的包
+    if missing_packages:
+        print(f&quot;\n正在安装缺失的包: {', '.join(missing_packages)}&quot;)
+        
+        # 构建安装命令
+        install_cmd = [sys.executable, &quot;-m&quot;, &quot;pip&quot;, &quot;install&quot;]
+        
+        # 添加镜像源参数
+        if mirror:
+            install_cmd += [&quot;-i&quot;, mirror]
+            print(f&quot;使用镜像源: {mirror}&quot;)
+        
+        # 添加信任主机参数 (Windows需要)
+        if mirror and platform.system() == &quot;Windows&quot;:
+            domain = mirror.split(&quot;//&quot;)[1].split(&quot;/&quot;)[0]
+            install_cmd += [&quot;--trusted-host&quot;, domain]
+        
+        # 执行安装命令
+        install_cmd += missing_packages
+        
+        try:
+            subprocess.check_call(install_cmd)
+            print(&quot;安装成功!&quot;)
+        except subprocess.CalledProcessError as e:
+            print(f&quot;安装失败! 错误代码: {e.returncode}&quot;)
+            print(&quot;请尝试更换镜像源或手动安装&quot;)
+            return False
+    else:
+        print(&quot;\n所有依赖包已安装，无需操作&quot;)
+    
+    return True
+
+def diagnose_import_failure(package):
+    &quot;&quot;&quot;诊断包导入失败的原因&quot;&quot;&quot;
+    print(f&quot;\n诊断 {package} 导入失败原因:&quot;)
+    
+    # 1. 检查当前Python环境
+    print(&quot;\n当前Python环境:&quot;)
+    print(f&quot;解释器路径: {sys.executable}&quot;)
+    print(f&quot;sys.path: {sys.path}&quot;)
+    
+    # 2. 检查包是否实际安装
+    try:
+        # 使用importlib检查包是否存在
+        spec = importlib.util.find_spec(package)
+        if spec is None:
+            print(f&quot;⚠ 错误: {package} 包未正确安装&quot;)
+            return False
+        
+        print(f&quot;✓ {package} 包已安装&quot;)
+        print(f&quot;包位置: {spec.origin}&quot;)
+    except Exception as e:
+        print(f&quot;⚠ 检查包状态时出错: {str(e)}&quot;)
+        return False
+    
+    # 3. 检查包安装位置是否在sys.path中
+    package_dir = os.path.dirname(spec.origin)
+    if package_dir not in sys.path:
+        print(f&quot;⚠ 错误: 包安装位置 {package_dir} 不在sys.path中&quot;)
+        print(&quot;尝试手动添加路径...&quot;)
+        sys.path.append(package_dir)
+    
+    # 4. 尝试导入包并捕获具体错误
+    try:
+        __import__(package)
+        print(f&quot;✓ {package} 导入成功&quot;)
+        return True
+    except Exception as e:
+        print(f&quot;⚠ 导入错误: {str(e)}&quot;)
+        
+        # 5. 提供特定包的解决方案
+        if package.lower() == &quot;pillow&quot;:
+            print(&quot;\nPillow 导入失败的常见解决方案:&quot;)
+            
+            # 检查操作系统
+            system = platform.system()
+            
+            if system == &quot;Windows&quot;:
+                print(&quot;1. 确保已安装 Microsoft Visual C++ Redistributable&quot;)
+                print(&quot;   - 下载地址: https://aka.ms/vs/16/release/vc_redist.x64.exe&quot;)
+                
+                # 检查是否安装了正确的VC++版本
+                vc_redist_path = r&quot;C:\Windows\System32\vcruntime140.dll&quot;
+                if not os.path.exists(vc_redist_path):
+                    print(&quot;⚠ 未找到 vcruntime140.dll，请安装VC++ Redistributable&quot;)
+                else:
+                    print(f&quot;✓ 已找到 vcruntime140.dll: {vc_redist_path}&quot;)
+                
+            elif system == &quot;Linux&quot;:
+                print(&quot;1. 安装系统依赖:&quot;)
+                print(&quot;   sudo apt-get install libjpeg-dev zlib1g-dev&quot;)
+                
+            elif system == &quot;Darwin&quot;:
+                print(&quot;1. 安装 Homebrew 和依赖:&quot;)
+                print('   /bin/bash -c &quot;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)&quot;')
+                print(&quot;   brew install libjpeg zlib&quot;)
+            
+            print(&quot;\n2. 尝试重新安装 Pillow:&quot;)
+            print(&quot;   pip uninstall pillow&quot;)
+            print(&quot;   pip install pillow --no-cache-dir --force-reinstall&quot;)
+            
+            print(&quot;\n3. 尝试安装预编译版本:&quot;)
+            print(&quot;   pip install pillow --only-binary :all:&quot;)
+            
+            print(&quot;\n4. 检查环境变量:&quot;)
+            print(&quot;   echo %PATH% (Windows)&quot;)
+            print(&quot;   echo $PATH (Linux/macOS)&quot;)
+            
+            print(&quot;\n5. 尝试使用其他Python版本:&quot;)
+            print(&quot;   某些Python版本可能与Pillow存在兼容性问题&quot;)
+        
+        return False
+
+def check_environment_consistency():
+    &quot;&quot;&quot;检查环境一致性&quot;&quot;&quot;
+    print(&quot;\n&quot; + &quot;=&quot;*50)
+    print(&quot;环境一致性检查&quot;)
+    print(&quot;=&quot;*50)
+    
+    # 1. 检查当前Python解释器
+    print(f&quot;当前解释器: {sys.executable}&quot;)
+    
+    # 2. 检查pip关联的解释器
+    try:
+        pip_output = subprocess.check_output(
+            [sys.executable, &quot;-m&quot;, &quot;pip&quot;, &quot;--version&quot;],
+            text=True
+        )
+        pip_info = pip_output.split()
+        if len(pip_info) &gt; 3:
+            print(f&quot;pip关联的解释器: {pip_info[3]}&quot;)
+        else:
+            print(&quot;⚠ 无法解析pip版本信息&quot;)
+    except Exception as e:
+        print(f&quot;⚠ 无法获取pip信息: {str(e)}&quot;)
+    
+    # 3. 检查site-packages路径
+    try:
+        site_packages = site.getsitepackages()
+        if site_packages:
+            print(&quot;\nSite-packages路径:&quot;)
+            for path in site_packages:
+                print(f&quot; - {path}&quot;)
+        else:
+            print(&quot;⚠ 无法获取site-packages路径&quot;)
+    except Exception:
+        # 回退方法
+        print(&quot;\nSite-packages路径:&quot;)
+        for path in sys.path:
+            if &quot;site-packages&quot; in path:
+                print(f&quot; - {path}&quot;)
+    
+    # 4. 检查环境变量
+    print(&quot;\n环境变量:&quot;)
+    print(f&quot;PATH: {os.environ.get('PATH', '未设置')}&quot;)
+    print(f&quot;PYTHONPATH: {os.environ.get('PYTHONPATH', '未设置')}&quot;)
+    
+    # 5. 检查虚拟环境激活状态
+    if 'VIRTUAL_ENV' in os.environ:
+        print(f&quot;\n虚拟环境已激活: {os.environ['VIRTUAL_ENV']}&quot;)
+    else:
+        print(&quot;\n虚拟环境未激活&quot;)
+
+def main():
+    print(&quot;=&quot;*50)
+    print(&quot;Python 依赖包检查与安装工具&quot;)
+    print(&quot;=&quot;*50)
+    
+    # 获取当前解释器信息
+    interpreter_info = get_interpreter_info()
+    
+    print(&quot;\n当前Python环境信息:&quot;)
+    # 在路径后添加环境类型标识
+    env_status = f&quot;({interpreter_info['env_type']})&quot; if interpreter_info[&quot;is_venv&quot;] else &quot;(系统环境)&quot;
+    print(f&quot;解释器路径: {interpreter_info['path']} {env_status}&quot;)
+    print(f&quot;Python版本: Python {interpreter_info['version']}&quot;)
+    
+    # 运行环境一致性检查
+    check_environment_consistency()
+    
+    # 如果是虚拟环境，请求用户确认
+    if interpreter_info[&quot;is_venv&quot;]:
+        if not confirm_continue():
+            print(&quot;\n操作已取消&quot;)
+            return
+    
+    # 获取用户配置
+    packages = get_user_packages()
+    mirror = select_mirror()
+    
+    print(&quot;\n&quot; + &quot;=&quot;*50)
+    print(&quot;开始检查依赖包...&quot;)
+    print(&quot;=&quot;*50)
+    
+    # 执行检查安装
+    success = check_and_install(packages, mirror)
+    
+    print(&quot;\n&quot; + &quot;=&quot;*50)
+    if success:
+        print(&quot;操作完成! 正在导入包...&quot;)
+        print(&quot;=&quot;*50)
+        
+        # 尝试导入所有包并记录失败的包
+        failed_packages = []
+        for package in packages:
+            try:
+                __import__(package)
+                print(f&quot;✓ {package} 导入成功&quot;)
+            except ImportError:
+                print(f&quot;⚠ 警告: {package} 安装但导入失败&quot;)
+                failed_packages.append(package)
+        
+        # 诊断失败的包
+        if failed_packages:
+            print(&quot;\n&quot; + &quot;=&quot;*50)
+            print(&quot;部分包导入失败，正在诊断问题...&quot;)
+            print(&quot;=&quot;*50)
+            
+            for package in failed_packages:
+                diagnose_import_failure(package)
+    else:
+        print(&quot;操作未完成，请检查错误信息&quot;)
+        print(&quot;=&quot;*50)
+
+if __name__ == &quot;__main__&quot;:
+    main()
+    
+    # 如果已经安装，则导入常用库
+    try:
+        import pandas as pd
+        import numpy as np
+        print(&quot;\n常用库导入完成，可以开始工作!&quot;)
+    except ImportError:
+        print(&quot;\n警告: 部分常用库导入失败&quot;)
+</code></pre>
+<p><strong>程序打包</strong></p>
+<pre><code class="language-python">import sys
+import os
+import subprocess
+import shutil
+import time
+from PyQt5.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, 
+                             QLabel, QLineEdit, QPushButton, QFileDialog, QGroupBox, 
+                             QRadioButton, QCheckBox, QTextEdit, QMessageBox, QProgressBar)
+from PyQt5.QtGui import QIcon, QFont
+from PyQt5.QtCore import Qt, QThread, pyqtSignal
+
+class BuildThread(QThread):
+    &quot;&quot;&quot;后台打包线程&quot;&quot;&quot;
+    update_signal = pyqtSignal(str)
+    finished_signal = pyqtSignal(bool, str)
+    progress_signal = pyqtSignal(int)
+
+    def __init__(self, args):
+        super().__init__()
+        self.args = args
+
+    def run(self):
+        try:
+            self.update_signal.emit(&quot;开始打包过程...&quot;)
+            self.progress_signal.emit(10)
+            
+            # 检查脚本文件是否存在
+            if not os.path.exists(self.args[&quot;script_path&quot;]):
+                self.finished_signal.emit(False, f&quot;错误：脚本文件不存在 - {self.args['script_path']}&quot;)
+                return
+
+            # 检查图标文件是否存在（如果提供了）
+            if self.args[&quot;icon_path&quot;] and not os.path.exists(self.args[&quot;icon_path&quot;]):
+                self.finished_signal.emit(False, f&quot;错误：图标文件不存在 - {self.args['icon_path']}&quot;)
+                return
+
+            # 清理旧构建
+            if os.path.exists('build'):
+                try:
+                    shutil.rmtree('build')
+                    self.update_signal.emit(&quot;清理旧构建目录...&quot;)
+                except Exception as e:
+                    self.update_signal.emit(f&quot;清理构建目录时出错: {str(e)}&quot;)
+            
+            if os.path.exists('spec'):
+                try:
+                    shutil.rmtree('spec')
+                    self.update_signal.emit(&quot;清理旧spec文件...&quot;)
+                except Exception as e:
+                    self.update_signal.emit(f&quot;清理spec目录时出错: {str(e)}&quot;)
+            
+            self.progress_signal.emit(20)
+            
+            # 构建PyInstaller命令
+            cmd = [
+                sys.executable,  # 使用当前 Python 解释器
+                &quot;-m&quot;, &quot;PyInstaller&quot;
+            ]
+            
+            # 添加主脚本（使用绝对路径）
+            script_path = os.path.abspath(self.args[&quot;script_path&quot;])
+            cmd.append(script_path)
+            
+            # 程序名称
+            cmd.extend([&quot;--name&quot;, self.args[&quot;app_name&quot;]])
+            
+            # 输出目录（使用绝对路径）
+            output_dir = os.path.abspath(self.args[&quot;output_dir&quot;])
+            cmd.extend([&quot;--distpath&quot;, output_dir])
+            
+            # 工作目录
+            cmd.extend([&quot;--workpath&quot;, &quot;build&quot;])
+            
+            # spec目录
+            cmd.extend([&quot;--specpath&quot;, &quot;spec&quot;])
+            
+            # 图标（使用绝对路径）
+            if self.args[&quot;icon_path&quot;]:
+                icon_path = os.path.abspath(self.args[&quot;icon_path&quot;])
+                cmd.extend([&quot;--icon&quot;, icon_path])
+            
+            # 单文件模式
+            if self.args[&quot;onefile&quot;]:
+                cmd.append(&quot;--onefile&quot;)
+            
+            # 控制台窗口
+            if not self.args[&quot;console&quot;]:
+                cmd.append(&quot;--windowed&quot;)
+            
+            # 添加数据文件（处理路径）
+            for data in self.args[&quot;add_data&quot;]:
+                # 分割源路径和目标路径
+                source, target = data.split(os.pathsep)
+                # 处理源路径（使用绝对路径）
+                abs_source = os.path.abspath(source)
+                # 重新组合
+                cmd.extend([&quot;--add-data&quot;, f&quot;{abs_source}{os.pathsep}{target}&quot;])
+            
+            # 添加隐藏导入
+            for imp in self.args[&quot;hidden_imports&quot;]:
+                cmd.extend([&quot;--hidden-import&quot;, imp])
+            
+            # 其他选项
+            cmd.append(&quot;--noconfirm&quot;)
+            cmd.append(&quot;--clean&quot;)
+            
+            self.update_signal.emit(f&quot;执行命令: {' '.join(cmd)}&quot;)
+            self.progress_signal.emit(30)
+            
+            # 运行打包命令
+            try:
+                # 设置环境变量以支持中文路径
+                env = os.environ.copy()
+                env['PYTHONUTF8'] = '1'  # 确保Python使用UTF-8编码
+                
+                process = subprocess.Popen(
+                    cmd, 
+                    stdout=subprocess.PIPE, 
+                    stderr=subprocess.STDOUT, 
+                    universal_newlines=True,
+                    encoding='utf-8',
+                    errors='replace',
+                    env=env  # 传递修改后的环境变量
+                )
+                
+                # 实时输出
+                for line in process.stdout:
+                    self.update_signal.emit(line.strip())
+                
+                # 等待完成
+                process.wait()
+                self.progress_signal.emit(90)
+                
+                if process.returncode == 0:
+                    self.finished_signal.emit(True, &quot;打包成功完成！&quot;)
+                else:
+                    self.finished_signal.emit(False, f&quot;打包失败，错误代码: {process.returncode}&quot;)
+                
+            except Exception as e:
+                self.finished_signal.emit(False, f&quot;执行打包命令时出错: {str(e)}&quot;)
+                
+            self.progress_signal.emit(100)
+            
+        except Exception as e:
+            self.finished_signal.emit(False, f&quot;打包过程中发生错误: {str(e)}&quot;)
+            self.progress_signal.emit(100)
+
+
+class PackagerApp(QMainWindow):
+    &quot;&quot;&quot;主应用程序窗口&quot;&quot;&quot;
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle(&quot;Python程序打包工具&quot;)
+        self.setGeometry(100, 100, 800, 600)
+        self.setWindowIcon(QIcon(self.resource_path(&quot;icon.ico&quot;)))
+        
+        # 创建主部件
+        main_widget = QWidget()
+        self.setCentralWidget(main_widget)
+        
+        # 主布局
+        main_layout = QVBoxLayout()
+        main_widget.setLayout(main_layout)
+        
+        # 创建标签
+        title_label = QLabel(&quot;Python程序打包工具&quot;)
+        title_label.setFont(QFont(&quot;Arial&quot;, 16, QFont.Bold))
+        title_label.setAlignment(Qt.AlignCenter)
+        main_layout.addWidget(title_label)
+        
+        # 创建配置区域
+        config_group = QGroupBox(&quot;打包配置&quot;)
+        config_layout = QVBoxLayout()
+        config_group.setLayout(config_layout)
+        main_layout.addWidget(config_group)
+        
+        # 脚本路径
+        script_layout = QHBoxLayout()
+        script_layout.addWidget(QLabel(&quot;Python脚本:&quot;))
+        self.script_input = QLineEdit()
+        script_layout.addWidget(self.script_input)
+        self.script_button = QPushButton(&quot;浏览...&quot;)
+        self.script_button.clicked.connect(self.browse_script)
+        script_layout.addWidget(self.script_button)
+        config_layout.addLayout(script_layout)
+        
+        # 程序名称
+        name_layout = QHBoxLayout()
+        name_layout.addWidget(QLabel(&quot;程序名称:&quot;))
+        self.name_input = QLineEdit()
+        name_layout.addWidget(self.name_input)
+        config_layout.addLayout(name_layout)
+        
+        # 图标路径
+        icon_layout = QHBoxLayout()
+        icon_layout.addWidget(QLabel(&quot;程序图标:&quot;))
+        self.icon_input = QLineEdit()
+        icon_layout.addWidget(self.icon_input)
+        self.icon_button = QPushButton(&quot;浏览...&quot;)
+        self.icon_button.clicked.connect(self.browse_icon)
+        icon_layout.addWidget(self.icon_button)
+        config_layout.addLayout(icon_layout)
+        
+        # 打包模式
+        mode_group = QGroupBox(&quot;打包模式&quot;)
+        mode_layout = QHBoxLayout()
+        self.onefile_radio = QRadioButton(&quot;单文件模式&quot;)
+        self.dir_radio = QRadioButton(&quot;目录模式&quot;)
+        self.dir_radio.setChecked(True)
+        mode_layout.addWidget(self.onefile_radio)
+        mode_layout.addWidget(self.dir_radio)
+        mode_group.setLayout(mode_layout)
+        config_layout.addWidget(mode_group)
+        
+        # 控制台选项
+        console_group = QGroupBox(&quot;控制台选项&quot;)
+        console_layout = QHBoxLayout()
+        self.console_radio = QRadioButton(&quot;显示控制台&quot;)
+        self.windowed_radio = QRadioButton(&quot;隐藏控制台&quot;)
+        self.windowed_radio.setChecked(True)
+        console_layout.addWidget(self.console_radio)
+        console_layout.addWidget(self.windowed_radio)
+        console_group.setLayout(console_layout)
+        config_layout.addWidget(console_group)
+        
+        # 输出目录
+        output_layout = QHBoxLayout()
+        output_layout.addWidget(QLabel(&quot;输出目录:&quot;))
+        self.output_input = QLineEdit(&quot;dist&quot;)
+        output_layout.addWidget(self.output_input)
+        self.output_button = QPushButton(&quot;浏览...&quot;)
+        self.output_button.clicked.connect(self.browse_output)
+        output_layout.addWidget(self.output_button)
+        config_layout.addLayout(output_layout)
+        
+        # 添加数据文件
+        self.data_label = QLabel(&quot;添加数据文件 (源路径;目标路径):&quot;)
+        config_layout.addWidget(self.data_label)
+        
+        self.data_layout = QVBoxLayout()
+        self.data_inputs = []
+        self.add_data_button = QPushButton(&quot;添加数据文件&quot;)
+        self.add_data_button.clicked.connect(self.add_data_field)
+        config_layout.addLayout(self.data_layout)
+        config_layout.addWidget(self.add_data_button)
+        
+        # 进度条
+        self.progress_bar = QProgressBar()
+        self.progress_bar.setRange(0, 100)
+        self.progress_bar.setValue(0)
+        main_layout.addWidget(self.progress_bar)
+        
+        # 日志输出
+        self.log_output = QTextEdit()
+        self.log_output.setReadOnly(True)
+        self.log_output.setFont(QFont(&quot;Courier New&quot;, 10))
+        main_layout.addWidget(self.log_output)
+        
+        # 按钮区域
+        button_layout = QHBoxLayout()
+        self.build_button = QPushButton(&quot;开始打包&quot;)
+        self.build_button.clicked.connect(self.start_build)
+        self.build_button.setStyleSheet(&quot;background-color: #4CAF50; color: white; font-weight: bold;&quot;)
+        button_layout.addWidget(self.build_button)
+        
+        self.cancel_button = QPushButton(&quot;取消&quot;)
+        self.cancel_button.clicked.connect(self.close)
+        self.cancel_button.setStyleSheet(&quot;background-color: #f44336; color: white;&quot;)
+        button_layout.addWidget(self.cancel_button)
+        
+        main_layout.addLayout(button_layout)
+        
+        # 初始化线程
+        self.build_thread = None
+        
+        # 设置默认值
+        self.name_input.setText(&quot;MyApp&quot;)
+        
+    def resource_path(self, relative_path):
+        &quot;&quot;&quot;获取资源绝对路径&quot;&quot;&quot;
+        try:
+            base_path = sys._MEIPASS
+        except Exception:
+            base_path = os.path.abspath(&quot;.&quot;)
+        return os.path.join(base_path, relative_path)
+    
+    def browse_script(self):
+        &quot;&quot;&quot;浏览Python脚本&quot;&quot;&quot;
+        file_path, _ = QFileDialog.getOpenFileName(
+            self, &quot;选择Python脚本&quot;, &quot;&quot;, &quot;Python文件 (*.py)&quot;
+        )
+        if file_path:
+            self.script_input.setText(file_path)
+            # 自动设置程序名称为脚本文件名
+            app_name = os.path.splitext(os.path.basename(file_path))[0]
+            self.name_input.setText(app_name)
+    
+    def browse_icon(self):
+        &quot;&quot;&quot;浏览图标文件&quot;&quot;&quot;
+        file_path, _ = QFileDialog.getOpenFileName(
+            self, &quot;选择图标文件&quot;, &quot;&quot;, &quot;图标文件 (*.ico)&quot;
+        )
+        if file_path:
+            self.icon_input.setText(file_path)
+    
+    def browse_output(self):
+        &quot;&quot;&quot;浏览输出目录&quot;&quot;&quot;
+        dir_path = QFileDialog.getExistingDirectory(self, &quot;选择输出目录&quot;)
+        if dir_path:
+            self.output_input.setText(dir_path)
+    
+    def add_data_field(self):
+        &quot;&quot;&quot;添加数据文件输入行&quot;&quot;&quot;
+        data_layout = QHBoxLayout()
+        
+        # 源路径
+        source_input = QLineEdit()
+        source_button = QPushButton(&quot;浏览...&quot;)
+        source_button.clicked.connect(lambda: self.browse_data_source(source_input))
+        
+        # 目标路径
+        target_input = QLineEdit()
+        
+        # 删除按钮
+        remove_button = QPushButton(&quot;删除&quot;)
+        remove_button.setStyleSheet(&quot;background-color: #f44336; color: white;&quot;)
+        remove_button.clicked.connect(lambda: self.remove_data_field(data_layout))
+        
+        data_layout.addWidget(QLabel(&quot;源:&quot;))
+        data_layout.addWidget(source_input)
+        data_layout.addWidget(source_button)
+        data_layout.addWidget(QLabel(&quot;目标:&quot;))
+        data_layout.addWidget(target_input)
+        data_layout.addWidget(remove_button)
+        
+        self.data_layout.addLayout(data_layout)
+        self.data_inputs.append((source_input, target_input, data_layout))
+    
+    def browse_data_source(self, source_input):
+        &quot;&quot;&quot;浏览数据文件源&quot;&quot;&quot;
+        # 允许选择文件或目录
+        path = QFileDialog.getOpenFileName(
+            self, &quot;选择数据文件&quot;, &quot;&quot;, &quot;所有文件 (*.*)&quot;
+        )[0]
+        if not path:
+            return
+            
+        # 如果是目录，选择整个目录
+        if os.path.isdir(path):
+            path = QFileDialog.getExistingDirectory(self, &quot;选择数据目录&quot;, path)
+            if not path:
+                return
+        
+        if path:
+            source_input.setText(path)
+    
+    def remove_data_field(self, layout):
+        &quot;&quot;&quot;删除数据文件输入行&quot;&quot;&quot;
+        # 从布局中移除所有部件
+        while layout.count():
+            item = layout.takeAt(0)
+            widget = item.widget()
+            if widget:
+                widget.deleteLater()
+        
+        # 从列表中移除
+        for i, (_, _, l) in enumerate(self.data_inputs):
+            if l == layout:
+                self.data_inputs.pop(i)
+                break
+        
+        # 删除布局本身
+        layout.deleteLater()
+    
+    def get_build_args(self):
+        &quot;&quot;&quot;获取打包参数&quot;&quot;&quot;
+        args = {
+            &quot;script_path&quot;: self.script_input.text(),
+            &quot;app_name&quot;: self.name_input.text(),
+            &quot;icon_path&quot;: self.icon_input.text(),
+            &quot;onefile&quot;: self.onefile_radio.isChecked(),
+            &quot;console&quot;: self.console_radio.isChecked(),
+            &quot;output_dir&quot;: self.output_input.text(),
+            &quot;add_data&quot;: [],
+            &quot;hidden_imports&quot;: [
+                'PIL', 'PIL._imaging', 'pkg_resources.py2_warn',
+                'numpy', 'pandas', 'scipy', 'sklearn', 'matplotlib'
+            ]
+        }
+        
+        # 收集数据文件
+        for source_input, target_input, _ in self.data_inputs:
+            source = source_input.text().strip()
+            target = target_input.text().strip()
+            if source and target:
+                args[&quot;add_data&quot;].append(f&quot;{source}{os.pathsep}{target}&quot;)
+        
+        return args
+    
+    def validate_inputs(self, args):
+        &quot;&quot;&quot;验证输入参数&quot;&quot;&quot;
+        if not args[&quot;script_path&quot;]:
+            QMessageBox.warning(self, &quot;输入错误&quot;, &quot;请选择要打包的Python脚本&quot;)
+            return False
+        
+        if not os.path.exists(args[&quot;script_path&quot;]):
+            QMessageBox.warning(self, &quot;输入错误&quot;, &quot;选择的Python脚本不存在&quot;)
+            return False
+        
+        if not args[&quot;app_name&quot;]:
+            QMessageBox.warning(self, &quot;输入错误&quot;, &quot;请输入程序名称&quot;)
+            return False
+        
+        if args[&quot;icon_path&quot;] and not os.path.exists(args[&quot;icon_path&quot;]):
+            QMessageBox.warning(self, &quot;输入错误&quot;, &quot;选择的图标文件不存在&quot;)
+            return False
+        
+        # 检查数据文件
+        for data in args[&quot;add_data&quot;]:
+            source, target = data.split(os.pathsep)
+            if not os.path.exists(source):
+                QMessageBox.warning(self, &quot;输入错误&quot;, f&quot;数据文件不存在: {source}&quot;)
+                return False
+        
+        return True
+    
+    def start_build(self):
+        &quot;&quot;&quot;开始打包过程&quot;&quot;&quot;
+        # 获取参数
+        args = self.get_build_args()
+        
+        # 验证输入
+        if not self.validate_inputs(args):
+            return
+        
+        # 禁用按钮
+        self.build_button.setEnabled(False)
+        self.log_output.clear()
+        self.progress_bar.setValue(0)
+        
+        # 创建并启动打包线程
+        self.build_thread = BuildThread(args)
+        self.build_thread.update_signal.connect(self.update_log)
+        self.build_thread.finished_signal.connect(self.build_finished)
+        self.build_thread.progress_signal.connect(self.progress_bar.setValue)
+        self.build_thread.start()
+    
+    def update_log(self, message):
+        &quot;&quot;&quot;更新日志输出&quot;&quot;&quot;
+        self.log_output.append(message)
+        self.log_output.verticalScrollBar().setValue(
+            self.log_output.verticalScrollBar().maximum()
+        )
+    
+    def build_finished(self, success, message):
+        &quot;&quot;&quot;打包完成处理&quot;&quot;&quot;
+        self.build_button.setEnabled(True)
+        
+        if success:
+            self.log_output.append(&quot;\n&quot; + message)
+            QMessageBox.information(self, &quot;打包成功&quot;, message)
+            
+            # 打开输出目录
+            output_path = os.path.join(self.output_input.text(), self.name_input.text())
+            if self.onefile_radio.isChecked():
+                output_path += &quot;.exe&quot;
+                self.log_output.append(f&quot;可执行文件位置: {output_path}&quot;)
+            else:
+                self.log_output.append(f&quot;程序目录位置: {output_path}&quot;)
+            
+            # 显示打开文件夹按钮
+            open_button = QPushButton(&quot;打开输出目录&quot;)
+            open_button.clicked.connect(lambda: self.open_output_directory())
+            self.log_output.setCornerWidget(open_button)
+            
+        else:
+            self.log_output.append(&quot;\n&quot; + message)
+            QMessageBox.critical(self, &quot;打包失败&quot;, message)
+    
+    def open_output_directory(self):
+        &quot;&quot;&quot;打开输出目录&quot;&quot;&quot;
+        output_dir = os.path.abspath(self.output_input.text())
+        if os.path.exists(output_dir):
+            if sys.platform == &quot;win32&quot;:
+                os.startfile(output_dir)
+            elif sys.platform == &quot;darwin&quot;:
+                subprocess.Popen([&quot;open&quot;, output_dir])
+            else:
+                subprocess.Popen([&quot;xdg-open&quot;, output_dir])
+    
+    def closeEvent(self, event):
+        &quot;&quot;&quot;关闭窗口事件处理&quot;&quot;&quot;
+        if self.build_thread and self.build_thread.isRunning():
+            reply = QMessageBox.question(
+                self, '确认退出',
+                '打包过程仍在运行，确定要退出吗？',
+                QMessageBox.Yes | QMessageBox.No, QMessageBox.No
+            )
+            
+            if reply == QMessageBox.Yes:
+                self.build_thread.terminate()
+                event.accept()
+            else:
+                event.ignore()
+        else:
+            event.accept()
+
+
+if __name__ == &quot;__main__&quot;:
+    app = QApplication(sys.argv)
+    window = PackagerApp()
+    window.show()
+    sys.exit(app.exec_())
+</code></pre>
+<p><strong>虚拟环境</strong></p>
+<pre><code class="language-python">python虚拟环境
+在Python中，虚拟环境是一种隔离的Python环境，它允许你在一个项目中安装特定版本的包，而不会影响到系统中其他Python项目或全局Python环境。这对于管理项目依赖和避免不同项目之间的包版本冲突非常有用。下面是如何在Windows、macOS和Linux上创建和使用Python虚拟环境的步骤：
+
+1. 使用venv模块（Python 3.3及以上版本）
+安装虚拟环境
+对于Python 3.3及以上版本，你可以使用内置的venv模块来创建虚拟环境。
+
+步骤：
+
+打开命令行界面（例如：终端、命令提示符或PowerShell）。
+
+创建一个新的目录用于你的项目（如果还没有的话）。
+
+mkdir myproject
+cd myproject
+
+使用venv模块创建一个虚拟环境。
+
+python -m venv venv
+
+这里venv是虚拟环境的目录名，你可以根据需要更改它。
+
+激活虚拟环境
+Windows:
+
+.\venv\Scripts\activate
+macOS/Linux:
+
+source venv/bin/activate
+激活后，你的命令行提示符会发生变化，表明你现在处于虚拟环境中。
+
+退出虚拟环境
+在命令行中输入以下命令来退出虚拟环境：
+
+deactivate
+2. 使用virtualenv（适用于所有Python版本）
+如果你使用的是Python 2或者想使用一个更早的版本的Python，你可以使用virtualenv。首先，你需要安装virtualenv。
+
+安装virtualenv:
+
+pip install virtualenv
+创建并激活虚拟环境:
+
+# 创建虚拟环境
+virtualenv venv
+# 激活虚拟环境（方法同上）
+# Windows: .\venv\Scripts\activate
+# macOS/Linux: source venv/bin/activate
+3. 使用conda（Anaconda/Miniconda）
+如果你使用的是Anaconda或Miniconda，你可以使用conda来创建和管理虚拟环境。
+
+创建虚拟环境:
+
+conda create --name myenv python=3.8
+这里myenv是虚拟环境的名称，python=3.8指定了Python的版本。
+
+激活虚拟环境:
+
+conda activate myenv
+或者，在某些系统上，你可以使用：
+
+source activate myenv  # macOS/Linux
+activate myenv  # Windows (在某些情况下)
+总结：
+选择哪种方法取决于你的具体需求和偏好。venv是Python官方推荐的虚拟环境工具，适用于所有Python 3版本。virtualenv提供了跨平台支持并且可以与所有Python版本一起使用。而conda则更适合数据科学和机器学习项目，因为它提供了包管理和环境管理的额外功能。
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[NBA2KOL辅助]]></title>
+        <id>https://viaoh.github.io/post/h1knsguHBt/</id>
+        <link href="https://viaoh.github.io/post/h1knsguHBt/">
+        </link>
+        <updated>2025-09-13T10:31:33.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="单线程">单线程</h2>
+<pre><code class="language-vb">//创建对象
+LogStart &quot;D:\用户目录\Desktop\2K1.log&quot;  
+import &quot;C:\obj.vbs&quot;
+Set dm = New dmsoft
+Set dm2 = New dmsoft
+ret = dm.Reg(&quot;XXXXXX&quot;, &quot;XXXXXX&quot;)
+ret2 = dm2.Reg(&quot;XXXXXX&quot;,&quot;XXXXXX&quot;)
+If ret = 1 AND ret2= 1 Then 
+    TracePrint &quot;大漠插件注册成功&quot;
+Else
+    TracePrint &quot;大漠插件注册失败,返回值1：&quot;+ CStr(ret) + &quot;    返回值2：&quot;+ CStr(ret2)
+End If
+dm.setPath &quot;.\pic&quot;
+dm2.setPath &quot;.\pic&quot;
+// 喵提醒参数：进度喵码和电脑状态喵码
+Global playCountMiaoCode
+playCountMiaoCode = &quot;tOy90iP&quot;
+Global msgMiaoCode
+msgMiaoCode = &quot;tT48aX9&quot;
+// 游戏路径
+Dim gamePath
+loginPath = &quot;C:\WeGameLogin\WeGameLogin.exe&quot;
+// 电脑编码
+UserVar pcCode=DropList{&quot;A01&quot;:&quot;A01&quot;|&quot;B01&quot;:&quot;B01&quot;}=0 &quot;电脑编码&quot;
+If StrComp(pcCode, &quot;A01&quot;) = 0 Then 
+    gamePath = &quot;E:\Game\OL1\NBA2K Online\NBA2KOnline.exe&quot;
+Else 
+    gamePath = &quot;D:\Game\NBA2KOL\NBA2K Online\NBA2KOnline.exe&quot;
+End If
+Global globalPcCode
+// 绑定模式
+displayMode = &quot;gdi&quot;
+mouseMode = &quot;dx.mouse.position.lock.api|dx.mouse.api|dx.mouse.cursor&quot;
+keypadMode = &quot;dx.keypad.api&quot;
+publicMode = &quot;dx.public.active.api|dx.public.hide.dll|dx.public.graphic.protect|dx.public.down.cpu&quot;
+mode = 101
+// 线程公共参数
+Dim playTheadID
+Dim loginTheadID
+// 是否自动登录WeGame
+UserVar autoLogin=DropList{&quot;是&quot;:0|&quot;否&quot;:1}=1 &quot;自动登录&quot;
+// 登陆方式
+UserVar loginSelect=DropList{&quot;账号密码&quot;:0|&quot;快捷登录&quot;:1}=0 &quot;登录方式&quot;
+// 登陆账号
+UserVar accountNumber=DropList{&quot;QQ账号&quot;:&quot;QQ账号&quot;|&quot;QQ账号2&quot;:&quot;QQ账号2&quot;}=0 &quot;登录账号&quot;
+accounPwd = &quot;密码&quot;
+// 登录大区
+UserVar areaX=DropList{&quot;斯台普斯&quot;:434|&quot;玫瑰花园&quot;:598|&quot;联合中心&quot;:274|&quot;美航球馆&quot;:111}= 0 &quot;登录大区&quot;
+areaY = 246
+// 挂机类型
+UserVar playType = DropList{&quot;街头赛（人机）&quot;:0 |&quot;NBA对抗赛&quot;:1|&quot;教练模式&quot;:2|&quot;王朝模式&quot;:3|&quot;街头赛（匹配）&quot;:4|&quot;巅峰季后赛（人机）&quot;:5|&quot;好友2v2&quot;:6|&quot;王朝模式（排位）&quot;:7|&quot;NBA对抗赛（排位）&quot;:8|&quot;街头赛（排位）&quot;:9|&quot;关键时刻&quot;:10}=0 &quot;选择模式&quot;
+Dim playTypeArray
+playTypeArray = Array(&quot;街头赛（人机）&quot;, &quot;NBA对抗赛&quot;, &quot;教练模式&quot;, &quot;王朝模式&quot;, &quot;街头赛（匹配）&quot;, &quot;巅峰季后赛（人机）&quot;, &quot;好友2v2&quot;,&quot;王朝模式（排位）&quot;,&quot;NBA对抗赛（排位）&quot;,&quot;街头赛（排位）&quot;,&quot;关键时刻&quot;)
+// 季后赛晋级几轮结束比赛
+UserVar maxPromoteCount=DropList{&quot;第一轮&quot;:1|&quot;第二轮&quot;:2|&quot;第三轮&quot;:3}= 0 &quot;季后赛晋级目标&quot;
+// 自定义场数
+UserVar playCount=6 &quot;自定义场数&quot;
+// 是否投降
+UserVar isPlayFail=DropList{&quot;是&quot;:0|&quot;否&quot;:1}=1 &quot;是否投降&quot;
+// 是否领取奖励
+UserVar isGetPrize=DropList{&quot;是&quot;:0|&quot;否&quot;:1}=1 &quot;是否领奖&quot;
+// 是否派遣表演赛
+UserVar isGoPlay=DropList{&quot;是&quot;:0|&quot;否&quot;:1}=1 &quot;自动表演赛&quot;
+// 是否关闭电脑
+UserVar isExitOS=DropList{&quot;是&quot;:0|&quot;否&quot;:1}=1 &quot;是否关机&quot;
+// ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+// -------------------------------------游戏坐标位置，根据电脑不同分辨率修改------------------------------------------------
+// 游戏窗口大小
+gameX1 = 0
+gameY1 = 0
+gameX2 = 1024
+gameY2 = 768
+// 复位位置
+resetX = 505
+resetY = 97
+// 黑色提示框
+dialogX = 512
+dialogY = 292
+dialogCR = &quot;181b1e&quot;
+// 点击确认关闭提示
+closeDialogX = 510
+closeDialogY = 458
+// 点击取消关闭提示
+cancelDialogX = 594
+cancelDialogY = 459
+// 安小西弹框点击确认
+confirmX = 548
+confirmY = 488
+// 关闭投降、网络异常、提前退出的提示坐标
+closeExceptionX = 477
+closeExceptionY = 457
+// 六个表演赛坐标
+showLevelXArray = Array(277,494,713,659,427,175)
+showLevelYArray = Array(209,281,298,512,408,375)
+// 当前已派遣次数
+goShowCount = 0
+// 5个等级判断
+levelImgArray = Array(&quot;level-UR.bmp&quot;, &quot;level-SSR.bmp&quot;, &quot;level-SS.bmp&quot;, &quot;level-S.bmp&quot;, &quot;level-A.bmp&quot;)
+// 季后赛晋级次数
+promoteCount = 0
+//↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+// 初始化
+Sub paramsInit()
+    globalPcCode = pcCode
+    If Hour(time) &gt;= 0 and Hour(time) &lt; 3 Then 
+        autoLogin = 0
+        loginSelect = 0
+        accountNumber = &quot;QQ账号&quot;
+        areaX = 434
+        playType = 2
+        playCount = 6
+        isPlayFail = 1
+        isGetPrize = 0
+        isGoPlay = 0
+        isExitOS = 0
+    ElseIf Hour(time) &gt;= 3 and Hour(time) &lt; 6 Then 
+        autoLogin = 0
+        loginSelect = 0
+        accountNumber = &quot;QQ账号&quot;
+        areaX = 598
+        playType = 2
+        playCount = 6
+        isPlayFail = 1
+        isGetPrize = 0
+        isGoPlay = 0
+        isExitOS = 0
+    ElseIf Hour(time) &gt;= 6 and Hour(time) &lt; 8 Then 
+        autoLogin = 0
+        loginSelect = 0
+        accountNumber = &quot;QQ账号2&quot;
+        areaX = 434
+        playType = 2
+        playCount = 6
+        isPlayFail = 1
+        isGetPrize = 0
+        isGoPlay = 0
+        isExitOS = 0
+    End If
+    TracePrint &quot;参数初始化完成&quot;
+End Sub
+// 点击返回按钮返回大厅、判断是否在游戏大厅
+Sub cancelIndex()
+    Do While True
+        Delay 1000
+        dm_ret = dm.FindPic(0, gameY1, gameX2, gameY2,&quot;play.bmp&quot;,&quot;000000&quot;,0.7,0,intX,intY)
+        If intX &gt; 0 And intY &gt; 0 Then 
+            Delay 5000
+            Exit do
+        End If
+        dm_ret = dm.FindPic(0, gameY1, gameX2, gameY2,&quot;zhuye.bmp&quot;,&quot;000000&quot;,0.7,0,intX,intY)
+        If intX &gt; 0 And intY &gt; 0 Then 
+            dm.MoveTo intX + 15, intY + 10
+            Delay 1000
+            dm.LeftClick
+            Delay 3000
+        End If
+        dm_ret = dm.FindPic(gameX2/2, gameY1, gameX2, gameY2/2, &quot;close.bmp&quot;, &quot;000000&quot;, 0.8, 0, intX, intY)
+        If intX &gt; 0 And intY &gt; 0 Then 
+            dm.MoveTo intX + 15, intY + 15
+            Delay 1000
+            dm.LeftClick
+            Delay 3000
+        End If
+    Loop
+End Sub
+// 定义倒计时进程
+Sub playThead(t) 
+    While t &gt;= 0
+        //Call Plugin.Msg.ShowScrTXT(0, 0, 1024, 100, &quot;比赛倒计时  &quot;&amp;t, &quot;0000FF&quot;)   
+        Delay 1000
+        If t = 0 Then 
+            StopThread playTheadID //停止倒计时线程
+            If msgMiaoCode &lt;&gt; &quot;&quot; Then 
+                text = &quot;比赛长时间未结束，请手动确认游戏进度【&quot; + globalPcCode + &quot;】&quot;
+                Set objXML=CreateObject(&quot;Microsoft.XMLHTTP&quot;)
+                objXML.Open &quot;Get&quot;, &quot;http://miaotixing.com/trigger?id=&quot; + msgMiaoCode + &quot;&amp;text=&quot; + text, False
+                objXML.send
+                Delay 3000
+            End If
+            // 关闭WeGame
+            //            WEGAME_APP = Plugin.Window.Find(&quot;TWINCONTROL&quot;, 0)
+            //            Call Plugin.Window.CloseEx(WEGAME_APP)
+            //            Delay 2000
+            //            // 关闭上号器
+            //            LoginHwnd = Plugin.Window.Find(&quot;WTWindow&quot;, 0)
+            //            Call Plugin.Window.CloseEx(LoginHwnd)
+            //            Delay 2000
+            //            // 关闭游戏 快捷键 Alt+N
+            //            KeyDown 18, 1
+            //            KeyPress 78, 1
+            //            KeyUp 18, 1
+            //            Delay 1000
+            //            // 重启脚本
+            //            RestartScript
+        End If
+        t = t - 1
+    Wend
+End Sub
+// 定义倒计时进程
+Sub loginThead(t) 
+    While t &gt;= 0
+        //Call Plugin.Msg.ShowScrTXT(0, 0, 1024, 100, &quot;登录倒计时  &quot; &amp; t, &quot;0000FF&quot;)
+        Delay 1000
+        If t = 0 Then 
+            StopThread loginTheadID //停止倒计时线程
+            If msgMiaoCode &lt;&gt; &quot;&quot; Then 
+                text = &quot;未登录成功，将重新进行登录操作【&quot; + globalPcCode + &quot;】&quot;
+                Set objXML=CreateObject(&quot;Microsoft.XMLHTTP&quot;)
+                objXML.Open &quot;Get&quot;, &quot;http://miaotixing.com/trigger?id=&quot; + msgMiaoCode + &quot;&amp;text=&quot; + text, False
+                objXML.send
+                Delay 3000
+            End If
+            // 关闭WeGame
+            WEGAME_APP = Plugin.Window.Find(&quot;TWINCONTROL&quot;, 0)
+            Call Plugin.Window.CloseEx(WEGAME_APP)
+            Delay 2000
+            // 关闭上号器
+            LoginHwnd = Plugin.Window.Find(&quot;WTWindow&quot;, 0)
+            Call Plugin.Window.CloseEx(LoginHwnd)
+            Delay 2000
+            // 重启脚本
+            RestartScript
+        End If
+        t = t - 1
+    Wend
+End Sub
+// 登录结束绑定窗口
+Sub bindNBAWindow
+    // 修改窗口标题为默认值
+    NBAHwnds = Split(Plugin.Window.SearchEx(0, &quot;NBA2K Online&quot;, 0), &quot;|&quot;)
+    If UBound(NBAHwnds) &gt;= 0 Then 
+        i=0
+        For UBound(NBAHwnds)
+            dm_ret = dm.SetWindowText(NBAHwnds(i),&quot;NBA2K Onlie 篮球在线&quot;)
+            i=i+1
+        Next
+    End If
+    NBAHwnds = Split(Plugin.Window.SearchEx(0, &quot;窗口-&quot;, 0), &quot;|&quot;)
+    If UBound(NBAHwnds) &gt;= 0 Then 
+        i=0
+        For UBound(NBAHwnds)
+            dm_ret = dm.SetWindowText(NBAHwnds(i),&quot;NBA2K Onlie 篮球在线&quot;)
+            i=i+1
+        Next
+    End If
+    Do While true
+        Delay 3000
+        NBA2KHwnd = dm.FindWindowEx(0,&quot;NBA2KONLINE_EXCLUSIVE_WND_CLASS_NAME&quot;,&quot;&quot;) 
+        dm_ret = dm.SetWindowState(NBA2KHwnd,1) 
+        // 获取窗体宽高
+        MyArray = Split(Plugin.Window.GetClientRect(NBA2KHwnd), &quot;|&quot;)
+        X1 = Clng(MyArray(0)): Y1 = Clng(MyArray(1))   
+        X2 = Clng(MyArray(2)) : Y2 = Clng(MyArray(3))
+        If X2 = -1 OR Y2 = -1 Then 
+            If msgMiaoCode &lt;&gt; &quot;&quot; Then 
+                text = &quot;未找到游戏窗口，请确认游戏是否启动【&quot; + pcCode +&quot;】&quot;
+                Set objXML=CreateObject(&quot;Microsoft.XMLHTTP&quot;)
+                objXML.Open &quot;Get&quot;, &quot;http://miaotixing.com/trigger?id=&quot; + msgMiaoCode + &quot;&amp;text=&quot; + text, False
+                objXML.send
+                Delay 3000
+            End If
+            StopThread loginTheadID //停止倒计时线程
+            TracePrint &quot;未找到游戏窗口，请确认游戏是否启动【&quot; + pcCode +&quot;】&quot;
+            EndScript
+        End If
+        If X2 &lt;&gt; 1024 OR Y2 &lt;&gt; 768 Then 
+            If msgMiaoCode &lt;&gt; &quot;&quot; Then 
+                text = &quot;请将游戏分辨率设置为1024*768、屏幕缩放设置为100%后再次运行【&quot; + pcCode +&quot;】&quot;
+                Set objXML=CreateObject(&quot;Microsoft.XMLHTTP&quot;)
+                objXML.Open &quot;Get&quot;, &quot;http://miaotixing.com/trigger?id=&quot; + msgMiaoCode + &quot;&amp;text=&quot; + text, False
+                objXML.send
+                Delay 3000
+            End If
+            StopThread loginTheadID //停止倒计时线程
+            TracePrint &quot;请将游戏分辨率设置为1024*768、屏幕缩放设置为100%后再次运行【&quot; + pcCode +&quot;】&quot;
+            EndScript
+        End If
+        dm_ret = dm.FindPic(0, 0, ScreenW, ScreenH,&quot;play.bmp&quot;,&quot;000000&quot;,0.8,0,intX,intY)
+        If intX &gt; 0 and intY &gt; 0 Then 
+            dm_ret = dm.SetWindowText(NBA2KHwnd, &quot;窗口-1&quot;)
+            dm_ret = dm.BindWindowEx(NBA2KHwnd, displayMode, mouseMode, keypadMode, publicMode, mode)
+            If dm_ret &lt;&gt; 0 Then 
+                StopThread loginTheadID //停止倒计时线程
+                TracePrint &quot;窗口-1绑定成功&quot;
+            Else 
+                TracePrint &quot;窗口-1绑定失败，结束运行&quot;
+                EndScript
+            End If
+            Exit Do
+        End If
+    Loop
+End Sub
+// 自动登录WeGame
+Sub loginWegame
+    // 开启登录线程，10分钟未登录重启脚本
+    loginTheadID = BeginThread(loginThead(600))
+    //获得屏幕分辨率宽高  
+    ScreenW = dm.GetScreenWidth()
+    ScreenH = dm.GetScreenHeight()
+    If autoLogin = 0 Then
+        Delay 10000
+        //最小化
+        KeyDown &quot;Win&quot;, 1
+        KeyPress &quot;M&quot;, 1
+        KeyUp &quot;Win&quot;, 1
+        Delay 2000
+        // 关闭WeGame
+        WEGAME_APP = Plugin.Window.Find(&quot;TWINCONTROL&quot;, 0)
+        Call Plugin.Window.CloseEx(WEGAME_APP)
+        Delay 8000
+        //运行NBA2K Online
+        RunApp gamePath
+        Delay 10000
+        // 是否打开WeGame
+        Do While true
+            Delay 2000	
+            dm_ret = dm.FindPic(0, 0, ScreenW, ScreenH,&quot;login_wegame.bmp&quot;,&quot;000000&quot;,0.7,0,intX,intY)
+            If intX &gt; 0 and intY &gt; 0 Then 
+                Delay 2000
+                WeGameHwnd = dm.FindWindowEx(0,&quot;TWINCONTROL&quot;,&quot;WeGame&quot;)
+                Delay 2000
+                dm.MoveWindow WeGameHwnd,0,0
+                Delay 3000
+                dm_ret = dm.BindWindowEx(WeGameHwnd, &quot;normal&quot;, &quot;normal&quot;, &quot;normal&quot;, &quot;&quot;, 0)
+                If dm_ret &lt;&gt; 0 Then 
+                    TracePrint &quot;登陆界面绑定成功&quot;
+                End If 
+                TracePrint &quot;检测到WeGame界面&quot;
+                Delay 3000
+                Exit Do
+            End If
+        Loop
+        If loginSelect = 0 Then //账号密码登录
+            //运行Wegame上号器
+            RunApp loginPath
+            Delay 10000
+            LoginHwnd = dm.GetForegroundWindow()
+            Delay 1000
+            Call Plugin.Sys.SetCLB(accountNumber)
+            dm.KeyDown 17
+            dm.KeyPress 86
+            dm.KeyUp 17
+            Delay 1000
+            Call Plugin.Sys.SetCLB(&quot;----&quot; + accounPwd)
+            dm.KeyDown 17
+            dm.KeyPress 86
+            dm.KeyUp 17
+            Delay 1500
+            dm_ret = dm.SetWindowState(WeGameHwnd,1) 
+            // 移动WeGame界面、找到输入框
+            Do While true
+                Delay 3000
+                dm_ret = dm.FindPic(0, 0, ScreenW, ScreenH,&quot;login.bmp&quot;,&quot;000000&quot;,0.7,0,intX,intY)
+                If intX &gt; 0 and intY &gt; 0 Then 
+                    dm.MoveTo intX + 15, intY - 130
+                    Delay 500
+                    dm.LeftClick
+                    Delay 1000
+                    Exit Do
+                End If
+            Loop
+            // 自动输入账号密码并登录
+            dm.KeyDown 17
+            dm.KeyPress 65
+            dm.KeyUp 17
+            Delay 500
+            dm.KeyPress 8
+            Delay 500
+            dm.KeyPress 114
+            Delay 10000
+            // 验证码验证
+            Do While true
+                Delay 10000
+                For i = 0 To 3
+                    If i = 3 Then
+                        TracePrint &quot;验证满3次&quot;
+                        // 验证码3次之后还不成功重新输入账号登录
+                        If msgMiaoCode &lt;&gt; &quot;&quot; Then 
+                            text = &quot;登录验证码验证失败，请关注后续是否登录成功【&quot; + pcCode +&quot;】&quot;
+                            Set objXML=CreateObject(&quot;Microsoft.XMLHTTP&quot;)
+                            objXML.Open &quot;Get&quot;, &quot;http://miaotixing.com/trigger?id=&quot; + msgMiaoCode + &quot;&amp;text=&quot; + text, False
+                            objXML.send
+                            Delay 3000
+                        End If
+                        dm.MoveTo 589, 102
+                        Delay 500
+                        dm.LeftClick
+                        Delay 5000
+                        dm_ret = dm.FindPic(0, 0, ScreenW, ScreenH,&quot;login.bmp&quot;,&quot;000000&quot;,0.7,0,intX,intY)
+                        If intX &gt; 0 and intY &gt; 0 Then 
+                            dm.MoveTo intX + 15, intY - 130
+                            Delay 500
+                            dm.LeftClick
+                            Delay 1000
+                            dm.KeyDown 17
+                            dm.KeyPress 65
+                            dm.KeyUp 17
+                            Delay 500
+                            dm.KeyPress 8
+                            Delay 500
+                            dm.KeyPress 114
+                            Delay 3000
+                            Exit For
+                        End If
+                    End If
+                    If dm.GetColor(560, 161) = &quot;007aff&quot; Then
+                        TracePrint &quot;验证码开始验证&quot;
+                        dm.MoveTo 426, 238
+                        Delay 500
+                        dm.LeftClick
+                        Delay 1000
+                        dm.MoveTo 543, 160
+                        Delay 500
+                        dm.LeftClick
+                        Delay 5000	                    
+                    ElseIf dm.GetColor(561, 161) &lt;&gt; &quot;007aff&quot; Then
+                        dm_ret = dm.UnBindWindow()
+                        // 关闭上号器
+                        dm_ret = dm.SetWindowState(LoginHwnd,13) 
+                        Delay 3000
+                        Exit Do
+                    End If 
+                Next
+            Loop
+        ElseIf loginSelect = 1 Then // 快捷登录
+            Do While true
+                dm_ret = dm.FindPic(0, 0, ScreenW, ScreenH,&quot;login_wegame.bmp&quot;,&quot;000000&quot;,0.7,0,intX,intY)
+                If intX &gt; 0 and intY &gt; 0 Then 
+                    dm.MoveTo intX + 50, intY + 250
+                    Delay 500
+                    dm.LeftClick
+                    Delay 1000
+                    Exit Do
+                End If
+            Loop
+        End If
+        // 是否打开登录界面
+        Do While true
+            Delay 2000 
+            dm_ret = dm.FindPic(0, 0, ScreenW, ScreenH,&quot;start.bmp&quot;,&quot;000000&quot;,0.7,0,intX,intY)
+            If intX &gt; 0 and intY &gt; 0 Then 
+                WeGameHwnd = dm.FindWindowEx(0, &quot;TWINCONTROL&quot;, &quot;WeGame&quot;)
+                Delay 3000
+                dm.MoveWindow WeGameHwnd,0,0
+                Delay 3000
+                dm_ret = dm.SetWindowSize(WeGameHwnd,1200,600)
+                Delay 3000
+                Exit Do
+            End If
+            dm_ret = dm.FindPic(0, 0, ScreenW, ScreenH,&quot;weihu.bmp&quot;,&quot;000000&quot;,0.8,0,intX,intY)
+            If intX &gt; 0 and intY &gt; 0 Then 
+                If msgMiaoCode &lt;&gt; &quot;&quot; Then 
+                    text = &quot;无法登录，服务器处于维护状态【&quot; + pcCode +&quot;】&quot;
+                    Set objXML=CreateObject(&quot;Microsoft.XMLHTTP&quot;)
+                    objXML.Open &quot;Get&quot;, &quot;http://miaotixing.com/trigger?id=&quot; + msgMiaoCode + &quot;&amp;text=&quot; + text, False
+                    objXML.send
+                    Delay 3000
+                End If
+                StopThread loginTheadID //停止倒计时线程
+                TracePrint &quot;无法登录，服务器处于维护状态【&quot; + pcCode +&quot;】&quot;
+                EndScript
+            End If
+            dm_ret = dm.FindPic(0, 0, ScreenW, ScreenH,&quot;update.bmp&quot;,&quot;000000&quot;,0.8,0,intX,intY)
+            If intX &gt; 0 and intY &gt; 0 Then 
+                dm.MoveTo intX + 100, intY + 20
+                Delay 1000
+                dm.LeftClick
+                Delay 1000
+                If msgMiaoCode &lt;&gt; &quot;&quot; Then 
+                    text = &quot;游戏正在更新，稍后将自动登录【&quot; + pcCode +&quot;】&quot;
+                    Set objXML=CreateObject(&quot;Microsoft.XMLHTTP&quot;)
+                    objXML.Open &quot;Get&quot;, &quot;http://miaotixing.com/trigger?id=&quot; + msgMiaoCode + &quot;&amp;text=&quot; + text, False
+                    objXML.send
+                    Delay 3000
+                End If
+                TracePrint &quot;游戏正在更新，稍后将自动登录【&quot; + pcCode +&quot;】&quot;
+            End If
+        Loop
+        // 打开选择其他大区
+        Do While true
+            Delay 2000  
+            dm_ret = dm.FindPic(0, 0, ScreenW, ScreenH,&quot;start.bmp&quot;,&quot;000000&quot;,0.7,0,intX,intY)
+            If intX &gt; 0 and intY &gt; 0 Then 
+                dm.MoveTo intX - 240,intY + 20
+                Delay 1000
+                dm.LeftClick
+                Delay 1000
+                Exit Do
+            End If
+        Loop
+        MoveR 0, -50
+        Delay 1000
+        dm.LeftClick
+        Delay 2000
+        // 移动选择大区界面
+        AreaHwnd = dm.GetForegroundWindow()
+        Delay 2000
+        dm.MoveWindow AreaHwnd,0,0
+        Delay 2000
+        // 选择大区并确认
+        dm.MoveTo areaX,areaY
+        Delay 1000
+        dm.LeftClick
+        Delay 2000
+        dm.MoveTo 96,503
+        Delay 1000
+        dm.LeftClick
+        Delay 2000
+        // 启动游戏
+        Delay 3000
+        Do While true
+            Delay 500 
+            dm_ret = dm.FindPic(0, 0, ScreenW, ScreenH,&quot;start.bmp&quot;,&quot;000000&quot;,0.7,0,intX,intY)
+            If intX &gt; 0 and intY &gt; 0 Then 
+                dm.MoveTo intX + 100, intY + 20
+                Delay 1000
+                dm.LeftClick
+                Delay 1000
+                Exit Do
+            End If
+        Loop
+        Delay 60000
+        // 关闭WeGame
+        WEGAME_APP = Plugin.Window.Find(&quot;TWINCONTROL&quot;, 0)
+        Call Plugin.Window.CloseEx(WEGAME_APP) 
+        Delay 8000
+        Call bindNBAWindow()
+    Else 
+        Call bindNBAWindow()
+    End If
+End Sub
+Sub startGameMsg(nowPlayNum, playCount)
+    // 游戏开始提醒
+    If playCountMiaoCode &lt;&gt; &quot;&quot; Then
+        Set objXML = CreateObject(&quot;Microsoft.XMLHTTP&quot;)
+        url = &quot;http://miaotixing.com/trigger?id=&quot; + playCountMiaoCode + &quot;&amp;templ=pP8Wvn9,1,&quot; + playTypeArray(playType) + &quot;,&quot; + pcCode + &quot;,&quot;+ CStr(nowPlayNum) +&quot;,&quot; + CStr(playCount - nowPlayNum) + &quot;,&quot; + Plugin.Sys.GetDateTime()
+        objXML.Open &quot;Get&quot;, url, False
+        objXML.send
+        Delay 1000
+    End If
+End Sub
+// 判断匹配成功并准备
+Sub waitPlay
+    //判断游戏是否匹配成功
+    Do While true
+        Delay 3000
+        If dm.GetColor(dialogX,dialogY) = dialogCR Then // 出现提示框
+            Exit do
+        End If
+    Loop
+    //匹配成功
+    Delay 3000
+    //关闭匹配成功的提示
+    dm.MoveTo closeDialogX, closeDialogY
+    Delay 1000
+    dm.LeftDoubleClick 
+    If playType = 6 Then 
+        Delay 2000
+        dm2.MoveTo closeDialogX, closeDialogY
+        Delay 1000
+        dm2.LeftDoubleClick 
+    End If
+    Delay 15000
+    // 关键时刻关闭随机球员提示
+    If playType = 10 Then 
+        Delay 8000
+        dm.MoveTo 490, 560
+        Delay 1000
+        dm.LeftDoubleClick 
+        Delay 1500
+    End If
+    //点击准备按钮
+    dm.MoveTo 473, 660
+    Delay 1000
+    dm.LeftDoubleClick 
+    If playType = 6 Then 
+        Delay 2000
+        dm2.MoveTo 473, 660
+        Delay 1000
+        dm2.LeftDoubleClick 
+    End If
+    Delay 20000
+End Sub
+//判断是否进入游戏
+Sub isPlayNow
+    Do While true
+        Delay 3000
+        If dm.GetColor(1003,21) = &quot;ffffff&quot; Then // 进入游戏退出循环
+            Exit do
+        End If
+        dm_ret = dm.FindPic(0, gameY1, gameX2, gameY2,&quot;play.bmp&quot;,&quot;000000&quot;,0.8,0,intX,intY)
+        If intX &gt; 0 And intY &gt; 0 Then 
+            If msgMiaoCode &lt;&gt; &quot;&quot; Then 
+                text = &quot;游戏出现异常，已重新执行脚本【&quot; + pcCode +&quot;】&quot;
+                Set objXML=CreateObject(&quot;Microsoft.XMLHTTP&quot;)
+                objXML.Open &quot;Get&quot;, &quot;http://miaotixing.com/trigger?id=&quot; + msgMiaoCode + &quot;&amp;text=&quot; + text, False
+                objXML.send
+                Delay 3000
+            End If
+            StopThread playTheadID //停止倒计时线程
+            Call nbaService()
+        End If
+        dm_ret = dm.FindPic(0, gameY1, gameX2, gameY2,&quot;exception.bmp&quot;,&quot;000000&quot;,0.8,0,intX,intY) //  发现异常点击确定直至返回大厅
+        If intX &gt; 0 and intY &gt; 0 Then 
+            //点击确定
+            dm.MoveTo closeExceptionX, closeExceptionY
+            Delay 600
+            dm.LeftDoubleClick
+            Delay 600
+        End If
+        If dm.GetColor(dialogX,dialogY) = dialogCR Then // 出现提示框，有人强退或网络错误
+            dm.MoveTo closeDialogX, closeDialogY
+            dm.LeftDoubleClick
+            Delay 600 
+        End If
+    Loop
+End Sub
+// 人物操作、判断是否可以结算、或者游戏异常
+Sub movePlayerOrGameOver
+    Do While true 
+        If playType &lt;&gt; 2 AND playType &lt;&gt; 5 Then 
+            If playType = 6 Then
+                dm2.KeyDown 37
+                Delay 3000
+                dm2.KeyUp 37
+                Delay 500
+                dm2.KeyPress 65
+                Delay 800
+                dm2.KeyDown 68
+                Delay 500
+                dm2.KeyUp 68
+                Delay 600
+                dm2.KeyPress 83
+                Delay 800
+                dm2.KeyDown 68
+                Delay 600
+                dm2.KeyUp 68
+                Delay 500
+            End If
+            dm.KeyDown 37
+            Delay 3000
+            dm.KeyUp 37
+            Delay 500
+            dm.KeyPress 65
+            Delay 800
+            dm.KeyDown 68
+            Delay 500
+            dm.KeyUp 68
+            Delay 600
+            dm.KeyPress 83
+            Delay 800
+            dm.KeyDown 68
+            Delay 600
+            dm.KeyUp 68
+            Delay 500
+            Delay 8000
+        End If
+        // 需要投降
+        If isPlayFail = 0 Then 
+            // 按键操作发起投降
+            Delay 2000
+            dm.KeyPress 27
+            Delay 1000
+            dm.MoveTo 433, 471
+            dm.LeftClick
+            Delay 1000
+            //确认投降
+            dm.MoveTo 432, 464
+            dm.LeftClick
+            Delay 5000
+            // 图片识别是否投降
+            //            If playType = 2 Then 
+            //                dm_ret = dm.FindPic(0, gameY1, gameX2, gameY2,&quot;3rdup.bmp&quot;,&quot;000000&quot;,0.6,0,intX,intY)
+            //                If intX &gt; 0 And intY &gt; 0 Then 
+            //                    //发起投降
+            //                    dm.KeyPress 27
+            //                    Delay 1000
+            //                    dm.MoveTo 433, 471
+            //                    dm.LeftClick
+            //                    Delay 1000
+            //                    //确认投降
+            //                    dm.MoveTo 432, 464
+            //                    dm.LeftClick
+            //                    Delay 5000
+            //                End If
+            //            ElseIf playType &lt;&gt; 2 Then 
+            //                dm_ret = dm.FindPic(gameX1, gameY1, gameX2, gameY2,&quot;3rd.bmp&quot;,&quot;000000&quot;,0.6,0,intX,intY)
+            //                If intX &gt; 0 And intY &gt; 0 Then 
+            //                    //发起投降
+            //                    dm.KeyPress 27
+            //                    Delay 1000
+            //                    dm.MoveTo 433, 471
+            //                    dm.LeftClick
+            //                    Delay 1000
+            //                    //确认投降
+            //                    dm.MoveTo 432, 464
+            //                    dm.LeftClick
+            //                    Delay 5000
+            //                End If
+            //            End If
+        End If
+        If playType = 5 Then // 巅峰季后赛
+            text = &quot;&quot;
+            // 比赛晋级
+            dm_ret = dm.FindPic(gameX1, gameY1, gameX2, gameY2,&quot;success.bmp&quot;,&quot;000000&quot;,0.8,0,intX,intY)
+            If intX &gt; 0 And intY &gt; 0 Then 
+                promoteCount = promoteCount + 1
+                text = &quot;巅峰季后赛晋级第&quot;+ CStr(promoteCount) + &quot;轮【&quot; + pcCode +&quot;】&quot;
+                dm.MoveTo confirmX, confirmY
+                Delay 600
+                dm.LeftDoubleClick
+                Delay 600
+                If msgMiaoCode &lt;&gt; &quot;&quot; And promoteCount = maxPromoteCount Then
+                    nowPlayNum = 0
+                    playCount = 2
+                    text = &quot;巅峰季后赛晋级第&quot; + Cstr(maxPromoteCount) +&quot;轮【&quot; + pcCode + &quot;】，2局后自动结束脚本&quot;
+                    Set objXML=CreateObject(&quot;Microsoft.XMLHTTP&quot;)
+                    objXML.Open &quot;Get&quot;, &quot;http://miaotixing.com/trigger?id=&quot; + msgMiaoCode + &quot;&amp;text=&quot; + text, False
+                    objXML.send
+                    Delay 3000
+                End If
+            End If
+            // 比赛淘汰
+            dm_ret = dm.FindPic(gameX1, gameY1, gameX2, gameY2,&quot;fail.bmp&quot;,&quot;000000&quot;,0.8,0,intX,intY)
+            If intX &gt; 0 And intY &gt; 0 Then 
+                promoteCount = 0
+                nowPlayNum = 0
+                text = &quot;巅峰季后赛被淘汰【&quot; + pcCode +&quot;】&quot;
+                dm.MoveTo confirmX, confirmY
+                Delay 600
+                dm.LeftDoubleClick
+                Delay 600
+            End If
+            // 夺得冠军
+            dm_ret = dm.FindPic(gameX1, gameY1, gameX2, gameY2,&quot;success_top.bmp&quot;,&quot;000000&quot;,0.8,0,intX,intY)
+            If intX &gt; 0 And intY &gt; 0 Then 
+                promoteCount = 0
+                nowPlayNum = playCount
+                text = &quot;巅峰季后赛夺冠军【&quot; + pcCode +&quot;】&quot;
+                dm.MoveTo confirmX, confirmY
+                Delay 600
+                dm.LeftDoubleClick
+                Delay 600
+            End If
+            If msgMiaoCode &lt;&gt; &quot;&quot; And text &lt;&gt; &quot;&quot; Then 
+                Set objXML=CreateObject(&quot;Microsoft.XMLHTTP&quot;)
+                objXML.Open &quot;Get&quot;, &quot;http://miaotixing.com/trigger?id=&quot; + msgMiaoCode + &quot;&amp;text=&quot; + text, False
+                objXML.send
+                Delay 3000
+            End If
+        End If
+        //判断游戏是否结束
+        If dm.GetColor(128,544) = &quot;bb281e&quot; Then
+            // 点击返回或随机选择
+            dm.MoveTo 468, 677
+            dm.LeftDoubleClick
+            Delay 5000
+            // 判断是否可以随机选择奖品
+            If dm.GetColor(468,677) &lt;&gt; &quot;292a2c&quot; Then
+                // 点击返回或随机选择
+                dm.MoveTo 468, 677
+                dm.LeftDoubleClick
+                Delay 5000
+            End If
+        End If
+        // 判断是否可以点击返回大厅
+        dm_ret = dm.FindPic(gameX1, gameY1, gameX2, gameY2,&quot;zonglan.bmp&quot;,&quot;000000&quot;,0.8,0,intX,intY)
+        If intX&gt;0 and intY&gt;0 Then  
+            // 点击返回大厅
+            dm.MoveTo 468, 677
+            dm.LeftDoubleClick
+            Delay 5000
+        End If 
+        // 判断游戏是否强制结束
+        dm_ret = dm.FindPic(gameX1, gameY1, gameX2, gameY2,&quot;exception.bmp&quot;,&quot;000000&quot;,0.8,0,intX,intY)
+        If intX &gt; 0 and intY &gt; 0 Then 
+            //点击确定
+            dm.MoveTo closeExceptionX, closeExceptionY
+            Delay 600
+            dm.LeftDoubleClick
+            Delay 5000  
+        End If
+        // 出现提示框
+        If dm.GetColor(dialogX,dialogY) = dialogCR Then
+            Delay 1500
+            dm.MoveTo closeDialogX, closeDialogY
+            dm.LeftDoubleClick 
+        End If
+        //误点处理
+        dm_ret = dm.FindPic(gameX2/2, gameY1, gameX2, gameY2/2, &quot;close.bmp&quot;, &quot;000000&quot;, 0.8, 0, intX, intY)
+        If intX &gt; 0 And intY &gt; 0 Then 
+            dm.MoveTo 819, 72
+            Delay 1000
+            dm.LeftClick
+            Delay 5000 
+        End If
+        dm_ret = dm.FindPic(gameX1, gameY2/2, gameX2, gameY2,&quot;close2.bmp&quot;,&quot;000000&quot;,0.8,0,intX,intY)
+        If intX &gt; 0 And intY &gt; 0 Then 
+            dm.MoveTo intX + 5, intY + 5
+            Delay 1000
+            dm.LeftClick
+            Delay 5000 
+        End If
+        // 是否在大厅
+        dm_ret = dm.FindPic(gameX1, gameY1, gameX2, gameY2, &quot;play.bmp&quot;, &quot;000000&quot;, 0.8, 0, intX, intY)
+        If intX &gt; 0 And intY &gt; 0 Then 
+            Exit do
+        End If
+    Loop
+    //已经返回大厅
+    dm.MoveTo resetX, resetY
+    Delay 1000
+End Sub
+Sub nbaService
+    Call cancelIndex()
+    //已经进入游戏大厅，执行挂机脚本
+    Delay 5000
+    dm.MoveTo resetX, resetY
+    Delay 1000
+    If playType = 0 Then
+        // 当前场数
+        nowPlayNum = 1
+        Do While true
+            //点击play
+            Do While true
+                dm.MoveTo 514, 470
+                Delay 500
+                dm.LeftClick
+                Delay 2000
+                If dm.GetColor(128, 368) = &quot;25162e&quot; Then 
+                    Exit Do
+                End If
+            Loop
+            Do While true
+                If dm.GetColor(128,368) = &quot;25162e&quot; Then
+                    //点击人机对战
+                    dm.MoveTo 85, 210
+                    Delay 500
+                    dm.LeftClick
+                    Delay 1000
+                    //点击街头赛
+                    dm.MoveTo 198, 173
+                    Delay 500
+                    dm.LeftClick
+                    Delay 1000
+                    //进入比赛
+                    dm.MoveTo 910, 361
+                    Delay 1000
+                    dm.LeftClick 
+                    Delay 3000
+                Else
+                    Exit Do
+                End If                
+            Loop
+            //判断是否进入游戏
+            playTheadID = BeginThread(playThead(1200)) //开启倒计时线程
+            Call isPlayNow
+            Call startGameMsg(nowPlayNum, playCount)       
+            Call movePlayerOrGameOver
+            StopThread playTheadID //停止倒计时线程
+            If nowPlayNum&gt;=playCount Then
+                //当循环条件成立的时候，离开循环体
+                Call getPrize()
+                Exit do  
+            End if  
+            nowPlayNum=nowPlayNum+1  
+        Loop
+    ElseIf playType = 4 Then
+        // 当前场数
+        nowPlayNum = 1
+        Do While true
+            //点击play
+            Do While true
+                dm.MoveTo 514, 470
+                Delay 500
+                dm.LeftClick
+                Delay 2000
+                If dm.GetColor(128, 368) = &quot;25162e&quot; Then 
+                    Exit Do
+                End If
+            Loop
+            Do While true
+                If dm.GetColor(128,368) = &quot;25162e&quot; Then
+                    //点击经典对战
+                    dm.MoveTo 85, 172
+                    Delay 500
+                    dm.LeftClick
+                    Delay 1000
+                    //点击街头赛
+                    dm.MoveTo 198, 173
+                    Delay 500
+                    dm.LeftClick
+                    Delay 1000
+                    //单人匹配
+                    dm.MoveTo 769, 361
+                    Delay 1000
+                    dm.LeftClick
+                    Delay 3000
+                    // 出现提示框，玩家被禁赛
+                    If dm.GetColor(dialogX,dialogY) = dialogCR Then 
+                        dm.MoveTo closeDialogX, closeDialogY
+                        dm.LeftDoubleClick
+                        Delay 600 
+                    End If
+                Else
+                    Exit Do
+                End If                
+            Loop
+            //判断游戏是否匹配成功
+            Call waitPlay
+            //判断是否进入游戏
+            playTheadID = BeginThread(playThead(1200)) //开启倒计时线程
+            Call isPlayNow
+            Call startGameMsg(nowPlayNum, playCount)       
+            Call movePlayerOrGameOver
+            StopThread playTheadID //停止倒计时线程
+            If nowPlayNum&gt;=playCount Then
+                //当循环条件成立的时候，离开循环体
+                Call getPrize()
+                Exit do  
+            End if  
+            nowPlayNum=nowPlayNum+1  
+        Loop
+    ElseIf playType = 5 Then
+        // 当前场数
+        nowPlayNum = 1
+        // 不投降
+        isPlayFail = 1
+        Do While true
+            //点击play
+            Do While true
+                dm.MoveTo 514, 470
+                Delay 500
+                dm.LeftClick
+                Delay 2000
+                If dm.GetColor(128, 368) = &quot;25162e&quot; Then 
+                    Exit Do
+                End If
+            Loop
+            Do While true
+                If dm.GetColor(128, 368) = &quot;25162e&quot; Then 
+                    // 点击人机对战
+                    dm.MoveTo 85, 210
+                    Delay 500
+                    dm.LeftClick
+                    Delay 1000
+                    // 点击人机巅峰赛
+                    dm.MoveTo 203, 209
+                    Delay 500
+                    dm.LeftClick
+                    Delay 1000
+                    // 进入比赛
+                    dm.MoveTo 910, 361
+                    Delay 1000
+                    dm.LeftClick 
+                    Delay 3000
+                    // 失败点击重开赛季
+                    dm.MoveTo 904, 645
+                    Delay 1000
+                    dm.LeftClick 
+                    Delay 2000
+                    // 首次点击选择球队
+                    dm.MoveTo 904, 645
+                    Delay 1000
+                    dm.LeftClick 
+                    Delay 2000
+                    // 打开选择球队的页面，选择热火队
+                    dm.MoveTo 767, 537
+                    Delay 1000
+                    dm.LeftClick 
+                    Delay 2000
+                    dm.MoveTo 379, 627
+                    Delay 1000
+                    dm.LeftClick 
+                    Delay 2000
+                    // 选择教练模式进入比赛
+                    dm.MoveTo 904, 645
+                    Delay 1000
+                    dm.LeftClick 
+                    Delay 5000
+                    // 如果找到了关闭标志点击关闭
+                    dm_ret = dm.FindPic(gameX2/2, gameY1, gameX2, gameY2/2, &quot;close.bmp&quot;, &quot;000000&quot;, 0.8, 0, intX, intY)
+                    If intX &gt; 0 And intY &gt; 0 Then 
+                        dm.MoveTo intX + 15, intY + 15
+                        Delay 1000
+                        dm.LeftClick
+                        Delay 1000
+                    End If
+                Else
+                    Exit Do
+                End If                
+            Loop
+            //判断是否进入游戏
+            playTheadID = BeginThread(playThead(1500)) //开启倒计时线程
+            Call isPlayNow
+            Call startGameMsg(nowPlayNum, playCount)       
+            Call movePlayerOrGameOver
+            StopThread playTheadID //停止倒计时线程
+            If nowPlayNum&gt;=playCount Then
+                //当循环条件成立的时候，离开循环体
+                Call getPrize()
+                Exit do  
+            End if  
+            nowPlayNum=nowPlayNum+1  
+        Loop
+    ElseIf playType = 6 Then
+        // 绑定第2个窗口
+        NBA2KHwnd = dm2.FindWindowEx(0,&quot;NBA2KONLINE_EXCLUSIVE_WND_CLASS_NAME&quot;,&quot;NBA2K Onlie 篮球在线&quot;) 
+        dm_ret = dm2.SetWindowState(NBA2KHwnd, 1)
+        Delay 2000
+        dm_ret = dm2.SetWindowText(NBA2KHwnd, &quot;窗口-2&quot;)
+        Delay 2000
+        dm_ret = dm2.BindWindowEx(NBA2KHwnd, displayMode, mouseMode, keypadMode, publicMode, mode)
+        If dm_ret &lt;&gt; 0 Then
+            TracePrint &quot;窗口-2绑定成功	&quot;
+        Else 
+            TracePrint &quot;窗口-2绑定失败，结束运行&quot;
+            EndScript
+        End If
+        // 当前场数
+        nowPlayNum = 1
+        Do While true
+            Do While true
+                Delay 1000
+                dm_ret = dm.FindPic(gameX1, gameY1, gameX2, gameY2, &quot;play.bmp&quot;, &quot;000000&quot;, 0.8, 0, intX, intY)
+                dm_ret2 = dm2.FindPic(gameX1, gameY1, gameX2, gameY2,&quot;play.bmp&quot;,&quot;000000&quot;,0.8,0,intX2,intY2)
+                If intX &gt; 0 And intY &gt; 0 And intX2 &gt; 0 And intY2 &gt; 0 Then 
+                    Exit Do
+                ElseIf intX = - 1  OR intY = - 1  Then
+                    dm.MoveTo 468, 677
+                    dm.LeftDoubleClick
+                    Delay 5000
+                ElseIf intX2 = - 1  OR intY2 = - 1  Then
+                    dm2.MoveTo 468, 677
+                    dm2.LeftDoubleClick
+                    Delay 5000
+                End If
+                Delay 1000
+            Loop
+            //开始匹配
+            dm.MoveTo 910, 361
+            Delay 1000
+            dm.LeftDoubleClick 
+            Delay 3000
+            //开始匹配
+            dm2.MoveTo 910, 361
+            Delay 1000
+            dm2.LeftDoubleClick 
+            Delay 3000
+            //判断游戏是否匹配成功
+            Call waitPlay
+            //判断是否进入游戏
+            playTheadID = BeginThread(playThead(1200)) //开启倒计时线程
+            Call isPlayNow
+            Call startGameMsg(nowPlayNum, playCount)       
+            Call movePlayerOrGameOver
+            StopThread playTheadID //停止倒计时线程
+            If nowPlayNum&gt;=playCount Then
+                //当循环条件成立的时候，离开循环体
+                Call getPrize()
+                Exit do  
+            End if  
+            nowPlayNum=nowPlayNum+1  
+        Loop   
+    Else
+        // 当前场数
+        nowPlayNum = 1
+        Do While true
+            //点击play
+            Do While true
+                dm.MoveTo 514, 470
+                Delay 500
+                dm.LeftClick
+                Delay 2000
+                If dm.GetColor(128, 368) = &quot;25162e&quot; Then 
+                    Exit Do
+                End If
+            Loop
+            Do While true
+                If dm.GetColor(128, 368) = &quot;25162e&quot; Then 
+                    //点击经典对战
+                    dm.MoveTo 85, 172
+                    Delay 500
+                    dm.LeftClick
+                    Delay 1000
+                    If playType = 1 Then  //点击NBA对抗赛
+                        dm.MoveTo 198, 241
+                        Delay 500
+                        dm.LeftClick
+                        Delay 1000
+                    ElseIf playType = 2 Then  //点击教练模式
+                        dm.MoveTo 198, 316
+                        Delay 500
+                        dm.LeftClick
+                        Delay 1000
+                    ElseIf playType = 3 Then  //点击王朝模式
+                        dm.MoveTo 198, 208
+                        Delay 500
+                        dm.LeftClick
+                        Delay 1000
+                    ElseIf playType = 10 Then  //点击关键时刻
+                        dm.MoveTo 198, 352
+                        Delay 500
+                        dm.LeftClick
+                        Delay 1000
+                    Else
+                        dm.MoveTo 85, 250  //点击排位赛
+                        Delay 500
+                        dm.LeftClick
+                        Delay 1000
+                        If playType = 7 Then  
+                            dm.MoveTo 198, 208  // 选择王朝模式
+                            Delay 500
+                            dm.LeftClick
+                            Delay 1000
+                        ElseIf playType = 8 Then  
+                            dm.MoveTo 198, 241  // 选择NBA对抗赛模式
+                            Delay 500
+                            dm.LeftClick
+                            Delay 1000
+                        ElseIf playType = 9 Then  
+                            dm.MoveTo 198, 173 //点击街头赛
+                            Delay 500
+                            dm.LeftClick
+                            Delay 1000
+                        End If
+                    End If
+                    If playType &lt;&gt; 9 Then 
+                        // 全场开始匹配
+                        dm.MoveTo 910, 361
+                        Delay 1000
+                        dm.LeftClick
+                        Delay 3000
+                    Else 
+                        // 街头赛单人匹配
+                        dm.MoveTo 769, 361
+                        Delay 500
+                        dm.LeftClick
+                        Delay 1000
+                    End If
+                    // 出现提示框，玩家被禁赛
+                    If dm.GetColor(dialogX,dialogY) = dialogCR Then 
+                        dm.MoveTo closeDialogX, closeDialogY
+                        dm.LeftDoubleClick
+                        Delay 600 
+                    End If
+                Else
+                    Exit Do
+                End If                
+            Loop
+            //判断游戏是否匹配成功
+            Call waitPlay
+            //判断是否进入游戏
+            playTheadID = BeginThread(playThead(1800)) //开启倒计时线程
+            Call isPlayNow
+            Call startGameMsg(nowPlayNum, playCount)       
+            Call movePlayerOrGameOver
+            StopThread playTheadID //停止倒计时线程
+            If nowPlayNum&gt;=playCount Then
+                //当循环条件成立的时候，离开循环体
+                Call getPrize()
+                Exit do  
+            End if
+            nowPlayNum=nowPlayNum+1  
+        Loop
+    End If
+End Sub
+// 表演赛业务
+Sub getShowService()
+    // 领取上次派遣奖励
+    For j = 0 To 5
+        dm.MoveTo showLevelXArray(j), showLevelYArray(j)
+        Delay 500
+        dm.LeftDoubleClick
+        Delay 1500
+        // 点击派遣出发或领取奖励
+        dm.MoveTo 812, 674
+        Delay 1000
+        dm.LeftDown 
+        Delay 300
+        dm.LeftUp 
+        Delay 2000
+        // 如果打开派遣界面关闭
+        dm_ret = dm.FindPic(gameX1, gameY1, gameX2, gameY2,&quot;chufa_grey.bmp&quot;,&quot;000000&quot;,0.8,0,intX,intY)
+        If intX &gt; 0 And intY &gt; 0 Then 
+            dm.KeyPress 27
+            Delay 1000
+        End If
+        Delay 1500
+    Next
+    // 派遣
+    For i=0 To 4   
+        For j = 0 To 5
+            dm.MoveTo showLevelXArray(j), showLevelYArray(j)
+            Delay 500
+            dm.LeftDoubleClick
+            Delay 1500
+            dm_ret = dm.FindPic(0, 400, 465, 706, levelImgArray(i), &quot;000000&quot;, 1, 0, intX, intY)
+            If intX &gt; 0 And intY &gt; 0 Then
+                dm_ret = dm.FindPic(gameX1, gameY1, gameX2, gameY2,&quot;chufa_hover.bmp&quot;,&quot;000000&quot;,0.8,0,intX,intY)
+                If intX &gt; 0 And intY &gt; 0 Then 
+                    // 点击派遣出发
+                    dm.MoveTo 812, 674
+                    Delay 1000
+                    dm.LeftDoubleClick
+                    Delay 1000
+                    // 判断是否打开派遣界面
+                    Do While true
+                        Delay 3000
+                        dm_ret = dm.FindPic(gameX1, gameY1, gameX2, gameY2,&quot;chufa_grey.bmp&quot;,&quot;000000&quot;,0.8,0,intX,intY)
+                        If intX &gt; 0 And intY &gt; 0 Then 
+                            Exit do  
+                        End If
+                    Loop
+                    // 选择球员
+                    dm.MoveTo 819, 207
+                    Delay 1000
+                    dm.LeftClick
+                    Delay 2500
+                    // 判断派遣结果
+                    dm_ret = dm.FindPic(gameX1, gameY1, gameX2, gameY2, &quot;chufa_grey.bmp&quot;, &quot;000000&quot;, 0.8, 0, intX, intY)
+                    If intX &gt; 0 And intY &gt; 0 Then // 无法派遣
+                        dm.KeyPress 27
+                        Delay 2500
+                    End If
+                    dm_ret = dm.FindPic(gameX1, gameY1, gameX2, gameY2,&quot;chufa_hover2.bmp&quot;,&quot;000000&quot;,0.8,0,intX,intY)
+                    If intX &gt; 0 And intY &gt; 0 Then // 点击派遣出发
+                        dm.MoveTo intX + 45, intY + 20
+                        Delay 1000
+                        dm.LeftDoubleClick
+                        Delay 3000
+                        If dm.GetColor(dialogX,dialogY) = dialogCR Then // 出现提示框，派遣达到上限
+                            dm.MoveTo closeDialogX, closeDialogY
+                            Delay 1000
+                            dm.LeftDoubleClick
+                            Delay 1500
+                            goShowCount = 3
+                            Exit For
+                        Else // 派遣成功，次数+1，到3退出循环
+                            goShowCount = goShowCount + 1
+                            If goShowCount = 3 Then 
+                                Exit For
+                            End If
+                            TracePrint &quot;派遣成功，当前派遣次数&quot;&amp;goShowCount
+                        End If
+                    End If
+                End If
+            End If
+        Next
+        If goShowCount = 3 Then 
+            Exit For
+        End If
+    Next
+End Sub
+// 执行表演赛
+Sub startPlay()
+    If isGoPlay = 0 Then 
+        TracePrint &quot;开始表演赛&quot;
+        Call cancelIndex()
+        If dm.GetColor(128, 368) = &quot;25162e&quot; Then 
+            dm.MoveTo 514, 470
+            Delay 500
+            dm.LeftClick
+            Delay 2000
+        End If
+        // 复位
+        dm.MoveTo resetX, resetY
+        Delay 1000
+        // 点击表演赛
+        dm.MoveTo 714, 473
+        Delay 1000
+        dm.LeftClick
+        Delay 1000
+        // 判断是否打开表演赛界面
+        Do While true
+            Delay 3000
+            dm_ret = dm.FindPic(gameX1, gameY1, gameX2, gameY2,&quot;bys.bmp&quot;,&quot;000000&quot;,0.8,0,intX,intY)
+            If intX &gt; 0 And intY &gt; 0 Then 
+                Exit do
+            End If
+        Loop
+        TracePrint &quot;打开表演赛界面&quot;
+        Call getShowService()
+        If goShowCount &lt; 3 Then 
+            dm.MoveTo 926, 136
+            Delay 1000
+            dm.LeftClick
+            Delay 2500
+            If dm.GetColor(dialogX,dialogY) = dialogCR Then // 出现提示框，不使用球员精华刷新
+                dm.MoveTo cancelDialogX, cancelDialogY
+                Delay 1000
+                dm.LeftDoubleClick
+                Delay 1000
+            Else 
+                Call getShowService()
+            End If
+            // 返回大厅
+            Call cancelIndex()
+        Else 
+            // 返回大厅
+            Call cancelIndex()
+        End If
+    End If
+End Sub
+// 奖励领取
+Sub getPrize()
+    If isGetPrize = 0 Then 
+        Call cancelIndex()
+        // 领取活跃度奖励
+        Do While true
+            Delay 3000
+            dm_ret = dm.FindPic(gameX1, gameY1, gameX2, gameY2,&quot;hyd_hover.bmp&quot;,&quot;000000&quot;,0.6,0,intX,intY)
+            If intX &gt; 0 And intY &gt; 0 Then 
+                dm.MoveTo intX + 25, intY + 20
+                Delay 1000
+                dm.LeftClick
+                Delay 5000
+                Do While true
+                    Delay 3000
+                    dm_ret = dm.FindPic(gameX1, gameY1, gameX2, gameY2,&quot;get.bmp&quot;,&quot;000000&quot;,0.5,0,intX,intY)
+                    If intX &gt; 0 And intY &gt; 0 Then 
+                        dm.MoveTo intX + 10, intY + 5
+                        Delay 1000
+                        dm.LeftClick
+                        Delay 3000
+                        dm.MoveTo confirmX, confirmY
+                        Delay 600
+                        dm.LeftDoubleClick
+                        Delay 3000
+                        dm.MoveTo resetX, resetY
+                        Delay 600
+                    Else 
+                        // 如果找到了关闭标志点击关闭
+                        dm_ret = dm.FindPic(gameX2/2, gameY1, gameX2, gameY2/2, &quot;close.bmp&quot;, &quot;000000&quot;, 0.8, 0, intX, intY)
+                        If intX &gt; 0 And intY &gt; 0 Then 
+                            dm.MoveTo intX + 15, intY + 15
+                            Delay 1000
+                            dm.LeftClick
+                            Delay 1000
+                        End If
+                        Delay 3000
+                        dm.MoveTo resetX, resetY
+                        Delay 600
+                        Exit do
+                    End If
+                Loop
+                TracePrint &quot;活跃度奖励领取完毕&quot;
+                Exit do
+            Else 
+                TracePrint &quot;暂无活跃度可领取&quot;
+                Exit do
+            End If
+        Loop          
+        Call cancelIndex()
+        // 领取礼包奖励
+        Do While true
+            Delay 3000
+            dm_ret = dm.FindPic(gameX1, gameY1, gameX2, gameY2,&quot;libao.bmp&quot;,&quot;000000&quot;,0.7,0,intX,intY)
+            If intX &gt; 0 And intY &gt; 0 Then 
+                dm.MoveTo intX + 15, intY + 15
+                Delay 1000
+                dm.LeftClick
+                Delay 5000
+                Do While true
+                    Delay 3000
+                    // 如果找到了关闭标志点击全部领取
+                    dm_ret = dm.FindPic(gameX2/2, gameY1, gameX2, gameY2/2, &quot;close.bmp&quot;, &quot;000000&quot;, 0.8, 0, intX, intY)
+                    If intX &gt; 0 And intY &gt; 0 Then 
+                        dm.MoveTo 524, 627
+                        Delay 1000
+                        dm.LeftClick
+                        Delay 5000
+                    End If
+                    // 领取成功的提示
+                    If dm.GetColor(dialogX,dialogY) = dialogCR Then
+                        dm.MoveTo closeDialogX, closeDialogY
+                        Delay 1000
+                        dm.LeftDoubleClick 
+                        Delay 3500
+                    End If
+                    // 确认返回了大厅
+                    dm_ret = dm.FindPic(gameX1, gameY1, gameX2, gameY2,&quot;play.bmp&quot;,&quot;000000&quot;,0.7,0,intX,intY)
+                    If intX &gt; 0 And intY &gt; 0 Then 
+                        Delay 5000
+                        dm.MoveTo resetX, resetY
+                        Delay 600
+                        Exit do
+                    End If
+                Loop
+                TracePrint &quot;左上角礼包领取完毕&quot;
+                Exit do
+            Else 
+                TracePrint &quot;左上角礼包无奖励可领取&quot;
+                Exit do
+            End If
+        Loop          
+        Call cancelIndex()
+        // 领取VIP奖励
+        Do While true
+            Delay 3000
+            dm_ret = dm.FindPic(gameX1, gameY1, gameX2, gameY2,&quot;vip.bmp&quot;,&quot;000000&quot;,0.8,0,intX,intY)
+            If intX &gt; 0 And intY &gt; 0 Then 
+                dm.MoveTo intX + 15, intY + 15
+                Delay 1000
+                dm.LeftClick
+                Delay 5000
+                Do While true
+                    Delay 3000
+                    dm_ret = dm.FindPic(gameX1, gameY1, gameX2, gameY2,&quot;get2.bmp&quot;,&quot;000000&quot;,0.7,0,intX,intY)
+                    If intX &gt; 0 And intY &gt; 0 Then 
+                        dm.MoveTo intX + 10, intY + 5
+                        Delay 1000
+                        dm.LeftClick
+                        Delay 3000
+                    Else 
+                        // 如果找到了关闭标志点击关闭
+                        dm_ret = dm.FindPic(gameX2/2, gameY1, gameX2, gameY2/2, &quot;close.bmp&quot;, &quot;000000&quot;, 0.8, 0, intX, intY)
+                        If intX &gt; 0 And intY &gt; 0 Then 
+                            dm.MoveTo intX + 15, intY + 15
+                            Delay 1000
+                            dm.LeftClick
+                            Delay 1000
+                        End If
+                        Delay 3000
+                        dm.MoveTo resetX, resetY
+                        Delay 600
+                        Exit do
+                    End If
+                Loop
+                TracePrint &quot;VIP奖励领取完毕&quot;
+                Exit do
+            Else 
+                TracePrint &quot;非VIP用户&quot;
+                Exit do
+            End If
+        Loop          
+        Call cancelIndex()
+        // 任务、活动奖励领取
+        For i=1 To 2
+            Delay 3000
+            dm_ret = dm.FindPic(gameX1, gameY1, gameX2, gameY2, &quot;jiang.bmp&quot;, &quot;000000&quot;, 0.7, 0, intX, intY)
+            dm_ret2 = dm.FindPic(gameX1, gameY1, gameX2, gameY2,&quot;xin.bmp&quot;,&quot;000000&quot;, 0.7, 0, intX2, intY2)
+            If intX &gt; 0 And intY &gt; 0 OR intX2 &gt; 0 And intY2 &gt; 0 Then 
+                If intX &gt; 0 And intY &gt; 0 Then 
+                	endX = 960
+                    endY = 703
+                    dm.MoveTo intX, intY
+                    Delay 1000
+                ElseIf intX2 &gt; 0 And intY2 &gt; 0 Then
+                    endX = 962
+                    endY = 681
+                    dm.MoveTo intX2, intY2
+                    Delay 1000
+                End If
+                dm.LeftClick
+                Delay 5000
+                // 开始领奖
+                Do While true
+                    Delay 3000
+                    dm_ret = dm.FindPic(gameX1, gameY1, gameX2, gameY2,&quot;get2.bmp&quot;,&quot;000000&quot;,0.5,0,intX,intY)
+                    If intX &gt; 0 And intY &gt; 0 Then 
+                        dm.MoveTo intX + 10, intY + 5
+                        Delay 1000
+                        dm.LeftClick
+                        Delay 2000
+                    Else 
+                        dm.WheelDown
+                        Delay 1000
+                    End If
+                    If dm.GetColor(endX,endY) = &quot;666666&quot; Then //下拉框到底了
+                        Exit Do
+                    End If
+                Loop
+                // 到底了再执行最后一次领取奖励的操作
+                Do While true
+                    Delay 3000
+                    dm_ret = dm.FindPic(gameX1, gameY1, gameX2, gameY2,&quot;get2.bmp&quot;,&quot;000000&quot;,0.5,0,intX,intY)
+                    If intX &gt; 0 And intY &gt; 0 Then 
+                        dm.MoveTo intX + 10, intY + 5
+                        Delay 1000
+                        dm.LeftClick
+                        Delay 3000
+                    Else 
+                        // 如果找到了关闭标志点击关闭
+                        dm_ret = dm.FindPic(gameX2/2, gameY1, gameX2, gameY2/2, &quot;close.bmp&quot;, &quot;000000&quot;, 0.8, 0, intX, intY)
+                        If intX &gt; 0 And intY &gt; 0 Then 
+                            dm.MoveTo intX + 15, intY + 15
+                            Delay 1000
+                            dm.LeftClick
+                            Delay 1000
+                        End If
+                        Delay 3000
+                        dm.MoveTo resetX, resetY
+                        Delay 600
+                        Exit do
+                    End If
+                Loop
+                Call cancelIndex()
+                TracePrint &quot;活动或任务奖励领取完毕&quot;
+            Else 
+                TracePrint &quot;暂无活动或任务奖励可以领取&quot;
+            End If        
+        Next 
+        Call cancelIndex()
+    Else 
+        Call cancelIndex()
+    End If
+End Sub
+// 推送脚本状态方法
+Sub endGameMsg()
+    If isExitOS=0 Then   //挂机完之后需要退出游戏
+        //打开退出游戏
+        dm.KeyDown 18
+        dm.KeyPress 115
+        dm.KeyUp 18
+        Delay 1000
+        //点击确认退出
+        dm.MoveTo 883, 655
+        Delay 1000
+        dm.LeftDoubleClick
+        Delay 8000
+        // 发送电脑状态提醒
+        If msgMiaoCode &lt;&gt; &quot;&quot; Then 
+            text = &quot;执行完毕，电脑已关机【&quot; + pcCode +&quot;】&quot;
+            Set objXML=CreateObject(&quot;Microsoft.XMLHTTP&quot;)
+            objXML.Open &quot;Get&quot;, &quot;http://miaotixing.com/trigger?id=&quot; + msgMiaoCode + &quot;&amp;text=&quot; + text, False
+            objXML.send
+            Delay 3000
+        End If
+        //模式:0=(注销),1=(关机),2=(重启)
+        Call Plugin.Sys.ExitOS(1) 
+    Else //不需要退出游戏，结束代码
+        If msgMiaoCode &lt;&gt; &quot;&quot; Then 
+            text = &quot;执行完毕，您的电脑仍在运行中【&quot; + pcCode +&quot;】&quot;
+            Set objXML=CreateObject(&quot;Microsoft.XMLHTTP&quot;)
+            objXML.Open &quot;Get&quot;, &quot;http://miaotixing.com/trigger?id=&quot; + msgMiaoCode + &quot;&amp;text=&quot; + text, False
+            objXML.send
+            Delay 3000
+        End If
+        EndScript
+    End If
+    dm_ret = dm.UnBindWindow()
+    dm_ret2 = dm2.UnBindWindow() 
+End Sub
+Call paramsInit()
+Call loginWegame()
+Call nbaService()
+Call getPrize()
+Call startPlay()
+Call endGameMsg()
+LogStop
+
+</code></pre>
+<h2 id="多线程">多线程</h2>
+<pre><code class="language-vb">LogStart &quot;D:\用户目录\Desktop\2K1.log&quot;
+// 最小化
+KeyDown &quot;Win&quot;, 1
+KeyPress &quot;M&quot;, 1
+KeyUp &quot;Win&quot;, 1
+Delay 2000
+// 挂机类型
+//UserVar playType = DropList{&quot;街头赛（人机）&quot;:0 |&quot;NBA对抗赛&quot;:1|&quot;教练模式&quot;:2|&quot;王朝模式&quot;:3|&quot;街头赛（匹配）&quot;:4|&quot;巅峰季后赛（人机）&quot;:5|&quot;好友2v2&quot;:6|&quot;王朝模式（排位）&quot;:7|&quot;NBA对抗赛（排位）&quot;:8}=0 &quot;选择模式&quot;
+//Dim playTypeArray
+//playTypeArray = Array(&quot;街头赛（人机）&quot;, &quot;NBA对抗赛&quot;, &quot;教练模式&quot;, &quot;王朝模式&quot;, &quot;街头赛（匹配）&quot;, &quot;巅峰季后赛（人机）&quot;, &quot;好友2v2&quot;,&quot;王朝模式（排位）&quot;,&quot;NBA对抗赛（排位）&quot;)
+//UserVar playCount=6 &quot;自定义场数&quot;  // 自定义场数
+//UserVar isPlayFail=DropList{&quot;是&quot;:0|&quot;否&quot;:1}=1 &quot;是否投降&quot;  // 是否投降
+//UserVar isGetPrize=DropList{&quot;是&quot;:0|&quot;否&quot;:1}=1 &quot;是否领奖&quot;  // 是否领取奖励
+//UserVar isGoPlay=DropList{&quot;是&quot;:0|&quot;否&quot;:1}=1 &quot;是否派遣&quot;  // 是否派遣表演赛
+//UserVar isExitOS=DropList{&quot;是&quot;:0|&quot;否&quot;:1}=1 &quot;是否关机&quot;  // 是否关闭电脑
+// 登录方式
+//UserVar loginSelect=DropList{&quot;账号密码&quot;:0|&quot;快捷登录&quot;:1}=0 &quot;登录方式&quot;
+// 挂机类型  写死了.................................
+Global playType
+playType = 0
+Global playCount
+playCount = 10
+Global isPlayFail
+isPlayFail = 1
+Global isGetPrize
+isGetPrize = 0
+Global isGoPlay
+isGoPlay = 0
+Global isExitOS
+isExitOS = 1
+Global loginSelect
+loginSelect = 0
+Global imgCode // 验证码验证方式：0 图灵验证  1 手动验证
+imgCode = 1
+Global maxPromoteCount // 季后赛晋级几轮结束比赛
+maxPromoteCount = 3
+// 最大窗口数量
+Global maxTheadNum
+maxTheadNum = 3
+Global nowTheadNum
+nowTheadNum = 1
+// 喵提醒参数：进度喵码和电脑状态喵码
+Global msgMiaoCode
+msgMiaoCode = &quot;tT48aX9&quot;
+// 游戏路径
+Global gamePath
+gamePath = &quot;D:\Game\NBA2KOL\NBA2K Online\NBA2KOnline.exe&quot;
+// 上号器软件路径
+Global loginPath
+loginPath = &quot;C:\WeGameLogin\WeGameLogin.exe&quot;
+// 电脑编码
+Global pcCode
+pcCode = &quot;B01&quot;
+// ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+// 登录账号
+Global accountNumber
+accountNumber = &quot;&quot;
+// 登录密码
+Global accountPwd
+accountPwd = &quot;&quot;
+// 游戏窗口大小
+Global gameX1
+gameX1 = 0
+Global gameY1
+gameY1 = 0
+Global gameX2
+gameX2 = 1024
+Global gameY2
+gameY2 = 768
+// 复位位置
+Global resetX
+resetX = 505
+Global resetY
+resetY = 97
+// 黑色提示框
+Global dialogX
+dialogX = 512
+Global dialogY
+dialogY = 292
+Global dialogCR
+dialogCR = &quot;181b1e&quot;
+// 点击确认关闭提示
+Global closeDialogX
+closeDialogX = 510
+Global closeDialogY
+closeDialogY = 458
+// 点击取消关闭提示
+Global cancelDialogX
+cancelDialogX = 594
+Global cancelDialogY
+cancelDialogY = 459
+// 安小西弹框点击确认
+Global confirmX
+confirmX = 548
+Global confirmY
+confirmY = 488
+// 关闭投降、网络异常、提前退出的提示坐标
+Global closeExceptionX
+closeExceptionX = 477
+Global closeExceptionY
+closeExceptionY = 457
+//↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+// 绑定模式
+Global displayMode
+displayMode = &quot;gdi&quot;
+Global mouseMode
+mouseMode = &quot;dx.mouse.position.lock.api|dx.mouse.api|dx.mouse.cursor&quot;
+Global keypadMode
+keypadMode = &quot;dx.keypad.api&quot;
+Global publicMode
+publicMode = &quot;dx.public.active.api|dx.public.hide.dll|dx.public.graphic.protect|dx.public.down.cpu&quot;
+Global mode
+mode = 101
+// 创建大漠对象
+import &quot;C:\obj.vbs&quot;
+Set dm = New dmsoft
+ret = dm.Reg(&quot;XXXXXX&quot;, &quot;XXXXXX&quot;)
+dm.setPath &quot;.\pic&quot;
+dm.SetAero 0
+TracePrint dm.Ver()
+// 这里做主线程的事情
+nowWindow = nowTheadNum
+Call paramsInit(nowTheadNum)
+Call loginWegame(nowTheadNum)
+Call nbaService(nowWindow)
+Call getPrize(nowWindow)
+Call startPlay(nowWindow)
+Sub 线程函数()
+    LogStart &quot;D:\用户目录\Desktop\2K1.log&quot;
+    // 创建大漠对象
+    import &quot;C:\obj.vbs&quot;
+    Set dm = New dmsoft
+    ret = dm.Reg(&quot;XXXXXX&quot;, &quot;XXXXXX&quot;)
+    dm.setPath &quot;.\pic&quot;
+    Call Plugin.Msg.Tips(&quot;绑定下一个窗口&quot;) 
+    Delay 10000
+    // 这里做线程里需要做的事情
+    nowWindow = nowTheadNum
+    Call paramsInit(nowTheadNum)
+    Call loginWegame(nowTheadNum)
+    Call nbaService(nowWindow)
+    Call getPrize(nowWindow)
+    Call startPlay(nowWindow)
+    Call endGameMsg(nowWindow)
+End Sub
+// 初始化
+Sub paramsInit(nowWindow)
+    If Hour(time) &gt;= 0 and Hour(time) &lt; 8 Then 
+        autoLogin = 0
+        loginSelect = 0
+        playType = 0
+        playCount = 10
+        isPlayFail = 1
+        isGetPrize = 0
+        isGoPlay = 0
+        isExitOS = 1
+    End If
+    TracePrint &quot;参数初始化完成&quot;
+End Sub
+// 登录结束绑定窗口
+Sub bindNBAWindow(nowWindow)
+    TracePrint &quot;开始绑定窗口&quot;
+    TracePrint  nowWindow
+    Do While true
+        Delay 3000
+        NBA2KHwnd =Plugin.Window.Foreground()
+        Call Plugin.Window.Active(NBA2KHwnd)
+        TracePrint NBA2KHwnd
+        TracePrint &quot;窗口-&quot;+ CStr(nowWindow)
+        // 获取窗体宽高
+        MyArray = Split(Plugin.Window.GetClientRect(NBA2KHwnd), &quot;|&quot;)
+        W1 = Clng(MyArray(0)): H1 = Clng(MyArray(1))   
+        W2 = Clng(MyArray(2)) : H2 = Clng(MyArray(3))
+        If W2 = -1 OR H2 = -1 Then 
+            If msgMiaoCode &lt;&gt; &quot;&quot; Then 
+                text = &quot;未找到游戏窗口，请确认游戏是否启动【&quot; + pcCode +&quot;】&quot;
+                Set objXML=CreateObject(&quot;Microsoft.XMLHTTP&quot;)
+                objXML.Open &quot;Get&quot;, &quot;http://miaotixing.com/trigger?id=&quot; + msgMiaoCode + &quot;&amp;text=&quot; + text, False
+                objXML.send
+                Delay 3000
+            End If
+            TracePrint &quot;未找到游戏窗口，请确认游戏是否启动【&quot; + pcCode +&quot;】&quot;
+            EndScript
+        End If
+        If W2 &lt;&gt; 1024 OR H2 &lt;&gt; 768 Then 
+            If msgMiaoCode &lt;&gt; &quot;&quot; Then 
+                text = &quot;请将游戏分辨率设置为1024*768、屏幕缩放设置为100%后再次运行【&quot; + pcCode +&quot;】&quot;
+                Set objXML=CreateObject(&quot;Microsoft.XMLHTTP&quot;)
+                objXML.Open &quot;Get&quot;, &quot;http://miaotixing.com/trigger?id=&quot; + msgMiaoCode + &quot;&amp;text=&quot; + text, False
+                objXML.send
+                Delay 3000
+            End If
+            TracePrint &quot;请将游戏分辨率设置为1024*768、屏幕缩放设置为100%后再次运行【&quot; + pcCode +&quot;】&quot;
+            EndScript
+        End If
+        dm_ret = dm.FindPic(0, 0, ScreenW, ScreenH,&quot;play.bmp&quot;,&quot;000000&quot;,0.8,0,intX,intY)
+        If intX &gt; 0 and intY &gt; 0 Then 
+            Call Plugin.Window.SetText(NBA2KHwnd,&quot;窗口-&quot;+ CStr(nowWindow))
+            dm_ret = dm.BindWindowEx(NBA2KHwnd, displayMode, mouseMode, keypadMode, publicMode, mode)
+            If dm_ret &lt;&gt; 0 Then 
+                Call Plugin.Window.Move(NBA2KHwnd, nowWindow * 10, nowWindow * 10)
+                TracePrint &quot;窗口-&quot; + CStr(nowWindow) + &quot;绑定成功&quot;
+                If nowTheadNum &lt; maxTheadNum Then 
+                    nowTheadNum = nowTheadNum + 1
+                    BeginThread 线程函数()
+                Else 
+                    If msgMiaoCode &lt;&gt; &quot;&quot; Then 
+                        text = &quot;达到目标窗口数，不再绑定【&quot; + pcCode +&quot;】&quot;
+                        Set objXML=CreateObject(&quot;Microsoft.XMLHTTP&quot;)
+                        objXML.Open &quot;Get&quot;, &quot;http://miaotixing.com/trigger?id=&quot; + msgMiaoCode + &quot;&amp;text=&quot; + text, False
+                        objXML.send
+                        Delay 3000
+                    End If
+                    TracePrint &quot;达到目标窗口数，不再绑定&quot;
+                End If
+            Else 
+                TracePrint &quot;窗口-&quot;+ CStr(nowWindow) + &quot;绑定失败，结束运行&quot;
+                EndScript
+            End If
+            Exit Do
+        End If
+    Loop
+End Sub
+// 自动登录WeGame
+Sub loginWegame(nowWindow)
+    // 登录大区
+    areaX = 0
+    areaY = 246
+    Dim areaXList
+    areaXList = Array(434,598,274,111)
+    //获得屏幕分辨率宽高  
+    ScreenW = Plugin.GetSysInfo.GetScreenResolutionX()
+    ScreenH = Plugin.GetSysInfo.GetScreenResolutionY()
+    Delay 10000
+    // 关闭WeGame
+    WEGAME_APP = Plugin.Window.Find(&quot;TWINCONTROL&quot;, 0)
+    Call Plugin.Window.CloseEx(WEGAME_APP)
+    Delay 8000
+    //运行NBA2K Online
+    RunApp gamePath
+    Delay 10000
+    // 是否打开WeGame
+    Do While true
+        Delay 2000	
+        dm_ret = dm.FindPic(0, 0, ScreenW, ScreenH,&quot;login_wegame.bmp&quot;,&quot;000000&quot;,0.7,0,intX,intY)
+        If intX &gt; 0 and intY &gt; 0 Then 
+            Delay 2000
+            WeGameHwnd = Plugin.Window.Find(&quot;TWINCONTROL&quot;, &quot;WeGame&quot;)
+            Delay 2000
+            Call Plugin.Window.Move(WeGameHwnd, 0, 0)
+            Delay 3000
+            dm_ret = dm.BindWindowEx(WeGameHwnd, &quot;normal&quot;, &quot;normal&quot;, &quot;normal&quot;, &quot;&quot;, 0)
+            If dm_ret &lt;&gt; 0 Then 
+                TracePrint &quot;登陆界面绑定成功&quot;
+            End If 
+            TracePrint &quot;检测到WeGame界面&quot;
+            Exit Do
+        End If
+    Loop
+    If loginSelect = 0 Then //账号密码登录
+        TracePrint &quot;读取文本内容：&quot; + Cstr(nowWindow)
+        // 读取文本
+        accountText = Plugin.File.ReadFileEx(&quot;C:\2K1\ZH_&quot; + Cstr(nowWindow) + &quot;.txt&quot;)
+        dim MyArray
+        MyArray = Split(accountText, &quot;|&quot;)   
+        If UBound(MyArray)&gt;=0 Then   
+            accountInfo = Split(Cstr(MyArray(0)), &quot;/&quot;)   
+            If UBound(accountInfo)&gt;=0 Then   
+                accountNumber = Cstr(accountInfo(0))
+                accountPwd = Cstr(accountInfo(1))
+                TracePrint &quot;登录账号&quot; + Cstr(accountInfo(0))
+                TracePrint &quot;登录大区编码：&quot; + accountInfo(2)
+                areaX = areaXList(accountInfo(2) - 1)
+            End If
+        End If
+        //运行Wegame上号器
+        RunApp loginPath
+        Delay 10000
+        LoginHwnd = Plugin.Window.Foreground()
+        Delay 1000
+        Call Plugin.Sys.SetCLB(accountNumber + &quot;----&quot; + accountPwd)
+        dm.KeyDown 17
+        dm.KeyPress 86
+        dm.KeyUp 17
+        Delay 1500
+        // 移动WeGame界面、找到输入框
+        Do While true
+            dm_ret = dm.FindPic(0, 0, ScreenW, ScreenH,&quot;login.bmp&quot;,&quot;000000&quot;,0.7,0,intX,intY)
+            If intX &gt; 0 and intY &gt; 0 Then 
+                dm.MoveTo intX + 15, intY - 130
+                Delay 500
+                dm.LeftClick
+                Delay 1000
+                Exit Do
+            End If
+        Loop
+        // 自动输入账号密码并登录
+        dm.KeyDown 17
+        dm.KeyPress 65
+        dm.KeyUp 17
+        Delay 500
+        dm.KeyPress 8
+        Delay 500
+        dm.KeyPress 114
+        Delay 10000
+        // 验证码验证
+        Do While true
+            Delay 10000
+            For i = 0 To 2
+                If i = 2 Then
+                    TracePrint &quot;验证满3次&quot;
+                    // 验证码3次之后还不成功重新输入账号登录
+                    dm.MoveTo 589, 102
+                    Delay 500
+                    dm.LeftClick
+                    Delay 5000
+                    dm_ret = dm.FindPic(0, 0, ScreenW, ScreenH,&quot;login.bmp&quot;,&quot;000000&quot;,0.7,0,intX,intY)
+                    If intX &gt; 0 and intY &gt; 0 Then 
+                        dm.MoveTo intX + 15, intY - 130
+                        Delay 500
+                        dm.LeftClick
+                        Delay 1000
+                        dm.KeyDown 17
+                        dm.KeyPress 65
+                        dm.KeyUp 17
+                        Delay 500
+                        dm.KeyPress 8
+                        Delay 500
+                        dm.KeyPress 114
+                        Delay 3000
+                        Exit For
+                    End If
+                End If
+                If dm.GetColor(560, 161) = &quot;007aff&quot; Then
+                    TracePrint &quot;验证码开始验证&quot;
+                    If imgCode = 0 Then 
+                        username=&quot;viaoh-&quot;
+                        password=&quot;liuQQ账号&quot;
+                        ID = &quot;42077360&quot;
+                        developer = username
+                        dm_ret = dm.CaptureJpg(282, 152, 566, 375, &quot;C:\2K1\imgcode.jpg&quot;, 80)
+                        img_path = &quot;C:\2K1\imgcode.jpg&quot;
+                        version=&quot;3.1.1&quot;
+                        X=Chr(34)
+                        b64 = Plugin.SMWH.Base64_File(img_path)
+                        Param=&quot;{&quot;&amp;X&amp;&quot;username&quot;&amp;X&amp;&quot;:&quot;&amp;X&amp;username&amp;X&amp;&quot;,&quot;&amp;X&amp;&quot;password&quot;&amp;X&amp;&quot;:&quot;&amp;X&amp;password&amp;X&amp;&quot;,&quot;&amp;X&amp;&quot;ID&quot;&amp;X&amp;&quot;:&quot;&amp;X&amp;ID&amp;X&amp;&quot;,&quot;&amp;X&amp;&quot;b64&quot;&amp;X&amp;&quot;:&quot;&amp;X&amp;b64&amp;X&amp;&quot;,&quot;&amp;X&amp;&quot;version&quot;&amp;X&amp;&quot;:&quot;&amp;X&amp;version&amp;X&amp;&quot;,&quot;&amp;X&amp;&quot;developer&quot;&amp;X&amp;&quot;:&quot;&amp;X&amp;developer&amp;X&amp;&quot;}&quot;
+                        json =  Plugin.SMWH.WinHttp(&quot;http://www.fdyscloud.com.cn/tuling/predict&quot;, 1, param ,&quot;&quot; ,&quot;&quot; ,&quot;&quot;,&quot;Content-Type: application/json; charset=UTF-8&quot;,&quot;&quot;,&quot;&quot;,&quot;&quot;,&quot;&quot;,&quot;&quot;,&quot;&quot;,&quot;UTF-8&quot;)
+                        TracePrint json
+                        result = Plugin.SMWH.GetJSON(json, &quot;data.result&quot;)
+                        TracePrint result
+                        If CInt(Plugin.SMWH.GetJSON(json, &quot;code&quot;)) = 1 Then 
+                            TracePrint &quot;验证码坐标位置识别成功&quot;
+                            X = Plugin.SMWH.GetJSON(json, &quot;data.顺序1.X坐标值&quot;)
+                            TracePrint X
+                            Y = Plugin.SMWH.GetJSON(json, &quot;data.顺序1.Y坐标值&quot;)
+                            TracePrint Y
+                            MsgBox &quot;准备移动到&quot; + Cstr(282 + CInt(X)) + &quot;         &quot; + Cstr(152 + CInt(Y))
+                            //{ &quot;code&quot;: 1, &quot;message&quot;: &quot;&quot;, &quot;data&quot;: { &quot;顺序1&quot;: { &quot;X坐标值&quot;: 67, &quot;Y坐标值&quot;: 199 }, &quot;顺序2&quot;: { &quot;X坐标值&quot;: 256, &quot;Y坐标值&quot;: 199 } } }
+                            dm.MoveTo 282 + CInt(X), 152 + CInt(Y)
+                            Delay 500
+                            dm.LeftClick
+                            Delay 1000
+                            dm.MoveTo 543, 160
+                            Delay 500
+                            dm.LeftClick
+                            Delay 5000
+                        Else 
+                            TracePrint &quot;验证码坐标位置识别失败&quot;
+                            Delay 5000
+                        End If
+                    Else 
+                        dm.MoveTo 426, 238
+                        Delay 500
+                        dm.LeftClick
+                        Delay 1000
+                        dm.MoveTo 543, 160
+                        Delay 500
+                        dm.LeftClick
+                        Delay 5000	
+                    End If                    
+                ElseIf dm.GetColor(561, 161) &lt;&gt; &quot;007aff&quot; Then
+                    dm_ret = dm.UnBindWindow()
+                    // 关闭上号器
+                    Call Plugin.Window.Close(LoginHwnd)
+                    Delay 3000
+                    Exit Do
+                End If 
+            Next
+        Loop
+    ElseIf loginSelect = 1 Then // 快捷登录
+        Do While true
+            dm_ret = dm.FindPic(0, 0, ScreenW, ScreenH,&quot;login_wegame.bmp&quot;,&quot;000000&quot;,0.7,0,intX,intY)
+            If intX &gt; 0 and intY &gt; 0 Then 
+                dm.MoveTo intX + 50, intY + 250
+                Delay 500
+                dm.LeftClick
+                Delay 1000
+                Exit Do
+            End If
+        Loop
+    End If
+    // 是否打开登录界面
+    Do While true
+        Delay 2000 
+        dm_ret = dm.FindPic(0, 0, ScreenW, ScreenH,&quot;start.bmp&quot;,&quot;000000&quot;,0.7,0,intX,intY)
+        If intX &gt; 0 and intY &gt; 0 Then 
+            WeGameHwnd = Plugin.Window.Find(&quot;TWINCONTROL&quot;, &quot;WeGame&quot;)
+            Delay 1000
+            Call Plugin.Window.Move(WeGameHwnd, 0, 0)
+            Delay 1000
+            Call Plugin.Window.Size(WeGameHwnd, 1200, 600)
+            Delay 3000
+            Exit Do
+        End If
+        dm_ret = dm.FindPic(0, 0, ScreenW, ScreenH,&quot;weihu.bmp&quot;,&quot;000000&quot;,0.8,0,intX,intY)
+        If intX &gt; 0 and intY &gt; 0 Then 
+            If msgMiaoCode &lt;&gt; &quot;&quot; Then 
+                text = &quot;无法登录，服务器处于维护状态【&quot; + pcCode +&quot;】&quot;
+                Set objXML=CreateObject(&quot;Microsoft.XMLHTTP&quot;)
+                objXML.Open &quot;Get&quot;, &quot;http://miaotixing.com/trigger?id=&quot; + msgMiaoCode + &quot;&amp;text=&quot; + text, False
+                objXML.send
+                Delay 3000
+            End If
+            TracePrint &quot;无法登录，服务器处于维护状态【&quot; + pcCode +&quot;】&quot;
+            EndScript
+        End If
+        dm_ret = dm.FindPic(0, 0, ScreenW, ScreenH,&quot;update.bmp&quot;,&quot;000000&quot;,0.8,0,intX,intY)
+        If intX &gt; 0 and intY &gt; 0 Then 
+            dm.MoveTo intX + 100, intY + 20
+            Delay 1000
+            dm.LeftClick
+            Delay 1000
+            If msgMiaoCode &lt;&gt; &quot;&quot; Then 
+                text = &quot;游戏正在更新，稍后将自动登录【&quot; + pcCode +&quot;】&quot;
+                Set objXML=CreateObject(&quot;Microsoft.XMLHTTP&quot;)
+                objXML.Open &quot;Get&quot;, &quot;http://miaotixing.com/trigger?id=&quot; + msgMiaoCode + &quot;&amp;text=&quot; + text, False
+                objXML.send
+                Delay 3000
+            End If
+            TracePrint &quot;游戏正在更新，稍后将自动登录【&quot; + pcCode +&quot;】&quot;
+        End If
+    Loop
+    // 打开选择其他大区
+    Do While true
+        Delay 2000  
+        dm_ret = dm.FindPic(0, 0, ScreenW, ScreenH,&quot;start.bmp&quot;,&quot;000000&quot;,0.7,0,intX,intY)
+        If intX &gt; 0 and intY &gt; 0 Then 
+            dm.MoveTo intX - 240,intY + 20
+            Delay 1000
+            dm.LeftClick
+            Delay 1000
+            Exit Do
+        End If
+    Loop
+    MoveR 0, -50
+    Delay 1000
+    dm.LeftClick
+    Delay 2000
+    // 移动选择大区界面
+    AreaHwnd = Plugin.Window.Foreground()
+    Call Plugin.Window.Move(AreaHwnd, 0, 0)
+    Delay 1000
+    // 选择大区并确认
+    dm.MoveTo areaX,areaY
+    Delay 1000
+    dm.LeftClick
+    Delay 2000
+    dm.MoveTo 96,503
+    Delay 1000
+    dm.LeftClick
+    Delay 2000
+    // 启动游戏
+    Delay 3000
+    // 打开选择其他大区
+    Do While true
+        Delay 500 
+        dm_ret = dm.FindPic(0, 0, ScreenW, ScreenH,&quot;start.bmp&quot;,&quot;000000&quot;,0.7,0,intX,intY)
+        If intX &gt; 0 and intY &gt; 0 Then 
+            dm.MoveTo intX + 100, intY + 20
+            Delay 1000
+            dm.LeftClick
+            Delay 1000
+            Exit Do
+        End If
+    Loop
+    Delay 60000
+    // 关闭WeGame
+    WEGAME_APP = Plugin.Window.Find(&quot;TWINCONTROL&quot;, 0)
+    Call Plugin.Window.CloseEx(WEGAME_APP)
+    Delay 8000
+    Call bindNBAWindow(nowWindow)
+End Sub
+// 点击返回按钮返回大厅、判断是否在游戏大厅
+Sub cancelIndex(nowWindow)
+    Do While True
+        Delay 1000
+        dm_ret = dm.FindPic(gameX1, gameY1, gameX2, gameY2,&quot;play.bmp&quot;,&quot;000000&quot;,0.7,0,intX,intY)
+        If intX &gt; 0 And intY &gt; 0 Then 
+            Delay 5000
+            Exit do
+        End If
+        dm_ret = dm.FindPic(gameX1, gameY1, gameX2, gameY2,&quot;zhuye.bmp&quot;,&quot;000000&quot;,0.7,0,intX,intY)
+        If intX &gt; 0 And intY &gt; 0 Then 
+            dm.MoveTo intX + 15, intY + 10
+            Delay 1000
+            dm.LeftClick
+            Delay 3000
+        End If
+        dm_ret = dm.FindPic(gameX2/2, gameY1, gameX2, gameY2/2, &quot;close.bmp&quot;, &quot;000000&quot;, 0.8, 0, intX, intY)
+        If intX &gt; 0 And intY &gt; 0 Then 
+            dm.MoveTo intX + 15, intY + 15
+            Delay 1000
+            dm.LeftClick
+            Delay 3000
+        End If
+    Loop
+End Sub
+// 表演赛业务
+Sub getShowService(nowWindow)
+    // 六个表演赛坐标
+    Dim showLevelXArray
+    showLevelXArray = Array(277,494,713,659,427,175)
+    Dim showLevelYArray
+    showLevelYArray = Array(209,281,298,512,408,375)
+    // 当前已派遣次数
+    goShowCount = 0
+    // 5个等级判断
+    Dim levelImgArray
+    levelImgArray = Array(&quot;level-UR.bmp&quot;, &quot;level-SSR.bmp&quot;, &quot;level-SS.bmp&quot;, &quot;level-S.bmp&quot;, &quot;level-A.bmp&quot;)
+    // 领取上次派遣奖励
+    For j = 0 To 5
+        dm.MoveTo showLevelXArray(j), showLevelYArray(j)
+        Delay 500
+        dm.LeftDoubleClick
+        Delay 1500
+        // 点击派遣出发或领取奖励
+        dm.MoveTo 812, 674
+        Delay 1000
+        dm.LeftDown 
+        Delay 300
+        dm.LeftUp 
+        Delay 2000
+        // 如果打开派遣界面关闭
+        dm_ret = dm.FindPic(gameX1, gameY1, gameX2, gameY2,&quot;chufa_grey.bmp&quot;,&quot;000000&quot;,0.8,0,intX,intY)
+        If intX &gt; 0 And intY &gt; 0 Then 
+            dm.KeyPress 27
+            Delay 1000
+        End If
+        Delay 1500
+    Next
+    // 派遣
+    For i=0 To 4   
+        For j = 0 To 5
+            dm.MoveTo showLevelXArray(j), showLevelYArray(j)
+            Delay 500
+            dm.LeftDoubleClick
+            Delay 1500
+            dm_ret = dm.FindPic(0, 400, 465, 706, levelImgArray(i), &quot;000000&quot;, 1, 0, intX, intY)
+            If intX &gt; 0 And intY &gt; 0 Then
+                dm_ret = dm.FindPic(gameX1, gameY1, gameX2, gameY2,&quot;chufa_hover.bmp&quot;,&quot;000000&quot;,0.8,0,intX,intY)
+                If intX &gt; 0 And intY &gt; 0 Then 
+                    // 点击派遣出发
+                    dm.MoveTo 812, 674
+                    Delay 1000
+                    dm.LeftDoubleClick
+                    Delay 1000
+                    // 判断是否打开派遣界面
+                    Do While true
+                        Delay 3000
+                        dm_ret = dm.FindPic(gameX1, gameY1, gameX2, gameY2,&quot;chufa_grey.bmp&quot;,&quot;000000&quot;,0.8,0,intX,intY)
+                        If intX &gt; 0 And intY &gt; 0 Then 
+                            Exit do  
+                        End If
+                    Loop
+                    // 选择球员
+                    dm.MoveTo 819, 207
+                    Delay 1000
+                    dm.LeftClick
+                    Delay 2500
+                    // 判断派遣结果
+                    dm_ret = dm.FindPic(gameX1, gameY1, gameX2, gameY2, &quot;chufa_grey.bmp&quot;, &quot;000000&quot;, 0.8, 0, intX, intY)
+                    If intX &gt; 0 And intY &gt; 0 Then // 无法派遣
+                        dm.KeyPress 27
+                        Delay 2500
+                    End If
+                    dm_ret = dm.FindPic(gameX1, gameY1, gameX2, gameY2,&quot;chufa_hover2.bmp&quot;,&quot;000000&quot;,0.8,0,intX,intY)
+                    If intX &gt; 0 And intY &gt; 0 Then // 点击派遣出发
+                        dm.MoveTo intX + 45, intY + 20
+                        Delay 1000
+                        dm.LeftDoubleClick
+                        Delay 3000
+                        If dm.GetColor(dialogX,dialogY) = dialogCR Then // 出现提示框，派遣达到上限
+                            dm.MoveTo closeDialogX, closeDialogY
+                            Delay 1000
+                            dm.LeftDoubleClick
+                            Delay 1500
+                            goShowCount = 3
+                            Exit For
+                        Else // 派遣成功，次数+1，到3退出循环
+                            goShowCount = goShowCount + 1
+                            If goShowCount = 3 Then 
+                                Exit For
+                            End If
+                            TracePrint &quot;派遣成功，当前派遣次数&quot;&amp;goShowCount
+                        End If
+                    End If
+                End If
+            End If
+        Next
+        If goShowCount = 3 Then 
+            Exit For
+        End If
+    Next
+End Sub
+// 执行表演赛
+Sub startPlay(nowWindow)
+    If isGoPlay = 0 Then 
+        TracePrint &quot;开始表演赛&quot;
+        Call cancelIndex(nowWindow)
+        If dm.GetColor(128, 368) = &quot;25162e&quot; Then 
+            dm.MoveTo 514, 470
+            Delay 500
+            dm.LeftClick
+            Delay 2000
+        End If
+        // 复位
+        dm.MoveTo resetX, resetY
+        Delay 1000
+        // 点击表演赛
+        dm.MoveTo 714, 473
+        Delay 1000
+        dm.LeftClick
+        Delay 1000
+        // 判断是否打开表演赛界面
+        Do While true
+            Delay 3000
+            dm_ret = dm.FindPic(gameX1, gameY1, gameX2, gameY2,&quot;bys.bmp&quot;,&quot;000000&quot;,0.8,0,intX,intY)
+            If intX &gt; 0 And intY &gt; 0 Then 
+                Exit do
+            End If
+        Loop
+        TracePrint &quot;打开表演赛界面&quot;
+        Call getShowService(nowWindow)
+        If goShowCount &lt; 3 Then 
+            dm.MoveTo 926, 136
+            Delay 1000
+            dm.LeftClick
+            Delay 2500
+            If dm.GetColor(dialogX,dialogY) = dialogCR Then // 出现提示框，不使用球员精华刷新
+                dm.MoveTo cancelDialogX, cancelDialogY
+                Delay 1000
+                dm.LeftDoubleClick
+                Delay 1000
+            Else 
+                Call getShowService(nowWindow)
+            End If
+            // 返回大厅
+            Call cancelIndex(nowWindow)
+        Else 
+            // 返回大厅
+            Call cancelIndex(nowWindow)
+        End If
+    End If
+End Sub
+// 奖励领取
+Sub getPrize(nowWindow)
+    If isGetPrize = 0 Then 
+        Call cancelIndex(nowWindow)
+        // 领取活跃度奖励
+        Do While true
+            Delay 3000
+            dm_ret = dm.FindPic(gameX1, gameY1, gameX2, gameY2,&quot;hyd_hover.bmp&quot;,&quot;000000&quot;,0.6,0,intX,intY)
+            If intX &gt; 0 And intY &gt; 0 Then 
+                dm.MoveTo intX + 25, intY + 20
+                Delay 1000
+                dm.LeftClick
+                Delay 5000
+                Do While true
+                    Delay 3000
+                    dm_ret = dm.FindPic(gameX1, gameY1, gameX2, gameY2,&quot;get.bmp&quot;,&quot;000000&quot;,0.5,0,intX,intY)
+                    If intX &gt; 0 And intY &gt; 0 Then 
+                        dm.MoveTo intX + 10, intY + 5
+                        Delay 1000
+                        dm.LeftClick
+                        Delay 3000
+                        dm.MoveTo confirmX, confirmY
+                        Delay 600
+                        dm.LeftDoubleClick
+                        Delay 3000
+                        dm.MoveTo resetX, resetY
+                        Delay 600
+                    Else 
+                        // 如果找到了关闭标志点击关闭
+                        dm_ret = dm.FindPic(gameX2/2, gameY1, gameX2, gameY2/2, &quot;close.bmp&quot;, &quot;000000&quot;, 0.8, 0, intX, intY)
+                        If intX &gt; 0 And intY &gt; 0 Then 
+                            dm.MoveTo intX + 15, intY + 15
+                            Delay 1000
+                            dm.LeftClick
+                            Delay 1000
+                        End If
+                        Delay 3000
+                        dm.MoveTo resetX, resetY
+                        Delay 600
+                        Exit do
+                    End If
+                Loop
+                TracePrint &quot;活跃度奖励领取完毕&quot;
+                Exit do
+            Else 
+                TracePrint &quot;暂无活跃度可领取&quot;
+                Exit do
+            End If
+        Loop          
+        Call cancelIndex(nowWindow)
+        // 任务、活动奖励领取
+        Do While true
+            Delay 3000
+            endX = 960
+            endY = 701
+            dm_ret = dm.FindPic(gameX1, gameY1, gameX2, gameY2, &quot;jiang.bmp&quot;, &quot;000000&quot;, 0.7, 0, intX, intY)
+            dm_ret2 = dm.FindPic(gameX1, gameY1, gameX2, gameY2,&quot;xin.bmp&quot;,&quot;000000&quot;, 0.7, 0, intX2, intY2)
+            If intX &gt; 0 And intY &gt; 0 OR intX2 &gt; 0 And intY2 &gt; 0 Then 
+                If intX &gt; 0 And intY &gt; 0 Then 
+                    endY = 680
+                    dm.MoveTo intX, intY
+                    Delay 1000
+                ElseIf intX2 &gt; 0 And intY2 &gt; 0 Then
+                    endY = 701
+                    dm.MoveTo intX2, intY2
+                    Delay 1000
+                End If
+                dm.LeftClick
+                Delay 5000
+                // 开始领奖
+                Do While true
+                    Delay 3000
+                    dm_ret = dm.FindPic(gameX1, gameY1, gameX2, gameY2,&quot;get2.bmp&quot;,&quot;000000&quot;,0.5,0,intX,intY)
+                    If intX &gt; 0 And intY &gt; 0 Then 
+                        dm.MoveTo intX + 10, intY + 5
+                        Delay 1000
+                        dm.LeftClick
+                        Delay 2000
+                    Else 
+                        dm.WheelDown
+                        Delay 1000
+                    End If
+                    If dm.GetColor(endX,endY) = &quot;666666&quot; Then //下拉框到底了
+                        Exit Do
+                    End If
+                Loop
+                // 到底了再执行最后一次领取奖励的操作
+                Do While true
+                    Delay 3000
+                    dm_ret = dm.FindPic(gameX1, gameY1, gameX2, gameY2,&quot;get2.bmp&quot;,&quot;000000&quot;,0.5,0,intX,intY)
+                    If intX &gt; 0 And intY &gt; 0 Then 
+                        dm.MoveTo intX + 10, intY + 5
+                        Delay 1000
+                        dm.LeftClick
+                        Delay 3000
+                    Else 
+                        // 如果找到了关闭标志点击关闭
+                        dm_ret = dm.FindPic(gameX2/2, gameY1, gameX2, gameY2/2, &quot;close.bmp&quot;, &quot;000000&quot;, 0.8, 0, intX, intY)
+                        If intX &gt; 0 And intY &gt; 0 Then 
+                            dm.MoveTo intX + 15, intY + 15
+                            Delay 1000
+                            dm.LeftClick
+                            Delay 1000
+                        End If
+                        Delay 3000
+                        dm.MoveTo resetX, resetY
+                        Delay 600
+                        Exit do
+                    End If
+                Loop
+                Call cancelIndex(nowWindow)
+                TracePrint &quot;活动或任务奖励领取完毕&quot;
+            Else 
+                TracePrint &quot;暂无活动或任务奖励可以领取&quot;
+                Exit do
+            End If        
+        Loop 
+        Call cancelIndex(nowWindow)
+        // 领取礼包奖励
+        Do While true
+            Delay 3000
+            dm_ret = dm.FindPic(gameX1, gameY1, gameX2, gameY2,&quot;libao.bmp&quot;,&quot;000000&quot;,0.7,0,intX,intY)
+            If intX &gt; 0 And intY &gt; 0 Then 
+                dm.MoveTo intX + 15, intY + 15
+                Delay 1000
+                dm.LeftClick
+                Delay 5000
+                Do While true
+                    Delay 3000
+                    // 如果找到了关闭标志点击全部领取
+                    dm_ret = dm.FindPic(gameX2/2, gameY1, gameX2, gameY2/2, &quot;close.bmp&quot;, &quot;000000&quot;, 0.8, 0, intX, intY)
+                    If intX &gt; 0 And intY &gt; 0 Then 
+                        dm.MoveTo 524, 627
+                        Delay 1000
+                        dm.LeftClick
+                        Delay 5000
+                    End If
+                    // 领取成功的提示
+                    If dm.GetColor(dialogX,dialogY) = dialogCR Then
+                        dm.MoveTo closeDialogX, closeDialogY
+                        Delay 1000
+                        dm.LeftDoubleClick 
+                        Delay 3500
+                    End If
+                    // 确认返回了大厅
+                    dm_ret = dm.FindPic(gameX1, gameY1, gameX2, gameY2,&quot;play.bmp&quot;,&quot;000000&quot;,0.7,0,intX,intY)
+                    If intX &gt; 0 And intY &gt; 0 Then 
+                        Delay 5000
+                        dm.MoveTo resetX, resetY
+                        Delay 600
+                        Exit do
+                    End If
+                Loop
+                TracePrint &quot;左上角礼包领取完毕&quot;
+                Exit do
+            Else 
+                TracePrint &quot;左上角礼包无奖励可领取&quot;
+                Exit do
+            End If
+        Loop          
+        Call cancelIndex(nowWindow)
+        // 领取VIP奖励
+        Do While true
+            Delay 3000
+            dm_ret = dm.FindPic(gameX1, gameY1, gameX2, gameY2,&quot;vip.bmp&quot;,&quot;000000&quot;,0.8,0,intX,intY)
+            If intX &gt; 0 And intY &gt; 0 Then 
+                dm.MoveTo intX + 15, intY + 15
+                Delay 1000
+                dm.LeftClick
+                Delay 5000
+                Do While true
+                    Delay 3000
+                    dm_ret = dm.FindPic(gameX1, gameY1, gameX2, gameY2,&quot;get2.bmp&quot;,&quot;000000&quot;,0.7,0,intX,intY)
+                    If intX &gt; 0 And intY &gt; 0 Then 
+                        dm.MoveTo intX + 10, intY + 5
+                        Delay 1000
+                        dm.LeftClick
+                        Delay 3000
+                    Else 
+                        // 如果找到了关闭标志点击关闭
+                        dm_ret = dm.FindPic(gameX2/2, gameY1, gameX2, gameY2/2, &quot;close.bmp&quot;, &quot;000000&quot;, 0.8, 0, intX, intY)
+                        If intX &gt; 0 And intY &gt; 0 Then 
+                            dm.MoveTo intX + 15, intY + 15
+                            Delay 1000
+                            dm.LeftClick
+                            Delay 1000
+                        End If
+                        Delay 3000
+                        dm.MoveTo resetX, resetY
+                        Delay 600
+                        Exit do
+                    End If
+                Loop
+                TracePrint &quot;VIP奖励领取完毕&quot;
+                Exit do
+            Else 
+                TracePrint &quot;非VIP用户&quot;
+                Exit do
+            End If
+        Loop          
+        Call cancelIndex(nowWindow)
+    Else 
+        Call cancelIndex(nowWindow)
+    End If
+End Sub
+Sub OnScriptExit() // 这句只会在主线程结束时被调用到
+    If msgMiaoCode &lt;&gt; &quot;&quot; Then 
+        text = &quot;执行完毕，您的电脑仍在运行中【&quot; + pcCode +&quot;】&quot;
+        Set objXML=CreateObject(&quot;Microsoft.XMLHTTP&quot;)
+        objXML.Open &quot;Get&quot;, &quot;http://miaotixing.com/trigger?id=&quot; + msgMiaoCode + &quot;&amp;text=&quot; + text, False
+        objXML.send
+        Delay 3000
+    End If
+    dm_ret = dm.UnBindWindow()
+End Sub
+Sub startGameMsg(nowPlayNum, playCount, nowWindow)
+    // 游戏开始提醒
+    TracePrint &quot;比赛进度通知：窗口&quot; + Cstr(nowWindow) + &quot;正在进行第&quot; + CStr(nowPlayNum) + &quot;场比赛&quot;
+End Sub
+// 推送脚本状态方法
+Sub endGameMsg(nowWindow)
+    If isExitOS=0 Then   //挂机完之后需要退出游戏
+        //打开退出游戏
+        dm.KeyDown 18
+        dm.KeyPress 115
+        dm.KeyUp 18
+        Delay 1000
+        //点击确认退出
+        dm.MoveTo 883, 655
+        Delay 1000
+        dm.LeftDoubleClick
+        Delay 8000
+        // 发送电脑状态提醒
+        If msgMiaoCode &lt;&gt; &quot;&quot; Then 
+            text = &quot;执行完毕，电脑已关机【&quot; + pcCode +&quot;】&quot;
+            Set objXML=CreateObject(&quot;Microsoft.XMLHTTP&quot;)
+            objXML.Open &quot;Get&quot;, &quot;http://miaotixing.com/trigger?id=&quot; + msgMiaoCode + &quot;&amp;text=&quot; + text, False
+            objXML.send
+            Delay 3000
+        End If
+        //模式:0=(注销),1=(关机),2=(重启)
+        Call Plugin.Sys.ExitOS(1) 
+    Else //不需要退出游戏，结束代码
+        If msgMiaoCode &lt;&gt; &quot;&quot; Then 
+            text = &quot;执行完毕，您的电脑仍在运行中【&quot; + pcCode +&quot;】&quot;
+            Set objXML=CreateObject(&quot;Microsoft.XMLHTTP&quot;)
+            objXML.Open &quot;Get&quot;, &quot;http://miaotixing.com/trigger?id=&quot; + msgMiaoCode + &quot;&amp;text=&quot; + text, False
+            objXML.send
+            Delay 3000
+        End If
+        EndScript
+    End If
+End Sub
+// 判断匹配成功并准备
+Sub waitPlay(nowWindow)
+    //判断游戏是否匹配成功
+    Do While true
+        Delay 3000
+        If dm.GetColor(dialogX,dialogY) = dialogCR Then // 出现提示框
+            Exit do
+        End If
+    Loop
+    //匹配成功
+    Delay 3000
+    //关闭匹配成功的提示
+    dm.MoveTo closeDialogX, closeDialogY
+    dm.LeftDoubleClick 
+    Delay 15000
+    // 关键时刻关闭随机球员提示
+    If playType = 10 Then 
+        Delay 8000
+        dm.MoveTo 490, 560
+        Delay 1000
+        dm.LeftDoubleClick 
+        Delay 1500
+    End If
+    //点击准备按钮
+    dm.MoveTo 473, 660 
+    dm.LeftDoubleClick 
+    Delay 20000
+End Sub
+//判断是否进入游戏
+Sub isPlayNow(nowWindow)
+    Do While true
+        Delay 3000
+        If dm.GetColor(1003,21) = &quot;ffffff&quot; Then // 进入游戏退出循环
+            Exit do
+        End If
+        dm_ret = dm.FindPic(gameX1, gameY1, gameX2, gameY2,&quot;play.bmp&quot;,&quot;000000&quot;,0.8,0,intX,intY)
+        If intX &gt; 0 And intY &gt; 0 Then 
+            If msgMiaoCode &lt;&gt; &quot;&quot; Then 
+                text = &quot;游戏出现异常，已重新执行脚本【&quot; + pcCode +&quot;】&quot;
+                Set objXML=CreateObject(&quot;Microsoft.XMLHTTP&quot;)
+                objXML.Open &quot;Get&quot;, &quot;http://miaotixing.com/trigger?id=&quot; + msgMiaoCode + &quot;&amp;text=&quot; + text, False
+                objXML.send
+                Delay 3000
+            End If
+            Call nbaService(nowWindow)
+        End If
+        dm_ret = dm.FindPic(gameX1, gameY1, gameX2, gameY2,&quot;exception.bmp&quot;,&quot;000000&quot;,0.8,0,intX,intY) //  发现异常点击确定直至返回大厅
+        If intX &gt; 0 and intY &gt; 0 Then 
+            //点击确定
+            dm.MoveTo closeExceptionX, closeExceptionY
+            Delay 600
+            dm.LeftDoubleClick
+            Delay 600
+        End If
+        If dm.GetColor(dialogX,dialogY) = dialogCR Then // 出现提示框，有人强退或网络错误
+            dm.MoveTo closeDialogX, closeDialogY
+            dm.LeftDoubleClick
+            Delay 600 
+        End If
+    Loop
+End Sub
+// 人物操作、判断是否可以结算、或者游戏异常
+Sub movePlayerOrGameOver(nowWindow)
+    // 季后赛晋级次数
+    promoteCount = 0
+    Do While true 
+        If playType &lt;&gt; 2 AND playType &lt;&gt; 5 Then 
+            dm.MoveTo resetX, resetY
+            dm.LeftClick
+            Delay 500
+            dm.KeyDown 37
+            Delay 3000
+            dm.KeyUp 37
+            Delay 500
+            dm.KeyPress 65
+            Delay 800
+            dm.KeyDown 68
+            Delay 500
+            dm.KeyUp 68
+            Delay 600
+            dm.KeyPress 83
+            Delay 800
+            dm.KeyDown 68
+            Delay 600
+            dm.KeyUp 68
+            Delay 500
+            Delay 8000
+        End If
+        // 需要投降
+        If isPlayFail = 0 Then 
+            // 按键操作发起投降
+            Delay 2000
+            dm.KeyPress 27
+            Delay 1000
+            dm.MoveTo 433, 471
+            dm.LeftClick
+            Delay 1000
+            //确认投降
+            dm.MoveTo 432, 464
+            dm.LeftClick
+            Delay 5000
+            // 图片识别是否投降
+            //            If playType = 2 Then 
+            //                dm_ret = dm.FindPic(gameX1, gameY1, gameX2, gameY2,&quot;3rdup.bmp&quot;,&quot;000000&quot;,0.6,0,intX,intY)
+            //                If intX &gt; 0 And intY &gt; 0 Then 
+            //                    //发起投降
+            //                    dm.KeyPress 27
+            //                    Delay 1000
+            //                    dm.MoveTo 433, 471
+            //                    dm.LeftClick
+            //                    Delay 1000
+            //                    //确认投降
+            //                    dm.MoveTo 432, 464
+            //                    dm.LeftClick
+            //                    Delay 5000
+            //                End If
+            //            ElseIf playType &lt;&gt; 2 Then 
+            //                dm_ret = dm.FindPic(gameX1, gameY1, gameX2, gameY2,&quot;3rd.bmp&quot;,&quot;000000&quot;,0.6,0,intX,intY)
+            //                If intX &gt; 0 And intY &gt; 0 Then 
+            //                    //发起投降
+            //                    dm.KeyPress 27
+            //                    Delay 1000
+            //                    dm.MoveTo 433, 471
+            //                    dm.LeftClick
+            //                    Delay 1000
+            //                    //确认投降
+            //                    dm.MoveTo 432, 464
+            //                    dm.LeftClick
+            //                    Delay 5000
+            //                End If
+            //            End If
+        End If
+        If playType = 5 Then // 巅峰季后赛
+            text = &quot;&quot;
+            // 比赛晋级
+            dm_ret = dm.FindPic(gameX1, gameY1, gameX2, gameY2,&quot;success.bmp&quot;,&quot;000000&quot;,0.8,0,intX,intY)
+            If intX &gt; 0 And intY &gt; 0 Then 
+                promoteCount = promoteCount + 1
+                text = &quot;巅峰季后赛晋级第&quot;+ CStr(promoteCount) + &quot;轮【&quot; + pcCode +&quot;】&quot;
+                dm.MoveTo confirmX, confirmY
+                Delay 600
+                dm.LeftDoubleClick
+                Delay 600
+                If msgMiaoCode &lt;&gt; &quot;&quot; And promoteCount = maxPromoteCount Then
+                    nowPlayNum = 0
+                    playCount = 2
+                    text = &quot;巅峰季后赛晋级第&quot; + Cstr(maxPromoteCount) +&quot;轮【&quot; + pcCode + &quot;】，2局后自动结束脚本&quot;
+                    Set objXML=CreateObject(&quot;Microsoft.XMLHTTP&quot;)
+                    objXML.Open &quot;Get&quot;, &quot;http://miaotixing.com/trigger?id=&quot; + msgMiaoCode + &quot;&amp;text=&quot; + text, False
+                    objXML.send
+                    Delay 3000
+                End If
+            End If
+            // 比赛淘汰
+            dm_ret = dm.FindPic(gameX1, gameY1, gameX2, gameY2,&quot;fail.bmp&quot;,&quot;000000&quot;,0.8,0,intX,intY)
+            If intX &gt; 0 And intY &gt; 0 Then 
+                promoteCount = 0
+                nowPlayNum = 0
+                text = &quot;巅峰季后赛被淘汰【&quot; + pcCode +&quot;】&quot;
+                dm.MoveTo confirmX, confirmY
+                Delay 600
+                dm.LeftDoubleClick
+                Delay 600
+            End If
+            // 夺得冠军
+            dm_ret = dm.FindPic(gameX1, gameY1, gameX2, gameY2,&quot;success_top.bmp&quot;,&quot;000000&quot;,0.8,0,intX,intY)
+            If intX &gt; 0 And intY &gt; 0 Then 
+                promoteCount = 0
+                nowPlayNum = playCount
+                text = &quot;巅峰季后赛夺冠军【&quot; + pcCode +&quot;】&quot;
+                dm.MoveTo confirmX, confirmY
+                Delay 600
+                dm.LeftDoubleClick
+                Delay 600
+            End If
+            If msgMiaoCode &lt;&gt; &quot;&quot; And text &lt;&gt; &quot;&quot; Then 
+                Set objXML=CreateObject(&quot;Microsoft.XMLHTTP&quot;)
+                objXML.Open &quot;Get&quot;, &quot;http://miaotixing.com/trigger?id=&quot; + msgMiaoCode + &quot;&amp;text=&quot; + text, False
+                objXML.send
+                Delay 3000
+            End If
+        End If
+        //判断游戏是否结束
+        If dm.GetColor(128,544) = &quot;bb281e&quot; Then
+            // 点击返回或随机选择
+            dm.MoveTo 468, 677
+            dm.LeftDoubleClick
+            Delay 5000
+            // 判断是否可以随机选择奖品
+            If dm.GetColor(468,677) &lt;&gt; &quot;292a2c&quot; Then
+                // 点击返回或随机选择
+                dm.MoveTo cancelX, cancelY
+                dm.LeftDoubleClick
+                Delay 5000
+            End If
+        End If
+        // 判断是否可以点击返回大厅
+        dm_ret = dm.FindPic(gameX1, gameY1, gameX2, gameY2,&quot;zonglan.bmp&quot;,&quot;000000&quot;,0.8,0,intX,intY)
+        If intX&gt;0 and intY&gt;0 Then  
+            // 点击返回大厅
+            dm.MoveTo 468, 677
+            dm.LeftDoubleClick
+            Delay 5000
+        End If 
+        // 判断游戏是否强制结束
+        dm_ret = dm.FindPic(gameX1, gameY1, gameX2, gameY2,&quot;exception.bmp&quot;,&quot;000000&quot;,0.8,0,intX,intY)
+        If intX &gt; 0 and intY &gt; 0 Then 
+            //点击确定
+            dm.MoveTo closeExceptionX, closeExceptionY
+            Delay 600
+            dm.LeftDoubleClick
+            Delay 5000  
+        End If
+        // 出现提示框
+        If dm.GetColor(dialogX,dialogY) = dialogCR Then
+            Delay 1500
+            dm.MoveTo closeDialogX, closeDialogY
+            dm.LeftDoubleClick 
+        End If
+        //误点处理
+        dm_ret = dm.FindPic(gameX1, gameY1, gameX2, gameY2,&quot;close.bmp&quot;,&quot;000000&quot;,0.8,0,intX,intY)
+        If intX &gt; 0 And intY &gt; 0 Then 
+            dm.MoveTo 819, 72
+            Delay 1000
+            dm.LeftClick
+            Delay 5000 
+        End If
+        dm_ret = dm.FindPic(gameX1, gameY1, gameX2, gameY2,&quot;close2.bmp&quot;,&quot;000000&quot;,0.8,0,intX,intY)
+        If intX &gt; 0 And intY &gt; 0 Then 
+            dm.MoveTo intX + 5, intY + 5
+            Delay 1000
+            dm.LeftDoubleClick
+            Delay 5000 
+        End If
+        // 是否在大厅
+        dm_ret = dm.FindPic(gameX1, gameY1, gameX2, gameY2, &quot;play.bmp&quot;, &quot;000000&quot;, 0.8, 0, intX, intY)
+        If intX &gt; 0 And intY &gt; 0 Then 
+            Exit do
+        End If
+    Loop
+    //已经返回大厅
+    dm.MoveTo resetX,resetY
+    dm.LeftDoubleClick
+    Delay 1000
+End Sub
+Sub nbaService(nowWindow)
+    Call cancelIndex(nowWindow)
+    //已经进入游戏大厅，执行挂机脚本
+    Delay 5000
+    dm.MoveTo resetX, resetY
+    Delay 1000
+    dm.LeftDoubleClick
+    Delay 1000
+    If playType = 0 Then
+        // 当前场数
+        nowPlayNum = 1
+        Do While true
+            //点击play
+            Do While true
+                dm.MoveTo 514, 470
+                Delay 500
+                dm.LeftClick
+                Delay 2000
+                If dm.GetColor(128, 368) = &quot;25162e&quot; Then 
+                    Exit Do
+                End If
+            Loop
+            Do While true
+                If dm.GetColor(128,368) = &quot;25162e&quot; Then
+                    //点击人机对战
+                    dm.MoveTo 85, 210
+                    Delay 500
+                    dm.LeftClick
+                    Delay 1000
+                    //点击街头赛
+                    dm.MoveTo 197, 173
+                    Delay 500
+                    dm.LeftClick
+                    Delay 1000
+                    //进入比赛
+                    dm.MoveTo 910, 361
+                    Delay 1000
+                    dm.LeftClick 
+                    Delay 3000
+                Else
+                    Exit Do
+                End If                
+            Loop
+            //判断是否进入游戏
+            Call isPlayNow(nowWindow)
+            Call startGameMsg(nowPlayNum, playCount, nowWindow)       
+            Call movePlayerOrGameOver(nowWindow)
+            If nowPlayNum&gt;=playCount Then
+                //当循环条件成立的时候，离开循环体
+                Call getPrize(nowWindow)
+                Exit do  
+            End if  
+            nowPlayNum=nowPlayNum+1  
+        Loop
+    ElseIf playType = 4 Then
+        // 当前场数
+        nowPlayNum = 1
+        Do While true
+            //点击play
+            Do While true
+                dm.MoveTo 514, 470
+                Delay 500
+                dm.LeftClick
+                Delay 2000
+                If dm.GetColor(128, 368) = &quot;25162e&quot; Then 
+                    Exit Do
+                End If
+            Loop
+            Do While true
+                If dm.GetColor(128,368) = &quot;25162e&quot; Then
+                    //点击经典对战
+                    dm.MoveTo 85, 172
+                    Delay 500
+                    dm.LeftClick
+                    Delay 1000
+                    //点击街头赛
+                    dm.MoveTo 197, 173
+                    Delay 500
+                    dm.LeftClick
+                    Delay 1000
+                    //单人匹配
+                    dm.MoveTo 769, 361
+                    Delay 1000
+                    dm.LeftClick
+                    Delay 3000
+                    // 出现提示框，玩家被禁赛
+                    If dm.GetColor(dialogX,dialogY) = dialogCR Then 
+                        dm.MoveTo closeDialogX, closeDialogY
+                        dm.LeftDoubleClick
+                        Delay 600 
+                    End If
+                Else
+                    Exit Do
+                End If                
+            Loop
+            //判断游戏是否匹配成功
+            Call waitPlay(nowWindow)
+            //判断是否进入游戏
+            Call isPlayNow(nowWindow)
+            Call startGameMsg(nowPlayNum, playCount, nowWindow)       
+            Call movePlayerOrGameOver(nowWindow)
+            If nowPlayNum&gt;=playCount Then
+                //当循环条件成立的时候，离开循环体
+                Call getPrize(nowWindow)
+                Exit do  
+            End if  
+            nowPlayNum=nowPlayNum+1  
+        Loop
+    ElseIf playType = 5 Then
+        // 当前场数
+        nowPlayNum = 1
+        // 不投降
+        isPlayFail = 1
+        Do While true
+            //点击play
+            Do While true
+                dm.MoveTo 514, 470
+                Delay 500
+                dm.LeftClick
+                Delay 2000
+                If dm.GetColor(128, 368) = &quot;25162e&quot; Then 
+                    Exit Do
+                End If
+            Loop
+            Do While true
+                If dm.GetColor(128, 368) = &quot;25162e&quot; Then 
+                    // 点击人机对战
+                    dm.MoveTo 85, 210
+                    Delay 500
+                    dm.LeftClick
+                    Delay 1000
+                    // 点击人机巅峰赛
+                    dm.MoveTo 203, 209
+                    Delay 500
+                    dm.LeftClick
+                    Delay 1000
+                    // 进入比赛
+                    dm.MoveTo 910, 361
+                    Delay 1000
+                    dm.LeftClick 
+                    Delay 3000
+                    // 失败点击重开赛季
+                    dm.MoveTo 904, 645
+                    Delay 1000
+                    dm.LeftClick 
+                    Delay 2000
+                    // 首次点击选择球队
+                    dm.MoveTo 904, 645
+                    Delay 1000
+                    dm.LeftClick 
+                    Delay 2000
+                    // 打开选择球队的页面，选择热火队
+                    dm.MoveTo 767, 537
+                    Delay 1000
+                    dm.LeftClick 
+                    Delay 2000
+                    dm.MoveTo 379, 627
+                    Delay 1000
+                    dm.LeftClick 
+                    Delay 2000
+                    // 选择教练模式进入比赛
+                    dm.MoveTo 904, 645
+                    Delay 1000
+                    dm.LeftClick 
+                    Delay 5000
+                    // 如果找到了关闭标志点击关闭
+                    dm_ret = dm.FindPic(gameX1, gameY1, gameX2, gameY2, &quot;close.bmp&quot;, &quot;000000&quot;, 0.9, 0, intX, intY)
+                    If intX &gt; 0 And intY &gt; 0 Then 
+                        dm.MoveTo intX + 15, intY + 15
+                        Delay 1000
+                        LeftClick 1
+                        Delay 1000
+                    End If
+                Else
+                    Exit Do
+                End If                
+            Loop
+            //判断是否进入游戏
+            Call isPlayNow(nowWindow)
+            Call startGameMsg(nowPlayNum, playCount, nowWindow)       
+            Call movePlayerOrGameOver(nowWindow)
+            If nowPlayNum&gt;=playCount Then
+                //当循环条件成立的时候，离开循环体
+                Call getPrize(nowWindow)
+                Exit do  
+            End if  
+            nowPlayNum=nowPlayNum+1  
+        Loop 
+    Else
+        // 当前场数
+        nowPlayNum = 1
+        Do While true
+            //点击play
+            Do While true
+                dm.MoveTo 514, 470
+                Delay 500
+                dm.LeftClick
+                Delay 2000
+                If dm.GetColor(128, 368) = &quot;25162e&quot; Then 
+                    Exit Do
+                End If
+            Loop
+            Do While true
+                If dm.GetColor(128, 368) = &quot;25162e&quot; Then 
+                    //点击经典对战
+                    dm.MoveTo 85, 172
+                    Delay 500
+                    dm.LeftClick
+                    Delay 1000
+                    If playType = 1 Then  //点击NBA对抗赛
+                        dm.MoveTo 198, 241
+                        Delay 500
+                        dm.LeftClick
+                        Delay 1000
+                    ElseIf playType = 2 Then  //点击教练模式
+                        dm.MoveTo 198, 316
+                        Delay 500
+                        dm.LeftClick
+                        Delay 1000
+                    ElseIf playType = 3 Then  //点击王朝模式
+                        dm.MoveTo 198, 208
+                        Delay 500
+                        dm.LeftClick
+                        Delay 1000
+                    ElseIf playType = 10 Then  //点击关键时刻
+                        dm.MoveTo 198, 352
+                        Delay 500
+                        dm.LeftClick
+                        Delay 1000
+                    Else // 排位赛模式
+                        dm.MoveTo 85, 250  //点击排位赛
+                        Delay 500
+                        dm.LeftClick
+                        Delay 1000
+                        If playType = 7 Then  
+                            dm.MoveTo 198, 208  // 选择王朝模式
+                            Delay 500
+                            dm.LeftClick
+                            Delay 1000
+                        ElseIf playType = 8 Then  
+                            // 选择NBA对抗赛
+                            dm.MoveTo 198, 239  // 选择NBA对抗赛模式
+                            Delay 500
+                            dm.LeftClick
+                            Delay 1000
+                        ElseIf playType = 9 Then  
+                            dm.MoveTo 198, 173 //点击街头赛
+                            Delay 500
+                            dm.LeftClick
+                            Delay 1000
+                        End If
+                    End If
+                    //开始匹配
+                    dm.MoveTo 910, 361
+                    Delay 1000
+                    dm.LeftClick
+                    Delay 3000
+                    // 出现提示框，玩家被禁赛
+                    If dm.GetColor(dialogX,dialogY) = dialogCR Then 
+                        dm.MoveTo closeDialogX, closeDialogY
+                        dm.LeftDoubleClick
+                        Delay 600 
+                    End If
+                Else
+                    Exit Do
+                End If                
+            Loop
+            //判断游戏是否匹配成功
+            Call waitPlay(nowWindow)
+            //判断是否进入游戏
+            Call isPlayNow(nowWindow)
+            Call startGameMsg(nowPlayNum, playCount, nowWindow)       
+            Call movePlayerOrGameOver(nowWindow)
+            If nowPlayNum&gt;=playCount Then
+                //当循环条件成立的时候，离开循环体
+                Call getPrize(nowWindow)
+                Exit do  
+            End if
+            nowPlayNum=nowPlayNum+1  
+        Loop
+    End If
+End Sub
+
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[按键精灵方法合集]]></title>
+        <id>https://viaoh.github.io/post/f_ULKBziao/</id>
+        <link href="https://viaoh.github.io/post/f_ULKBziao/">
+        </link>
+        <updated>2025-09-13T10:24:16.000Z</updated>
+        <content type="html"><![CDATA[<p><strong>窗体句柄</strong></p>
+<pre><code class="language-vb">//得到当前最前面的窗口句柄   
+Hwnd = Plugin.Window.Foreground()
+Rect = Plugin.Window.GetWindowRect(Hwnd)
+MyArray = Split(Rect, &quot;|&quot;)
+x = Clng(MyArray(0))
+y = Clng(MyArray(1))//这里的(x,y)是窗口包含边框的左上角坐标，可用后台操作
+MsgBox x
+MsgBox y
+Rect = Plugin.Window.GetClientRect(Hwnd)
+MyArray = Split(Rect, &quot;|&quot;)
+x = Clng(MyArray(0))
+y = Clng(MyArray(1))//这里的(x,y)是窗口不含边框(称为客户区)的左上角坐标
+MsgBox x
+MsgBox y
+//移动窗口到(X1, Y1)位置
+Call Plugin.Window.Move(Hwnd, x, y)
+//得到当前最前面的窗口句柄   
+Hwnd = Plugin.Window.Foreground()
+MsgBox &quot;得到当前最前面的窗口句柄为：&quot; &amp; Hwnd
+//得到窗口句柄的标题   
+sText = Plugin.Window.GetTextEx(Hwnd, 0)
+//得到窗口句柄的类名   
+Class1 = Plugin.Window.GetClass(Hwnd)
+MsgBox &quot;得到窗口句柄的信息内容为：&quot; &amp; sText
+MsgBox &quot;得到窗口句柄的信息内容为：&quot; &amp; Class1
+//移动窗口到(X1, Y1)位置   
+Call Plugin.Window.Move(Hwnd, 800, 400)   
+MsgBox &quot;当前移动窗口到(800, 400)位置&quot;
+// 窗口句柄  根据类名和标题获取句柄
+Hwnd = Plugin.Window.Find(Class1, sText)
+MsgBox &quot;得到当前最前面的窗口句柄为：&quot;&amp; Hwnd
+//得到窗口句柄的边框大小(包括标题栏)   
+sRect = Plugin.Window.GetWindowRect(Hwnd)   
+MsgBox &quot;得到窗口句柄的边框大小(包括标题栏)为：&quot;&amp; sRect   
+//分割字符串,将横坐标和纵坐标分成两个字符串   
+dim MyArray   
+MyArray = Split(sRect, &quot;|&quot;)
+//下面这句将字符串转换成数值   
+W1 = Clng(MyArray(0)): H1 = Clng(MyArray(1))   
+W2 = Clng(MyArray(2)): H2 = Clng(MyArray(3))   
+MsgBox &quot;边框大小：       &quot;  &amp;  W2-W1 &amp; &quot;             &quot; &amp; H2-H1  
+//移动窗口到(X1, Y1)位置
+Call Plugin.Window.Move(Hwnd, 200, 200)
+</code></pre>
+<p><strong>定时器</strong></p>
+<pre><code class="language-vb">While True
+    CountdownID = BeginThread(Countdown(30)) //开启30秒倒计时线程
+    //下面写你要执行的功能代码，这里我随便写一个,代码执行完后重新倒计时
+    For i = 1 To 200
+        TracePrint(&quot;i的数值-------------------------------&quot; &amp; i &amp; &quot;&quot;)
+        Delay 500
+    Next
+    StopThread CountdownID //停止倒计时线程
+Wend
+Sub Countdown(t) //定义倒计时进程
+    // 喵提醒参数
+    playCountMiaoCode = &quot;tOy90iP&quot;
+    msgMiaoCode = &quot;tT48aX9&quot;
+    While t &gt;= 0
+        TracePrint(&quot;剩下!!!!!!!!&quot; &amp; t &amp; &quot;秒&quot;)
+        Delay 1000
+        If t = 0 AND msgMiaoCode &lt;&gt; &quot;&quot; Then 
+            TracePrint(&quot;发通知了&quot; )
+            text = &quot;比赛长时间未结束，请手动查看运行状态&quot;
+            Set objXML=CreateObject(&quot;Microsoft.XMLHTTP&quot;)
+            objXML.Open &quot;Get&quot;, &quot;http://miaotixing.com/trigger?id=&quot; + msgMiaoCode + &quot;&amp;text=&quot; + text, False
+            objXML.send
+            Delay 3000
+        End If
+        t = t - 1
+    Wend
+End Sub
+</code></pre>
+<p><strong>判断周几</strong></p>
+<pre><code class="language-vb">// 判断是否是周一、周二、周五
+nowWeek = Weekday(now) - 1
+If nowWeek &gt; 0 and nowWeek &lt; 3 or nowWeek = 5 Then
+    MsgBox &quot;周一、二、五&quot;
+Else 
+    MsgBox &quot;不是&quot;
+End If
+</code></pre>
+<p><strong>批量修改窗口标题</strong></p>
+<pre><code class="language-vb">MyArray = Split(Plugin.Window.SearchEx(0, &quot;NBA2K Online&quot;, 0), &quot;|&quot;)
+If UBound(MyArray)&gt;=0 Then
+    i=0
+    For UBound(MyArray)
+        Call Plugin.Window.SetText(MyArray(i),&quot;NBA2K Onlie 篮球在线&quot;)
+        i=i+1
+    Next
+End If
+MyArray = Split(Plugin.Window.SearchEx(0, &quot;窗口-&quot;, 0), &quot;|&quot;)
+If UBound(MyArray)&gt;=0 Then
+    i=0
+    For UBound(MyArray)
+        Call Plugin.Window.SetText(MyArray(i),&quot;NBA2K Onlie 篮球在线&quot;)
+        i=i+1
+    Next
+End If
+//NBA2KHwnd = Plugin.Window.Find(&quot;NBA2KONLINE_EXCLUSIVE_WND_CLASS_NAME&quot;, 0)
+//nbaWinText = Plugin.Window.GetText(NBA2KHwnd)
+//TracePrint nbaWinText
+//下面这句是按查找方式(模糊)，遍历符合窗口类名(0)且标题(&quot;记事本&quot;)的句柄，保存到数组(HwndEx)里
+HwndEx = Plugin.Window.SearchEx(0,&quot;窗口&quot;,0) 
+MsgBox &quot;查找到符合的窗口句柄为：&quot;&amp; HwndEx
+//下面这句用于分割字符串,将获得的句柄组分割
+dim MyArray
+MyArray = Split(HwndEx, &quot;|&quot;)
+If UBound(MyArray)&gt;=0 Then
+    i=0
+    For UBound(MyArray)
+        Call Plugin.Window.SetText(MyArray(i),&quot;NBA2K Onlie 篮球在线&quot;)
+        i=i+1
+    Next
+End If
+//Call Plugin.Window.SetText(NBA2KHwnd,&quot;窗口-1&quot;)
+//dm_ret = dm.BindWindowEx(NBA2KHwnd, displayMode, mouseMode, keypadMode, publicMode, 0)
+</code></pre>
+<p><strong>生成随机四位数</strong></p>
+<pre><code class="language-vb">Randomize
+A = Array(0,1,2,3,4,5,6,7,8,9)
+Num=a(Int(10*Rnd ))&amp;a(Int(10*Rnd ))&amp;a(Int(10*Rnd ))&amp;a(Int(10*Rnd ))
+</code></pre>
+<p><strong>时间判断</strong></p>
+<pre><code class="language-vb">If Hour(time) &gt;= 0 and Hour(time)&lt; 2
+    MsgBox &quot;挂大号&quot;
+Else
+    MsgBox &quot;挂小号&quot;
+End If
+
+EndScript
+
+// 系统时间 在10：10分到22：00分之间。运行脚本A,22点07分到凌晨两点之间，运行 脚本B
+If Hour(time) &gt;= 10 and Hour(time)&lt;22
+    If Hour(time) = 10 and Minute(time)&gt;=10
+        call a()
+    ElseIf Hour(time) &gt; 10 then
+        call a()
+    End If
+ElseIf Hour(time)&gt;=22
+    If Hour(time)=22 and Minute(time)&gt;=7
+        call b()
+    ElseIf Hour(time)&gt;22
+        call b()
+    End If
+End If
+Sub a()
+    MessageBox &quot;运行A&quot;
+End Sub
+Sub b()
+    MessageBox &quot;运行B&quot;
+End Sub
+</code></pre>
+<p><strong>HTTP请求</strong></p>
+<pre><code class="language-vb">Dim reqUrl，reqType，reqCode，resultData
+reqUrl = &quot;http://rap2api.taobao.org/app/mock/322147/nba2kol/customize&quot;
+reqType = &quot;GET&quot;
+reqCode = &quot;UTF-8&quot;
+reqResult = Plugin.SMWH.WinHttp(reqUrl, reqType, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, reqCode)
+TracePrint reqResult
+resultData0 = Plugin.SMWH.GetJSON(reqResult, &quot;playType&quot;)
+resultData1 = Plugin.SMWH.GetJSON(reqResult, &quot;playCount&quot;)
+resultData2 = Plugin.SMWH.GetJSON(reqResult, &quot;isPlayFail&quot;)
+resultData3 = Plugin.SMWH.GetJSON(reqResult, &quot;isGetPrize&quot;)
+resultData4 = Plugin.SMWH.GetJSON(reqResult, &quot;isGoPlay&quot;)
+resultData5 = Plugin.SMWH.GetJSON(reqResult, &quot;isExitOS&quot;)
+TracePrint resultData0
+TracePrint resultData1
+TracePrint resultData2
+TracePrint resultData3
+TracePrint resultData4
+TracePrint resultData5
+
+EndScript
+// POST请求
+Dim 网址2, 访问方式2, 提交信息2, 附加协议头2, 网页编码2, 返回值2
+网址2 = &quot;http://localhost:80/api8&quot;
+访问方式2 = &quot;POST&quot;
+提交信息2 = jsonFormatter(&quot;a=酷玩&amp;b=蚊仔&quot;)
+附加协议头2 = &quot;CONTENT-TYPE:application/json&quot;
+网页编码2 = &quot;UTF-8&quot;
+返回值2 = SMWH.WinHttp(网址2, 访问方式2, 提交信息2, &quot;&quot;, &quot;&quot;, 附加协议头2, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;, 网页编码2)
+TracePrint 返回值2
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[JSON数据解析]]></title>
+        <id>https://viaoh.github.io/post/iGmJlvMSWw/</id>
+        <link href="https://viaoh.github.io/post/iGmJlvMSWw/">
+        </link>
+        <updated>2025-07-19T07:18:44.000Z</updated>
+        <content type="html"><![CDATA[<pre><code class="language-java">package com.example.demo;
+
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
+
+@RunWith(SpringRunner.class)
+@SpringBootTest
+public class DemoApplicationTests {
+
+	@Test
+	public static void main(String[] args) {
+        String inputFilePath = &quot;D:\\题库.txt&quot;;
+        String outputFilePath = &quot;D:\\题库.xlsx&quot;;
+        try {
+            List&lt;Question&gt; questions = parseTxtFile(inputFilePath);
+            createExcelFile(questions, outputFilePath);
+            System.out.println(&quot;转换成功！生成文件: &quot; + outputFilePath);
+        } catch (IOException e) {
+            System.err.println(&quot;处理文件时出错: &quot; + e.getMessage());
+        }
+    }
+
+    private static List&lt;Question&gt; parseTxtFile(String filePath) throws IOException {
+        List&lt;Question&gt; questions = new ArrayList&lt;&gt;();
+        
+        InputStream inputStream=new FileInputStream(filePath);
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream,&quot;UTF-8&quot;));
+        
+        String line;
+        Question currentQuestion = null;
+        
+        while ((line = reader.readLine()) != null) {
+            line = line.trim();
+            if (line.startsWith(&quot;题干：&quot;)) {
+                // 新题目开始
+                if (currentQuestion != null) {
+                    questions.add(currentQuestion);
+                }
+                currentQuestion = new Question();
+                currentQuestion.setQuestion(line.substring(3).trim());
+            } else if (line.startsWith(&quot;A：&quot;)) {
+                currentQuestion.setOptionA(line.substring(2).trim());
+            } else if (line.startsWith(&quot;B：&quot;)) {
+                currentQuestion.setOptionB(line.substring(2).trim());
+            } else if (line.startsWith(&quot;C：&quot;)) {
+                currentQuestion.setOptionC(line.substring(2).trim());
+            } else if (line.startsWith(&quot;D：&quot;)) {
+                currentQuestion.setOptionD(line.substring(2).trim());
+            } else if (line.startsWith(&quot;E：&quot;)) {
+                currentQuestion.setOptionE(line.substring(2).trim());
+            } else if (line.startsWith(&quot;F：&quot;)) {
+                currentQuestion.setOptionF(line.substring(2).trim());
+            } else if (line.startsWith(&quot;G：&quot;)) {
+                currentQuestion.setOptionG(line.substring(2).trim());
+            } else if (line.startsWith(&quot;答案：&quot;)) {
+                currentQuestion.setAnswer(line.substring(3).trim());
+            } else if (line.startsWith(&quot;题目解析：&quot;)) {
+                currentQuestion.setAnalysis(line.substring(5).trim());
+            } else if (line.startsWith(&quot;题目类型：&quot;)) {
+                currentQuestion.setQuestionType(line.substring(5).trim());
+            }
+        }
+        
+        // 添加最后一个问题
+        if (currentQuestion != null) {
+            questions.add(currentQuestion);
+        }
+        
+        reader.close();
+        return questions;
+    }
+
+    private static void createExcelFile(List&lt;Question&gt; questions, String filePath) throws IOException {
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet(&quot;题库&quot;);
+        // 创建表头
+        Row headerRow = sheet.createRow(0);
+        String[] headers = {&quot;题目&quot;, &quot;选项A&quot;, &quot;选项B&quot;, &quot;选项C&quot;, &quot;选项D&quot;,&quot;选项E&quot;,&quot;选项F&quot;,&quot;选项G&quot;, &quot;答案&quot;, &quot;题目解析&quot;,&quot;题目类型&quot;};
+        for (int i = 0; i &lt; headers.length; i++) {
+            Cell cell = headerRow.createCell(i);
+            cell.setCellValue(headers[i]);
+        }
+        // 填充数据
+        int rowNum = 1;
+        for (Question q : questions) {
+            Row row = sheet.createRow(rowNum++);
+            row.createCell(0).setCellValue(q.getQuestion());
+            row.createCell(1).setCellValue(q.getOptionA());
+            row.createCell(2).setCellValue(q.getOptionB());
+            row.createCell(3).setCellValue(q.getOptionC());
+            row.createCell(4).setCellValue(q.getOptionD());
+            row.createCell(5).setCellValue(q.getOptionE());
+            row.createCell(6).setCellValue(q.getOptionF());
+            row.createCell(7).setCellValue(q.getOptionG());
+            row.createCell(8).setCellValue(q.getAnswer());
+            row.createCell(9).setCellValue(q.getAnalysis());
+            row.createCell(10).setCellValue(q.getQuestionType());
+        }
+        
+        // 自动调整列宽
+        for (int i = 0; i &lt; headers.length; i++) {
+            sheet.autoSizeColumn(i);
+        }
+        
+        // 写入文件
+        try (FileOutputStream outputStream = new FileOutputStream(filePath)) {
+            workbook.write(outputStream);
+        }
+        workbook.close();
+    }
+
+    static class Question {
+        private String question;
+        private String optionA;
+        private String optionB;
+        private String optionC;
+        private String optionD;
+        private String optionE;
+        private String optionF;
+        private String optionG;
+        private String answer;
+        private String analysis;
+        private String questionType;
+        // 省略getter和setter方法
+        public String getQuestion() { return question; }
+        public void setQuestion(String question) { this.question = question; }
+        public String getOptionA() { return optionA; }
+        public void setOptionA(String optionA) { this.optionA = optionA; }
+        public String getOptionB() { return optionB; }
+        public void setOptionB(String optionB) { this.optionB = optionB; }
+        public String getOptionC() { return optionC; }
+        public void setOptionC(String optionC) { this.optionC = optionC; }
+        public String getOptionD() { return optionD; }
+        public void setOptionD(String optionD) { this.optionD = optionD; }
+        public String getOptionE() { return optionE; }
+        public void setOptionE(String optionE) { this.optionE = optionE; }
+        public String getOptionF() { return optionF; }
+        public void setOptionF(String optionF) { this.optionF = optionF; }
+        public String getOptionG() { return optionG; }
+        public void setOptionG(String optionG) { this.optionG = optionG; }
+        public String getAnswer() { return answer; }
+        public void setAnswer(String answer) { this.answer = answer; }
+        public String getAnalysis() { return analysis; }
+        public void setAnalysis(String analysis) { this.analysis = analysis; }
+        public String getQuestionType() { return questionType; }
+        public void setQuestionType(String questionType) { this.questionType = questionType; }
+    }
+
+}
+</code></pre>
+<pre><code class="language-java">package test;
+/**
+ * JSON转TXT文本：睿达一点通小程序
+ */
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Map;
+
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
+
+public class JsonTest {
+
+	public static void jsonLoop(Object object) {
+		if (object instanceof JSONObject) {
+			JSONObject jsonObject = (JSONObject) object;
+			for (Map.Entry&lt;String, Object&gt; entry : jsonObject.entrySet()) {
+				Object o = entry.getValue();
+				String questionType = &quot;&quot;;
+				String description = &quot;&quot;;
+				String option = &quot;&quot;;
+				String answer = &quot;&quot;;
+				String analysis = &quot;&quot;;
+					switch (entry.getKey().toString()) {
+					case &quot;type&quot;:
+						if (!entry.getValue().equals(&quot;&quot;)) {
+							switch (Integer.parseInt(entry.getValue().toString())) {
+							case 1:
+								questionType = &quot;题目类型：单选题&quot; + &quot;\n&quot;;
+								break;
+							case 2:
+								questionType = &quot;题目类型：多选题&quot; + &quot;\n&quot;;
+								break;	
+							case 3:
+								questionType = &quot;题目类型：判断题&quot; + &quot;\n&quot;;
+								break;
+				            case 4:
+				            	questionType = &quot;题目类型：序号四&quot; + &quot;\n&quot;;
+								break;
+				            case 5:
+				            	questionType = &quot;题目类型：序号五&quot; + &quot;\n&quot;;
+								break;
+							}
+						}
+						break;
+					case &quot;description&quot;:
+						if (!entry.getValue().equals(&quot;&quot;)) {
+							description += &quot;题干：&quot; + entry.getValue().toString() + &quot;\n&quot;;
+						}
+						break;
+					case &quot;option&quot;:
+						if (!entry.getValue().equals(&quot;&quot;)) {
+							JSONObject jsonObject2 = JSONObject.parseObject(entry.getValue().toString());
+					        for (Map.Entry&lt;String, Object&gt; entry2 : jsonObject2.entrySet()) {
+					            switch (entry2.getKey().toString()) {
+								case &quot;a&quot;:
+									if (!entry2.getValue().equals(&quot;&quot;)) {
+										option += &quot;A：&quot; + entry2.getValue().toString() + &quot;\n&quot;;
+									}
+									break;
+								case &quot;b&quot;:
+									if (!entry2.getValue().equals(&quot;&quot;)) {
+										option += &quot;B：&quot; + entry2.getValue().toString() + &quot;\n&quot;;
+									}
+									break;	
+								case &quot;c&quot;:
+									if (!entry2.getValue().equals(&quot;&quot;)) {
+										option += &quot;C：&quot; + entry2.getValue().toString() + &quot;\n&quot;;
+									}
+									break;
+								
+					            case &quot;d&quot;:
+									if (!entry2.getValue().equals(&quot;&quot;)) {
+										option += &quot;D：&quot; + entry2.getValue().toString() + &quot;\n&quot;;
+									}
+									break;
+					            case &quot;e&quot;:
+									if (!entry2.getValue().equals(&quot;&quot;)) {
+										option += &quot;E：&quot; + entry2.getValue().toString() + &quot;\n&quot;;
+									}
+									break;
+					            case &quot;f&quot;:
+									if (!entry2.getValue().equals(&quot;&quot;)) {
+										option += &quot;F：&quot; + entry2.getValue().toString() + &quot;\n&quot;;
+									}
+									break;
+					            case &quot;g&quot;:
+									if (!entry2.getValue().equals(&quot;&quot;)) {
+										option += &quot;G：&quot; + entry2.getValue().toString() + &quot;\n&quot;;
+									}
+									break;
+					            case &quot;panduan&quot;:
+										option += &quot;A：\n&quot;;
+										option += &quot;B：\n&quot;;
+										option += &quot;C：\n&quot;;
+										option += &quot;D：\n&quot;;
+										option += &quot;E：\n&quot;;
+										option += &quot;F：\n&quot;;
+										option += &quot;G：\n&quot;;
+									break;
+								}
+					            
+					        }
+						}
+						break;	
+					case &quot;answer&quot;:
+						if (!entry.getValue().equals(&quot;&quot;)) {
+							JSONObject jsonObject2 = JSONObject.parseObject(entry.getValue().toString());
+					        for (Map.Entry&lt;String, Object&gt; entry2 : jsonObject2.entrySet()) {
+					            switch (entry2.getKey().toString()) {
+								case &quot;answer&quot;:
+									if (!entry2.getValue().equals(&quot;&quot;)) {
+										answer += &quot;答案：&quot; + entry2.getValue().toString().replaceAll(&quot;[^a-zA-Z]&quot;, &quot;&quot;).toUpperCase() + &quot;\n&quot;;
+									}
+									break;
+								case &quot;analysis&quot;:
+									if (!entry2.getValue().equals(&quot;&quot;)) {
+										analysis += &quot;题目解析：&quot; + entry2.getValue().toString() + &quot;\n&quot;;
+									}
+									break;	
+								}
+					        }
+						}
+						break;
+					}
+					try {
+						// 创建FileWriter对象，指定文件路径和是否追加内容
+						FileWriter writer = new FileWriter(&quot;D:\\题库.txt&quot;, true); // 第二个参数为true表示追加内容
+						writer.write(questionType + description + option + answer + analysis); // 写入数据ExcelTool.java
+						writer.close(); // 关闭流
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				if (o instanceof String) {
+						
+					
+				} else {
+					jsonLoop(o);
+				}
+			}
+		}
+		if (object instanceof JSONArray){
+			JSONArray jsonArray = (JSONArray) object;
+			for (int i = 0; i &lt; jsonArray.size(); i++) {
+				jsonLoop(jsonArray.get(i));
+			}
+		}
+	}
+
+	public static void main(String[] args) throws IOException {
+		String jsonStr = new String(Files.readAllBytes(Paths.get(&quot;D:\\题库.json&quot;)), StandardCharsets.UTF_8);
+		JSONObject jsonObject = JSON.parseObject(jsonStr);
+		//JSONArray jsonArray = JSONArray.parseArray(jsonStr);
+		jsonLoop(jsonObject);
+		System.err.println(&quot;读取完成&quot;);
+	}
+}
+</code></pre>
+<pre><code class="language-java">package test;
+
+/**
+ * JSON转TXT文本：易知课堂网页端
+ */
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Map;
+
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONArray;
+import com.alibaba.fastjson2.JSONObject;
+
+public class JsonTest2 {
+
+	public static void jsonLoop(Object object) {
+		if (object instanceof JSONObject) {
+			JSONObject jsonObject = (JSONObject) object;
+			for (Map.Entry&lt;String, Object&gt; entry : jsonObject.entrySet()) {
+				Object o = entry.getValue();
+				//System.err.println(entry.getKey());
+				String questionType = &quot;&quot;;
+				String description = &quot;&quot;;
+				String option = &quot;&quot;;
+				String answer = &quot;&quot;;
+				String analysis = &quot;&quot;;
+					switch (entry.getKey().toString()) {
+					case &quot;question_type&quot;:
+						if (!entry.getValue().equals(&quot;&quot;)) {
+							switch (Integer.parseInt(entry.getValue().toString())) {
+							case 1:
+								questionType = &quot;题目类型:单选题&quot; + &quot;\n&quot;;
+								break;
+							case 2:
+								questionType = &quot;题目类型:多选题&quot; + &quot;\n&quot;;
+								break;	
+							case 3:
+								questionType = &quot;题目类型:判断题&quot; + &quot;\n&quot;;
+								break;
+				            case 4:
+				            	questionType = &quot;题目类型:序号四&quot; + &quot;\n&quot;;
+								break;
+				            case 5:
+				            	questionType = &quot;题目类型:序号五&quot; + &quot;\n&quot;;
+								break;
+							}
+						}
+						break;
+					case &quot;question&quot;:
+						if (!entry.getValue().equals(&quot;&quot;)) {
+							System.err.println(entry.getValue().toString());
+							description += &quot;题干:&quot; + entry.getValue().toString() + &quot;\n&quot;;
+						}
+						break;
+					case &quot;options&quot;:
+						if (!entry.getValue().equals(&quot;&quot;)) {
+							JSONArray jsonArray = JSONArray.parseArray(entry.getValue().toString());
+								for (int i = 0; i &lt; jsonArray.size(); i++) {
+						            switch (i) {
+						            
+									case 0:
+										if (!jsonArray.get(i).equals(&quot;&quot;)) {
+											JSONObject optionObject = JSONObject.parseObject(jsonArray.get(i).toString());
+											String optionTxt = optionObject.get(&quot;option&quot;).toString();
+											option += &quot;A.&quot; + optionTxt.toString() + &quot;\n&quot;;
+											Integer isRight = (Integer) optionObject.get(&quot;is_right&quot;);
+											if (isRight == 1) {
+												answer += &quot;正确答案:A&quot;+ &quot;\n&quot;;
+											}
+										}
+										break;
+									case 1:
+										if (!jsonArray.get(i).equals(&quot;&quot;)) {
+											JSONObject optionObject = JSONObject.parseObject(jsonArray.get(i).toString());
+											String optionTxt = optionObject.get(&quot;option&quot;).toString();
+											option += &quot;B.&quot; + optionTxt.toString() + &quot;\n&quot;;
+											Integer isRight = (Integer) optionObject.get(&quot;is_right&quot;);
+											if (isRight == 1) {
+												answer += &quot;正确答案:B&quot;+ &quot;\n&quot;;
+											}
+										}
+										break;	
+									case 2:
+										if (!jsonArray.get(i).equals(&quot;&quot;)) {
+											JSONObject optionObject = JSONObject.parseObject(jsonArray.get(i).toString());
+											String optionTxt = optionObject.get(&quot;option&quot;).toString();
+											option += &quot;C.&quot; + optionTxt.toString() + &quot;\n&quot;;
+											Integer isRight = (Integer) optionObject.get(&quot;is_right&quot;);
+											if (isRight == 1) {
+												answer += &quot;正确答案:C&quot;+ &quot;\n&quot;;
+											}
+										}
+										break;
+									case 3:
+										if (!jsonArray.get(i).equals(&quot;&quot;)) {
+											JSONObject optionObject = JSONObject.parseObject(jsonArray.get(i).toString());
+											String optionTxt = optionObject.get(&quot;option&quot;).toString();
+											option += &quot;D.&quot; + optionTxt.toString() + &quot;\n&quot;;
+											Integer isRight = (Integer) optionObject.get(&quot;is_right&quot;);
+											if (isRight == 1) {
+												answer += &quot;正确答案:D&quot;+ &quot;\n&quot;;
+											}
+										}
+										break;
+									case 4:
+										if (!jsonArray.get(i).equals(&quot;&quot;)) {
+											JSONObject optionObject = JSONObject.parseObject(jsonArray.get(i).toString());
+											String optionTxt = optionObject.get(&quot;option&quot;).toString();
+											option += &quot;E.&quot; + optionTxt.toString() + &quot;\n&quot;;
+											Integer isRight = (Integer) optionObject.get(&quot;is_right&quot;);
+											if (isRight == 1) {
+												answer += &quot;正确答案:E&quot;+ &quot;\n&quot;;
+											}
+										}
+										break;
+									case 5:
+										if (!jsonArray.get(i).equals(&quot;&quot;)) {
+											JSONObject optionObject = JSONObject.parseObject(jsonArray.get(i).toString());
+											String optionTxt = optionObject.get(&quot;option&quot;).toString();
+											option += &quot;F.&quot; + optionTxt.toString() + &quot;\n&quot;;
+											Integer isRight = (Integer) optionObject.get(&quot;is_right&quot;);
+											if (isRight == 1) {
+												answer += &quot;正确答案:F&quot;+ &quot;\n&quot;;
+											}
+										}
+										break;
+								}
+								}
+						}
+						break;	
+					case &quot;office_explain&quot;:
+						if (!entry.getValue().equals(&quot;&quot;)) {
+							analysis += &quot;解题思路:&quot; + entry.getValue().toString() + &quot;\n&quot;;
+						}
+						break;
+					}
+					try {
+						// 创建FileWriter对象，指定文件路径和是否追加内容
+						FileWriter writer = new FileWriter(&quot;D:\\题库.txt&quot;, true); // 第二个参数为true表示追加内容
+						writer.write(description + option + answer + analysis + questionType); // 写入数据ExcelTool.java
+						writer.close(); // 关闭流
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				if (o instanceof String) {
+						
+					
+				} else {
+					jsonLoop(o);
+				}
+			}
+		}
+		if (object instanceof JSONArray){
+			JSONArray jsonArray = (JSONArray) object;
+			for (int i = 0; i &lt; jsonArray.size(); i++) {
+				jsonLoop(jsonArray.get(i));
+			}
+		}
+	}
+
+	public static void main(String[] args) throws IOException {
+		String jsonStr = new String(Files.readAllBytes(Paths.get(&quot;D:\\题库.json&quot;)), StandardCharsets.UTF_8);
+		JSONObject jsonObject = JSON.parseObject(jsonStr);
+		//JSONArray jsonArray = JSONArray.parseArray(jsonStr);
+		jsonLoop(jsonObject);
+		System.err.println(&quot;读取完成&quot;);
+	}
+}
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Fiddler+雷电模拟器里的APP抓包]]></title>
+        <id>https://viaoh.github.io/post/6GTKKzFzwX/</id>
+        <link href="https://viaoh.github.io/post/6GTKKzFzwX/">
+        </link>
+        <updated>2025-06-27T13:47:58.000Z</updated>
+        <content type="html"><![CDATA[<p>常用的抓包工具有fiddler、wireshark、httpwatch、 firebug、F12/等。抓包抓的是协议，fiddler抓的是HTTP、HTTPS协议，wireshark抓的是其他协议。fiddler、wireshark可以修改接口的参数和返回值，常用的F12调试工具只可以查看接口的参数和响应值。</p>
+<ul>
+<li>fiddler最适合，在APP测试的时候抓包；</li>
+<li>wireshare适合对整个流量进行抓取；</li>
+<li>burpsuite最大的特点是抓包改包</li>
+</ul>
+<p>0x01 Fiddler原理</p>
+<p>Fiddler是以代理WEB服务器的形式工作的,浏览器与服务器之间通过建立TCP连接以HTTP协议进行通信，浏览器默认通过自己发送HTTP请求到服务器，它使用代理地址:127.0.0.1, 端口:8888. 当Fiddler开启会自动设置代理， 退出的时候它会自动注销代理，这样就不会影响别的程序。不过如果Fiddler非正常退出，这时候因为Fiddler没有自动注销，会造成网页无法访问。解决的办法是重新启动下Fiddler.</p>
+<figure data-type="image" tabindex="1"><img src="https://pic4.zhimg.com/v2-29d858f306b6578800a52f13220d91df.webp" alt="" loading="lazy"></figure>
+<p>0X02 安装应用</p>
+<p><strong>1.下载最新版Fiddler,强烈建议在官网下载：</strong> <a href="https://www.telerik.com/download/fiddler">https://www.telerik.com/download/fiddler</a></p>
+<figure data-type="image" tabindex="2"><img src="https://pica.zhimg.com/v2-818c2e99407df6dee549c6a6ccd89fe5.webp" alt="" loading="lazy"></figure>
+<p><strong>2. 正常傻瓜式安装，</strong><br>
+下一步，下一步，安装完毕后，先不用急于打开软件。</p>
+<p><strong>3.下载并安装Fiddler证书生成器：</strong><br>
+<a href="http://www.telerik.com/docs/default-source/fiddler/addons/fiddlercertmaker.exe?sfvrsn=2">http://www.telerik.com/docs/default-source/fiddler/addons/fiddlercertmaker.exe?sfvrsn=2</a></p>
+<p><strong>4.打开Fiddler进行设置</strong><br>
+点击工具栏中的Tools—&gt;Options<br>
+<img src="https://pica.zhimg.com/v2-944cfb36644f2f8bcb610864932d60f9.webp" alt="" loading="lazy"></p>
+<p><strong>5、点击HTTPS</strong>，勾选Decrypt HTTPS traffic和Ignore server certificate(unsafe)</p>
+<figure data-type="image" tabindex="3"><img src="https://pica.zhimg.com/v2-47e48cf1e3ad4d65c64aaad687761281.webp" alt="" loading="lazy"></figure>
+<p><strong>6、点击Actions</strong>，点击Export Root Certificate to Desktop<br>
+<img src="https://picx.zhimg.com/v2-138c9b211fa3f2d0c6f5558075de60e5.webp" alt="" loading="lazy"></p>
+<p>【注】此时电脑上会生成 一个证书<br>
+<img src="https://picx.zhimg.com/v2-161e1e27cf9e3bae927816a4619dfbf8.webp" alt="" loading="lazy"></p>
+<p><strong>7、https设置及connections设置，勾选选择项</strong><br>
+<img src="https://pic4.zhimg.com/v2-37d7a7446fb79028b5aed8342631e540.webp" alt="" loading="lazy"></p>
+<figure data-type="image" tabindex="4"><img src="https://pic4.zhimg.com/v2-47a617e194e998e3a53c678c35408457.webp" alt="" loading="lazy"></figure>
+<p><strong>8、安装雷电模拟器</strong><br>
+<strong><a href="https://cloud.tencent.com/developer/tools/blog-entry?target=https%3A%2F%2Fwww.ldmnq.com%2F&amp;objectId=2220183&amp;objectType=1&amp;isNewArticle=undefined">https://www.ldmnq.com/</a></strong><br>
+<img src="https://pica.zhimg.com/v2-7f3df1de8ebb49c15fe5aac8edb2c72b.webp" alt="" loading="lazy"></p>
+<p><strong>9、安装好后，桌面双击打开雷电模拟器，点击设置</strong><br>
+<img src="https://pic1.zhimg.com/v2-d9399fda5ed5bdd1f06b5724d6c0012f.webp" alt="" loading="lazy"></p>
+<p><strong>10、安装好后，桌面双击打开雷电模拟器，点击设置</strong><br>
+<img src="https://pic2.zhimg.com/v2-01720ff7a5e9688e640dcf484527ec78.webp" alt="" loading="lazy"></p>
+<p><strong>11、选择网络设置，勾选桥接模式，点击安装驱动，点击确定，点击保存设置</strong><br>
+<img src="https://picx.zhimg.com/v2-2619bf596e95737a83ec515bb17aa04d.webp" alt="" loading="lazy"></p>
+<figure data-type="image" tabindex="5"><img src="https://picx.zhimg.com/v2-0eb44e88e233c3e908146492f242afff.webp" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="6"><img src="https://pic2.zhimg.com/v2-aae8ba9e2156363c42a973c4301a8d69.webp" alt="" loading="lazy"></figure>
+<p><strong>12、打开模拟器，设置代理。找到系统应用，点击设置，点击无线网络WLAN—&gt;左键常按点击已连接网络—&gt;修改网络</strong><br>
+<img src="https://pic2.zhimg.com/v2-f137773a12e8aad39cd92e03171eb74b.webp" alt="" loading="lazy"></p>
+<figure data-type="image" tabindex="7"><img src="https://picx.zhimg.com/v2-d102e0bd6cbf042f624e320fde332386.webp" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="8"><img src="https://pic2.zhimg.com/v2-5dbd5bf7cc1c4428b4adb9088c113f27.webp" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="9"><img src="https://pic4.zhimg.com/v2-4c3789c6e4c839ee62daa65425d9c0b1.webp" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="10"><img src="https://pic2.zhimg.com/v2-a2fd6b69bf6dd9f34bad9f9d8bd232ca.webp" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="11"><img src="https://pic2.zhimg.com/v2-6b3643e0c07ec6ce1a1d6416301cafda.webp" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="12"><img src="https://pic3.zhimg.com/v2-0d15e57d61ee21a8adaac7704c502604.webp" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="13"><img src="https://pic4.zhimg.com/v2-beebb48cbf01f356d5d3c782bc7b56c0.webp" alt="" loading="lazy"></figure>
+<p><strong>13、将步骤6导出的证书FiddlerRoot.cer文件导入至模拟器</strong><br>
+<img src="https://picx.zhimg.com/v2-7bafb2d0fd203e0ca182c47b01632b7d.webp" alt="" loading="lazy"></p>
+<figure data-type="image" tabindex="14"><img src="https://pic1.zhimg.com/v2-535b8ade670dd3f3a23f8b30b3aae57b.webp" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="15"><img src="https://pic4.zhimg.com/v2-0e973e558369b0b9291368db1a47e57c.webp" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="16"><img src="https://pic2.zhimg.com/80/v2-66b542d2b73ecfda2b9cec91015d851d_720w.webp" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="17"><img src="https://pic1.zhimg.com/v2-15af09b0c642d020a1df44d1a078be23.webp" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="18"><img src="https://pic3.zhimg.com/v2-34ff90ae2e0223b72225d1f2276ce03b.webp" alt="" loading="lazy"></figure>
+<p><strong>点击完成导入</strong><br>
+<img src="https://pic4.zhimg.com/80/v2-813f0bddca2c3e800601a22648fa9779_720w.webp" alt="" loading="lazy"></p>
+<p><strong>14、在模拟器中打开系统应用—&gt;设置—&gt;安全—&gt;从SD卡安装。找到FiddlerRoot.cer文件，按提示导入即可，注意在此过程需要名称和解锁图案等，自行即可</strong></p>
+<p>设置-安全-为证书命名<br>
+<img src="https://pic2.zhimg.com/v2-0cdf732cae8b7af78b9cdf878b36b29b.webp" alt="" loading="lazy"></p>
+<figure data-type="image" tabindex="19"><img src="https://pic1.zhimg.com/v2-44e0b0bea0d1d2b89209c9da74190d91.webp" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="20"><img src="https://pic1.zhimg.com/v2-df0a4aff604bd4014e5ae55c51a2fa35.webp" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="21"><img src="https://picx.zhimg.com/80/v2-9b11467ff0fe2a9c8de145af2b444f6f_720w.webp" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="22"><img src="https://picx.zhimg.com/v2-c3e3a4c25196b1920ec4a12656eb7a0c.webp" alt="" loading="lazy"></figure>
+<p>或者另一种方法安装证书：<br>
+在雷电模拟器里打开浏览器，访问刚才设置的本机IP加端口，便可自动下载证书进行安装<br>
+流程如下<br>
+手机端(客户端)设置<br>
+保证Fiddler和手机在同一局域网下，设置手机代理服务器地址为Fiddler服务器地址即可。<br>
+<img src="https://pic4.zhimg.com/80/v2-61bf7429b9e899dfe256c90757908205_720w.webp" alt="" loading="lazy"></p>
+<p>设置代理服务器<br>
+当使用https协议时，需要下载证书(根据需要)<br>
+在手机浏览器访问Fiddler服务器—下载证书—安装证书（设置→安全→凭据存储→从sd卡安装）<br>
+<img src="https://pic1.zhimg.com/v2-e3d89d7680122c38f9d3c29172192fb6.webp" alt="" loading="lazy"></p>
+<p>下载证书</p>
+<p><strong>15、打开fiddler，重启模拟器，输入设置的密码，按回车键，打开需要抓包的APP，就可以在电脑上进行APP抓包了</strong><br>
+<img src="https://picx.zhimg.com/v2-c407729b4dbbc40e6e2985ed5ac74977.webp" alt="" loading="lazy"></p>
+<p><strong>常用图标含义</strong><br>
+<img src="https://picx.zhimg.com/v2-5482d5b836bf84a9f774efed3bdeaa2f.webp" alt="" loading="lazy"></p>
+]]></content>
+    </entry>
+</feed>
