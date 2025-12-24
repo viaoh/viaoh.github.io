@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="keywords" content="Gridea静态个人博客">
+<meta name="description" content="Windy City Rose">
+<meta name="theme-color" content="#000">
+<title>liuyoung&#39;s blog</title>
+<link rel="shortcut icon" href="/favicon.ico?v=1766589912682">
+<link rel="stylesheet" href="/media/css/pisces.css">
+<link rel="stylesheet" href="/media/fonts/font-awesome.css">
+<link
+  href="//fonts.loli.net/css?family=Monda:300,300italic,400,400italic,700,700italic|Roboto Slab:300,300italic,400,400italic,700,700italic|Rosario:300,300italic,400,400italic,700,700italic|PT Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext"
+  rel="stylesheet" type="text/css">
+
+<link href="/media/hljs/styles/default.css"
+  rel="stylesheet">
+
+<link rel="stylesheet" href="/styles/main.css">
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<script src="/media/js/jquery.js"></script>
+<script src="/media/hljs/highlight.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.0/velocity.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/velocity-animate@1.5.0/velocity.ui.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css"
+  integrity="sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq" crossorigin="anonymous">
+
+
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js"
+  integrity="sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js"
+  integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI" crossorigin="anonymous"
+  onload="renderMathInElement(document.body);"></script>
+
+
+
+
+
+
+</head>
+
+<body>
+  <div class="head-top-line"></div>
+  <div class="header-box">
+    
+<div class="pisces">
+  <header class="header  ">
+    <div class="blog-header box-shadow-wrapper bg-color " id="header">
+      <div class="nav-toggle" id="nav_toggle">
+        <div class="toggle-box">
+          <div class="line line-top"></div>
+          <div class="line line-center"></div>
+          <div class="line line-bottom"></div>
+        </div>
+      </div>
+      <div class="site-meta">       
+        <div class="site-title">
+          
+            <a href="/" class="brand">
+              <span>liuyoung&#39;s blog</span>
+            </a>  
+          
+        </div>
+        
+          <p class="subtitle">青云当自致  何必求知音</p>
+        
+      </div>
+      <nav class="site-nav" id="site_nav">
+        <ul id="nav_ul">
+          
+            
+            
+              
+            
+            <li class="nav-item ">
+              
+              
+                <a href="/" target="_self">
+                  <i class="fa fa-globe"></i> 首页
+                </a>
+              
+            </li>
+          
+            
+            
+              
+            
+            <li class="nav-item ">
+              
+              
+                <a href="/archives" target="_self">
+                  <i class="fa fa-globe"></i> 归档
+                </a>
+              
+            </li>
+          
+            
+            
+              
+            
+            <li class="nav-item ">
+              
+              
+                <a href="/tags" target="_self">
+                  <i class="fa fa-globe"></i> 标签
+                </a>
+              
+            </li>
+          
+            
+            
+              
+            
+            <li class="nav-item ">
+              
+              
+                <a href="https://viaoh.github.io/post/XuQvrNvEf" target="_self">
+                  <i class="fa fa-globe"></i> 关于
+                </a>
+              
+            </li>
+          
+          
+            
+              <li class="nav-item ">
+                <a href="/friends/" target="_self">
+                  
+                    <i class="fa fa-address-book"></i> 友链
+                  
+                </a>
+              </li>
+            
+          
+          
+            <li id="fa_search" class="nav-item">
+              <a href="javascript:void(0);">
+                <i class="fa fa-search"></i> <span class="language" data-lan="search">搜索</span>
+              </a>
+            </li>
+          
+        </ul>
+      </nav>
+    </div>
+  </header>
+</div>
+
+<script type="text/javascript"> 
+ 
+  let showNav = true;
+
+  let navToggle = document.querySelector('#nav_toggle'),
+  siteNav = document.querySelector('#site_nav');
+  
+  function navClick() {
+    let sideBar = document.querySelector('.sidebar');
+    let navUl = document.querySelector('#nav_ul');
+    navToggle.classList.toggle('nav-toggle-active');
+    siteNav.classList.toggle('nav-menu-active');
+    if (siteNav.classList.contains('nav-menu-active')) {
+      siteNav.style = "height: " + (navUl.children.length * 42) +"px !important";
+    } else {
+      siteNav.style = "";
+    }
+  }
+
+  navToggle.addEventListener('click',navClick);  
+</script>
+  </div>
+  <div class="main-continer">
+    
+    <div
+      class="section-layout  pisces">
+      <div class="section-layout-wrapper">
+        <div id="sidebarMeta" class="sidebar">
+    
+<div class="sidebar-wrapper box-shadow-wrapper bg-color">
+  <div class="sidebar-item">
+    <img class="site-author-image right-motion" src="/images/avatar.png"/>
+    <p class="site-author-name">Windy City Rose</p>
+    
+    <div class="site-description right-motion">
+      
+      
+      
+        <p>这个人很懒</p>
+      
+        <p>什么也没有留下</p>
+      
+      
+    </div>
+    
+  </div>
+  <div class="sidebar-item side-item-stat right-motion">
+    <div class="sidebar-item-box">
+      <a href="/archives/">
+        
+        <span class="site-item-stat-count">3</span>
+        <span class="site-item-stat-name language" data-lan="article">文章</span>
+      </a>
+    </div>
+    <div class="sidebar-item-box">
+      <a href="/tags/">
+        <span class="site-item-stat-count">1</span>
+        <span class="site-item-stat-name language" data-lan="tag">标签</span>
+      </a>
+    </div>
+  </div>
+  
+    
+      <div class="sidebar-item">
+        <span class="site-item-rss">
+            <i class="fa fa-rss"></i>
+            <a href="https://viaoh.github.io/atom.xml" target="_blank">RSS</a>
+        </span>
+      </div>
+    
+  
+  
+    <div class="sidebar-item sidebar-item-social">
+      <div class="social-item">
+        
+          
+            <a href="https://www.zhihu.com/people/viaoh-">
+              <i class="fa fa-envelope-square" title="知乎"></i>
+            </a>
+          
+            <a href="https://weibo.com/viaoh">
+              <i class="fa fa-weibo" title="微博"></i>
+            </a>
+          
+            <a href="https://github.com/viaoh/viaoh.github.io">
+              <i class="fa fa-github-alt" title="github"></i>
+            </a>
+          
+        
+        
+      </div>
+    </div>
+  
+
+
+
+</div>
+</div>
+<script>
+  let sidebarMeta = document.querySelector('#sidebarMeta');
+  let scheme = 'pisces';
+  let sidebarWrapper = document.querySelector('.sidebar-wrapper');
+  if (sidebarMeta && (scheme === 'pisces' || scheme === 'gemini')) {
+    document.addEventListener('scroll', function(e) {
+      if (document.scrollingElement.scrollTop > parseInt(sidebarMeta.style.marginTop) + 10) {
+        sidebarWrapper.classList.add('home-sidebar-fixed')
+      } else {
+        sidebarWrapper.classList.remove('home-sidebar-fixed')
+      }
+    });
+  }
+  </script>
+        <div class="section-box tag-line box-shadow-wrapper">
+          <section class="section tags-section posts-expand bg-color">
+            <div class="padding-wrapper">
+  <div class="tag-timeline-box">
+    <div class="tag-timeline-wrapper">
+      <div class="tag-timeline-title">
+        <h2>
+          考试学习
+          <small class="language" data-lan="tag">标签</small>
+        </h2>
+      </div>
+      
+      
+      
+      
+      
+      
+      
+      <a href="https://viaoh.github.io/post/qIcjFMRjk/">
+        <div class="motion-warpper">
+          <div class="tag-post-node">
+            <h1>
+              05-22
+              <small>孙卫卫“宽窄”微思录</small>
+            </h1>
+          </div>
+        </div>
+      </a>
+      
+      
+      
+    </div>
+  </div>
+</div>
+          </section>
+        </div>
+      </div>
+    </div>
+    <div class="footer-box">
+  <footer class="footer">
+    <center id="runTimeBox">
+      已运行:<span id="run_time"></span>
+    </center>
+    <span id="busuanzi_container_site_pv">浏览数:<span id="busuanzi_value_site_pv"></span> 次</span>
+    <span class="post-meta-divider">|</span>
+    <span id="busuanzi_container_site_uv">访客数:<span id="busuanzi_value_site_uv"></span> 人</span>
+
+    <script>
+      BirthDay = new Date('');
+      if (BirthDay.getTime()) {
+        function runTime() {
+          str = "";
+          today = new Date();
+          timeold = today.getTime() - BirthDay.getTime();
+          msPerDay = 24 * 60 * 60 * 1000;
+          e_daysold = timeold / msPerDay;
+          daysold = Math.floor(e_daysold);
+          str += daysold + "天";
+          return str;
+        }
+        setInterval(function () {
+          $("#run_time").html(runTime());
+        }, 1000);
+      } else {
+        document.querySelector('.footer').removeChild(document.querySelector('#runTimeBox'));
+      }
+    </script>
+    <div class="poweredby">
+      
+    </div>
+  </footer>
+  
+    
+        <div class="pisces back-to-top" id="back_to_top">
+          <i class="fa fa-arrow-up"></i>
+          
+            <span class="scrollpercent"> <span id="back_to_top_text">0</span>% </span>
+            
+        </div>
+        
+                  
+                        
+</div>
+<script>
+  let sideBarOpen = "sidebar-open";
+  let body = document.body;
+  let back2Top = document.querySelector("#back_to_top"),
+    back2TopText = document.querySelector("#back_to_top_text"),
+    drawerBox = document.querySelector("#drawer_box"),
+    rightSideBar = document.querySelector(".sidebar"),
+    viewport = document.querySelector("body");
+
+  function scrollAnimation(currentY, targetY) {
+    let needScrollTop = targetY - currentY;
+    let _currentY = currentY;
+    setTimeout(() => {
+      const dist = Math.ceil(needScrollTop / 10);
+      _currentY += dist;
+      window.scrollTo(_currentY, currentY);
+      if (needScrollTop > 10 || needScrollTop < -10) {
+        scrollAnimation(_currentY, targetY);
+      } else {
+        window.scrollTo(_currentY, targetY);
+      }
+    }, 1);
+  }
+
+  back2Top.addEventListener("click", function (e) {
+    scrollAnimation(document.scrollingElement.scrollTop, 0);
+    e.stopPropagation();
+    return false;
+  });
+
+  window.addEventListener("scroll", function (e) {
+    let percent =
+      (document.scrollingElement.scrollTop /
+        (document.scrollingElement.scrollHeight -
+          document.scrollingElement.clientHeight)) *
+      100;
+    if (percent > 1 && !back2Top.classList.contains("back-top-active")) {
+      back2Top.classList.add("back-top-active");
+    }
+    if (percent == 0) {
+      back2Top.classList.remove("back-top-active");
+    }
+    if (back2TopText) {
+      back2TopText.textContent = Math.floor(percent);
+    }
+  });
+
+  let hasCacu = false;
+  window.addEventListener("resize", function (e) {
+    calcuHeight();
+  });
+
+  function calcuHeight() {
+    // 动态调整站点概览高度
+    if (
+      (!hasCacu && back2Top.classList.contains("pisces")) ||
+      back2Top.classList.contains("gemini")
+    ) {
+      let sideBar = document.querySelector(".sidebar");
+      let navUl = document.querySelector("#site_nav");
+      sideBar.style =
+        "margin-top:" + (navUl.offsetHeight + navUl.offsetTop + 15) + "px;";
+      hasCacu = true;
+    }
+  }
+  calcuHeight();
+
+  let open = false,
+    MOTION_TIME = 300,
+    RIGHT_MOVE_DIS = "320px";
+
+  if (drawerBox) {
+    let rightMotions = document.querySelectorAll(".right-motion");
+    let right = drawerBox.classList.contains("right");
+
+    let transitionDir = right
+      ? "transition.slideRightIn"
+      : "transition.slideLeftIn";
+
+    let openProp, closeProp;
+    if (right) {
+      openProp = {
+        paddingRight: RIGHT_MOVE_DIS,
+      };
+      closeProp = {
+        paddingRight: "0px",
+      };
+    } else {
+      openProp = {
+        paddingLeft: RIGHT_MOVE_DIS,
+      };
+      closeProp = {
+        paddingLeft: "0px",
+      };
+    }
+
+    drawerBox.onclick = function () {
+      open = !open;
+      jQuery.Velocity(rightSideBar, "stop");
+      jQuery.Velocity(viewport, "stop");
+      jQuery.Velocity(rightMotions, "stop");
+      if (open) {
+        jQuery.Velocity(
+          rightSideBar,
+          {
+            width: RIGHT_MOVE_DIS,
+          },
+          {
+            duration: MOTION_TIME,
+            begin: function () {
+              jQuery.Velocity(rightMotions, transitionDir, {});
+            },
+          }
+        );
+        jQuery.Velocity(viewport, openProp, {
+          duration: MOTION_TIME,
+        });
+      } else {
+        jQuery.Velocity(
+          rightSideBar,
+          {
+            width: "0px",
+          },
+          {
+            duration: MOTION_TIME,
+            begin: function () {
+              jQuery.Velocity(rightMotions, {
+                opacity: 0,
+              });
+            },
+          }
+        );
+        jQuery.Velocity(viewport, closeProp, {
+          duration: MOTION_TIME,
+        });
+      }
+      for (let i = 0; i < drawerBox.children.length; i++) {
+        drawerBox.children[i].classList.toggle("muse-line");
+      }
+      drawerBox.classList.toggle(sideBarOpen);
+    };
+  }
+
+  // 链接跳转
+  let newWindow = "true";
+  if (newWindow === "true") {
+    let links = document.querySelectorAll(".post-body a");
+    links.forEach((item) => {
+      if (!item.classList.contains("btn")) {
+        item.setAttribute("target", "_blank");
+      }
+    });
+  }
+
+  let faSearch = document.querySelector("#fa_search");
+  faSearch &&
+    faSearch.addEventListener("click", function () {
+      document.querySelector("#search_mask").style = "";
+    });
+
+  // 代码高亮
+  hljs.initHighlightingOnLoad();
+
+  // 离开当前页title变化
+  var leaveTitle = "";
+  var normal_title = document.title;
+  if (leaveTitle) {
+    document.addEventListener("visibilitychange", function () {
+      if (document.visibilityState == "hidden") {
+        normal_title = document.title;
+        document.title = leaveTitle;
+      } else {
+        document.title = normal_title;
+      }
+    });
+  }
+</script>
+
+<link rel="stylesheet" href="/media/css/jquery.fancybox.css" />
+<script src="/media/js/jquery.fancybox.js"></script>
+
+<script>
+  let images = document.querySelectorAll(".section img");
+  images.forEach((image) => {
+    var parent = image.parentElement;
+    var next = image.nextElementSibling;
+    parent.removeChild(image);
+    var aelem = document.createElement("a");
+    aelem.href = image.src;
+    aelem.dataset["fancybox"] = "images";
+    aelem.dataset["rel"] = "fancybox-button";
+    aelem.classList.add("fancybox");
+    aelem.appendChild(image);
+    parent.insertBefore(aelem, next);
+  });
+</script>
+  </div>
+</body>
+
+  <div class="search-mask" id="search_mask" style="display: none;">
+  <div class="search-box">
+    <div class="search-title">
+      <i class="fa fa-search"></i>
+      <div class="input-box">
+        <input id="search" type="text" class="language" data-lan="search" placeholder="搜索">
+      </div>
+      <i id="close" class="fa fa-times-circle"></i>
+    </div>
+    <div class="stat-box">
+      <span id="stat_count">0</span><span class="language" data-lan="stat">条相关条目，使用了</span><span id="stat_times">0</span><span class="language" data-lan="stat-time">毫秒</span>
+      <hr>
+    </div>
+    <div class="result" id="result">
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://viaoh.github.io/post/LAezkllz56/"" data-c="
+          &lt;h4 id=&#34;qJs6a&#34;&gt;2025年下半年事业单位联考&lt;/h4&gt;
+&lt;p&gt;进面分数线：？？？   最高分：？？？&lt;br&gt;
+&lt;img src=&#34;https://pic1.imgdb.cn/item/693ac63f0edaae20ec58d157.png&#34; alt=&#34;&#34; loading=&#34;lazy&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;kZRhl&#34;&gt;2025年下半年陕西事业单位&lt;/h4&gt;
+&lt;p&gt;进面分数线：209.5   最高分：？？？&lt;br&gt;
+&lt;img src=&#34;https://pic1.imgdb.cn/item/69001b893203f7be00a801fe.jpg&#34; alt=&#34;&#34; loading=&#34;lazy&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;IHjms&#34;&gt;2025年上半年事业单位联考&lt;/h4&gt;
+&lt;p&gt;进面分数线：197.5   最高分：217.5&lt;br&gt;
+&lt;img src=&#34;https://s3.bmp.ovh/imgs/2025/06/05/8871186f4294c039.png&#34; alt=&#34;&#34; loading=&#34;lazy&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;yHSPp&#34;&gt;2025年河南省考&lt;/h4&gt;
+&lt;p&gt;进面分数线：62.8   最高分：64.6&lt;br&gt;
+&lt;img src=&#34;https://s3.bmp.ovh/imgs/2025/06/05/7ae8c24dd28d7726.png&#34; alt=&#34;&#34; loading=&#34;lazy&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;E982f&#34;&gt;2024年下半年陕西事业单位&lt;/h4&gt;
+&lt;p&gt;进面分数线：206.5   最高分：216&lt;br&gt;
+&lt;img src=&#34;https://s3.bmp.ovh/imgs/2024/11/05/a5db523f7c2d77c1.jpg&#34; alt=&#34;&#34; loading=&#34;lazy&#34;&gt;&lt;br&gt;
+&lt;img src=&#34;https://s3.bmp.ovh/imgs/2024/11/05/89206d63563830cd.jpg&#34; alt=&#34;&#34; loading=&#34;lazy&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;ubsKm&#34;&gt;2024年三门峡市陕州区事业单位&lt;/h4&gt;
+&lt;p&gt;进面分数线：72.35   最高分：76.52&lt;br&gt;
+&lt;img src=&#34;https://pic.imgdb.cn/item/66bc9021d9c307b7e9c03579.png&#34; alt=&#34;&#34; loading=&#34;lazy&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;sY3vy&#34;&gt;2024年四川省三支一扶&lt;/h4&gt;
+&lt;p&gt;进面分数线：66   最高分：72&lt;br&gt;
+&lt;img src=&#34;https://pic.imgdb.cn/item/66bc928ed9c307b7e9c43bc5.jpg&#34; alt=&#34;&#34; loading=&#34;lazy&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;y5Sdb&#34;&gt;2024年上半年事业单位联考&lt;/h4&gt;
+&lt;p&gt;进面分数线：206.5   最高分：225.5&lt;br&gt;
+&lt;img src=&#34;https://s3.bmp.ovh/imgs/2024/05/10/dd0360ecf0c7c7ed.jpg&#34; alt=&#34;&#34; loading=&#34;lazy&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;Si8J4&#34;&gt;2024年陕西省考&lt;/h4&gt;
+&lt;p&gt;进面分数线：201.5&lt;br&gt;
+&lt;img src=&#34;https://s3.bmp.ovh/imgs/2024/06/01/d77ec2c0ad392144.jpg&#34; alt=&#34;&#34; loading=&#34;lazy&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;exet1&#34;&gt;2024年国考&lt;/h4&gt;
+&lt;p&gt;进面分数线：135.7&lt;br&gt;
+&lt;img src=&#34;https://s3.bmp.ovh/imgs/2024/05/10/222e264a05090883.jpg&#34; alt=&#34;&#34; loading=&#34;lazy&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;mVGLX&#34;&gt;2023下半年陕西事业单位&lt;/h4&gt;
+&lt;p&gt;进面分数线：210.1&lt;br&gt;
+&lt;img src=&#34;https://s3.bmp.ovh/imgs/2024/05/10/32f49a7278c50a50.jpg&#34; alt=&#34;&#34; loading=&#34;lazy&#34;&gt;&lt;br&gt;
+&lt;img src=&#34;https://pic.imgdb.cn/item/66bc8e63d9c307b7e9ba355b.jpg&#34; alt=&#34;&#34; loading=&#34;lazy&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;LPMKF&#34;&gt;2023上半年事业单位联考&lt;/h4&gt;
+&lt;p&gt;进面分数线：194.5   最高分：203.5&lt;br&gt;
+&lt;img src=&#34;https://s3.bmp.ovh/imgs/2024/05/10/4fb6b652f2fead34.png&#34; alt=&#34;&#34; loading=&#34;lazy&#34;&gt;&lt;/p&gt;
+&lt;h4 id=&#34;yFJTv&#34;&gt;2023年河南省考&lt;/h4&gt;
+&lt;p&gt;进面分数线：59.45   最高分：61.55&lt;br&gt;
+&lt;img src=&#34;https://s3.bmp.ovh/imgs/2024/05/10/16381ca87c17efc2.jpg&#34; alt=&#34;&#34; loading=&#34;lazy&#34;&gt;&lt;/p&gt;
+">成绩单</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://viaoh.github.io/post/XuQvrNvEf/"" data-c="
+          &lt;p&gt;Less is more&lt;/p&gt;
+&lt;p&gt;😘 Enjoy~&lt;/p&gt;
+">关于</a>
+      </div>
+      
+      <div class="item">
+        <a class="result-title" style="opacity: 0;" href="https://viaoh.github.io/post/qIcjFMRjk/"" data-c="
+          &lt;p&gt;“行到水穷处、坐看云起时”，人生无处不宽窄。读书、交友、赶路、沉思，生活中的宽与窄，如微光照亮心房。正是在这样的状态下，近日偶得“宽窄”微思几则，摘录如下。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;做人准则&lt;/strong&gt;&lt;br&gt;
+整理电脑里的资料，发现了自己八年前写下的一篇《做人准则》，共十条：一、少谈自己，无论是言谈还是在文章中，别人是不喜欢听的看的，除非是接受记者采访。二、不迁怒，不二过。三、说到做到，做不到就不要说。四、能马上办的，不拖后；今天能处理的，不拖至明天。五、衣服干干净净，做人也要干干净净。当你离开的时候，不要给人家留下被指责和批评的口实。六、利益面前，多想别人。推己及人。七、专注于自己的工作和写作，与此无关的少参与。八、写序、题词，能推掉的尽量推掉。少参加研讨会。九、无欲则刚。不求人，自己便会很强大。十、一切节约归根结底是时间的节约。浪费时间的事情尽量少做直至不做。&lt;br&gt;
+以上十条，有的到今天也没做好。比如，总是想着把一件事情做完美，想找整块时间来做，或者等把某件事做了再做某事，其实，哪有那么多整块时间？往往是这个还没开始做，下个事情又来了，原定的工作就拖下来。一件事，不管是大是小，还是要先做起来，再说做好。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;朋友&lt;/strong&gt;&lt;br&gt;
+我的朋友不多，我也不想多。十几年、二十几年还能继续走在一起的，应该是真朋友。朋友身上的闪光点，让我见贤思齐。小时候抄马克思关于友谊的名言：“友谊需要用忠诚去播种，用热情去浇灌，用原则去培养，用谅解去护理。”当时似懂非懂，现在看这句话真有道理。不按这句话做的，友谊都长久不了，有的也许都不能叫友谊。&lt;br&gt;
+岁尾年初，我都会为新结识的朋友感到高兴，也为老朋友的渐渐远去而难过。远去有我的原因，也有对方的原因。有时候也说不上是什么原因。&lt;br&gt;
+我帮很多朋友做过的事，朋友要是不提，或者我不翻看从前的书信、日记，我自己也不会想起。比如，很多年以前，朋友的孩子需要一种药，我辗转坐公交车到医院挂号、排队去买。朋友需要当地买不到的教材，我到他说的专门书店去买，这家没有再找另一家。冬天迎着风，夏天顶着太阳。我认为这是对朋友的应尽之责。只是，今天如果有人还提出这样的要求，我肯定要掂量有没有必要去，我得考虑这样做值不值。&lt;br&gt;
+我是不是变得世故了？也不全是。我想起马克思关于友谊的论述。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;读书&lt;/strong&gt;&lt;br&gt;
+春秋战国时期，文字都是刻在竹简上，“学富五车”，换成今天的书其实并不多。古代可能是因为典籍少，所以要反复阅读，而今天书太多了，对大多数人来说，只能走马观花，并不能走心。&lt;br&gt;
+我经常说，一个作家只要不犯法、不违反道德规范，对生活体验得越多越好。我现在的问题是，精读太少，经常有“书到用时方恨少”的感觉。现在每年出那么多书，绝大多数没时间去看，当然，也没必要全看。但是，怎么把书由厚读薄，由薄读厚，对我们是考验。有的人读书不多，读过的都是精华，且都被他吸收了，这就比囫囵吞枣读千本万本要好。我如果喜欢一个作家，往往把他的作品翻来覆去地读，每天都读，感觉学习的效果就很明显。我曾在地铁里看到一个女孩抱着《中日大词典》一直在看，旁边有什么对她丝毫不影响。她也许是为了考试，也许是为了工作，但以这样的精神去读书，真的让我感到震撼。我们如果能把高考前的那股劲头拿出来一直学习、读书，那肯定会战无不胜、攻无不克。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;人生是一本书&lt;/strong&gt;&lt;br&gt;
+每个人都在书写他自己的历史，也可以说在写他自己这本书。也许这本书不会出版，但是，它是存在的。&lt;br&gt;
+当我们老了的时候，我们当然希望这本书厚重、大气，会被越来越多的人提起、翻看。不希望这本书被放在角落沾满灰尘，或者外面看着光鲜，里面真正给人启迪的不多。我们当然也不希望人家看完后说，什么书，全部是“假大空”。还是想有一些实实在在的东西，哪怕薄一些，但是，要有真实的、有意义的东西在其中。&lt;br&gt;
+我们每天都在书写自己这本书。后人在看着我们书写。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;祖先&lt;/strong&gt;&lt;br&gt;
+我曾在一本儿童小说中写了儿子和父亲的对话：&lt;br&gt;
+“爸爸，这么多星星，是不是我们的祖先那时候也在看它们呢？”&lt;br&gt;
+“那当然，它们的寿命都是以亿计算的。”&lt;br&gt;
+“您说我们的祖先都是干什么的？”&lt;br&gt;
+“我们不是大户人家，没有家谱，也就没有记载。”&lt;br&gt;
+“有没有带兵打仗的？”&lt;br&gt;
+“可能有。”&lt;br&gt;
+“有没有当官的？”&lt;br&gt;
+“可能有。”&lt;br&gt;
+“有没有坐过牢的？”&lt;br&gt;
+“可能有。”&lt;br&gt;
+“有没有当大官的？”&lt;br&gt;
+“可能有。”&lt;br&gt;
+“有没有做不好的事，被人家在背后指指点点的？”&lt;br&gt;
+“可能有。”&lt;br&gt;
+“这个不好，最好不要有。”&lt;br&gt;
+“是呀，我们虽然不知道我们的祖先是从哪里来的，曾经做过什么，但是，可以通过我们的努力，让我们的后人为我们感到骄傲。”&lt;br&gt;
+“爸爸，我要努力，成为您的骄傲。”&lt;br&gt;
+“儿子，我更要努力，让你为爸爸骄傲。”&lt;br&gt;
+我们的祖先里出过英雄还是不好的人，我们无法去考证。但是，我们可以做的是，不给我们的后人丢脸。每当我看到有的人在那里旁若无人吹嘘的时候，我就想，如果他的孩子在场，孩子会怎么想。当然，这还不算大事。倘若做了违法犯罪的事进了监狱，肯定会影响孩子的一生。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;幸福&lt;/strong&gt;&lt;br&gt;
+随着年龄的增加，我已经对有些事情看得没有以前那么重了，觉得还是平平淡淡最好。写好自己的文字，做好自己的工作，有更多的时间和家里人在一起，有一些谈得来的朋友，一生就满足了。&lt;br&gt;
+写到这里，想起了刚刚在《读者》杂志看到的一篇短文，上帝问人，你的愿望是什么，那个人大概说了我上面的话。上帝扭头就走，上帝说，这样的生活也是我所向往的。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;调兵遣将&lt;/strong&gt;&lt;br&gt;
+《新华字典》里的多数汉字人们都会用，但是，要组合得不一般，甚至光彩夺目，顿叫山河增色，却不是每个人都能做到的。优秀的作家都有这种本事，就好像优秀的音乐家对声音和节奏特别敏感一样。天分特别重要，没有天分，很多时候努力一辈子，也是徒劳，如我。一想起来就很沮丧，沮丧。&lt;br&gt;
+上天把我降生到这个世界，最适合我做的是什么工作呢？要正确认识自己，很难，很难。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;替古人担忧&lt;/strong&gt;&lt;br&gt;
+看历史书，时不时替古人惋惜，为什么要这样走，而不那样走。这是我们跳出局外看，如果身处其中，可能比他们还要傻。我们正在书写明天的历史，只是我们的事情小，不会惊天动地，但是，也是个人的历史，吸取历史的教训，不要出昏招，坚实走好每一步。&lt;br&gt;
+“以史为鉴”是好话，很多时候，我们并没有认真地去总结历史、吸取教训。就说骄兵必败吧，说了几千年，还是有人在重蹈覆辙，大的，小的。不迁怒、不二过，孔子那个时候就说，我们今天是不是真做到了？&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;他是一个人&lt;/strong&gt;&lt;br&gt;
+作家严文井在《悼沈从文先生》一文的最后说：“他来了，又去了，一生曲曲折折、辛辛苦苦，但是不虚此行。他是一个人。”&lt;br&gt;
+小时候在家乡经常听到这句话的反话，长大了在电视剧里也会看到，一个人对另一个人气愤到了极点，会声嘶力竭地说，你不是人、他不是人。在骂者眼里，人是有标准的，不管这个标准是高是低。严文井说沈从文是一个人，应该是一个大写的人，一个优秀的人。在严文井眼里，肯定也有小写的人，不能称之为人的人，他只是没有说出来而已。&lt;br&gt;
+我也经常想起小的时候大人们常说的一句话，书都读到哪里去了？意思是说，读书人和不读书人还是有区别的。生活中，一个人饱读诗书，但是，他的言行还没有不读书的人文明或者高尚，那他读书又有什么用呢？&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;放下&lt;/strong&gt;&lt;br&gt;
+看一个内部刊物《禅》，其中有一篇文章《放下你的心》。文章说：“对功名利禄放不下，出现了跑官、买官、贪官；对金钱富贵放不下，催生了贪污、受贿、盗窃；对爱情婚姻放不下，产生了痴男、怨女、殉情。”“你只有放下一种执著，才能收获一种自在。”&lt;br&gt;
+该放下的是要放下，不该做的也不要去做，但是，全部放下就好吗？我看未必。还是古人说得好，恰到好处，过犹不及，不好全都放下，也不好全都放不下。&lt;/p&gt;
+">孙卫卫“宽窄”微思录</a>
+      </div>
+      
+    </div>
+    <div class="page">
+      <div id="page_ul"></div>
+    </div>
+  </div>
+</div>
+<script>
+  !function () {
+    let searchMask = document.querySelector('#search_mask');
+    let result = document.querySelector('#result');
+    let items = document.querySelectorAll('.item');
+    let searchBox = document.querySelector('#search');
+    let statCount = document.querySelector('#stat_count');
+    let statTimes = document.querySelector('#stat_times');
+    let pageUl = document.querySelector('#page_ul');
+    let close = document.querySelector('#close');
+    
+    close.addEventListener('click', function() {
+      searchMask.style = 'display: none;'
+    })
+
+    let finds = [];
+    let contents = [];
+    let pageSize = 10;
+    items.forEach(item => {
+      let a = item.querySelector('a');
+      contents.push({
+        title: a.innerText,
+        details: a.dataset.c,
+        link: a.href
+      })
+      item.remove();
+    })
+
+    function insertStr(soure, start, count) {
+      let newStr = soure.substr(start, count);
+      return soure.slice(0, start) + '<em>' + newStr + '</em>' + soure.slice(start + count);
+    }
+
+    pageUl.addEventListener('click', function(event) {
+      let target = event.target;
+      if (target.__proto__ === HTMLSpanElement.prototype) {
+        appendResults(parseInt(target.dataset.i));
+      }
+    })
+
+    function appendResults(index) {
+      let htmlResult = '';
+      let start = index || 0;
+      let end = Math.min(start + pageSize, finds.length);
+      for (let i = start; i < end; i++) {
+        const current = finds[i];
+        let html = current.title;
+        let sum = 0;
+        let positions = current.positions;
+        positions.forEach(position => {
+          html = insertStr(html, position.start + sum, position.count);
+          sum += 9;
+        })
+        htmlResult += `<div class="item"><a class="result-title" href="${current.link}">${html}</a></div>`;
+      }
+      result.innerHTML = htmlResult;
+      pageUl.innerHTML = '';
+      let count = finds.length / pageSize;
+      let lis = '';
+      if (start !== 0) {
+        lis += `<span class="fa fa-angle-left" data-i='${start - 1}'></span>`;
+      }
+      for (let i = 0; i < count; i++) {
+        lis += `<span class='${i === start?'current':''}' data-i='${i}'>${i+1}</span>`;     
+      }
+      if (start+1 < count) {
+        lis += `<span class="fa fa-angle-right" data-i='${start+1}'></span>`;  
+      }
+      pageUl.innerHTML = lis;
+    }
+
+    function search(delay) {
+      let timer = null
+      return function () {
+        clearTimeout(timer)
+        timer = setTimeout(() => {
+          let start = Date.now();
+          let segments = searchBox.value.split(' ').filter(c => c != '');
+          if (segments.length <= 0) {
+            return;
+          }
+          finds = [];
+          let htmlResult = '';
+          contents.forEach(content => {
+            let title = content.title;
+            let positions = [];
+            let find = false;
+            segments.forEach((segment) => {
+              if (content.title.includes(segment)) {
+                find = true;
+                positions.push({
+                  start: content.title.indexOf(segment),
+                  count: segment.length
+                })
+              } else if (content.details.includes(segment)) {
+                find = true;
+              }
+            });
+            if (find) {
+              finds.push({
+                title: content.title,
+                link: content.link,
+                positions
+              });
+            }
+          })
+          appendResults(0);
+          statCount.textContent = finds.length;
+          statTimes.textContent = Date.now() - start;
+        }, delay)
+      }
+    }
+    searchBox.addEventListener('input', search(200));
+  }()
+</script>
+
+<input hidden id="copy" />
+<script>
+  !function () {
+    let times = document.querySelectorAll('.publish-time');
+    for (let i = 0; i < times.length; i++) {
+      let date = times[i].dataset.t;
+      let time = Math.floor((new Date().getTime() - new Date(date).getTime()) / 1000);
+      if (time < 60) {
+        str = time + '秒之前';
+      } else if (time < 3600) {
+        str = Math.floor(time / 60) + '分钟之前';
+      } else if (time >= 3600 && time < 86400) {
+        str = Math.floor(time / 3600) + '小时之前';
+      } else if (time >= 86400 && time < 259200) {
+        str = Math.floor(time / 86400) + '天之前';
+      } else {
+        str = times[i].textContent;
+      }
+      times[i].textContent = str;
+    }
+  }();
+</script>
+
+<script>
+  let language = '';
+  if (language !== '') {
+    let map = new Map();
+    if (language === 'en') {
+      map.set('search', 'Search');
+      map.set('category', 'Categories');
+      map.set('article', 'Articles');
+      map.set('tag', 'Tags');
+      map.set('top', 'Top');
+      map.set('publish', 'published');
+      map.set('minute', ' minutes');
+      map.set('read-more', 'Read More');
+      map.set('view', 'View');
+      map.set('words', ' words');
+      map.set('category-in', 'category in');
+      map.set('preview', 'Meta');
+      map.set('index', 'Toc');
+      map.set('no-archives', "You haven't created yet");
+      map.set('archives', " articles in total");
+      map.set('cloud-tags', " tags in total");
+      map.set('copyright', "Copyright: ");
+      map.set('author', "Author: ");
+      map.set('link', "Link: ");
+      map.set('leave-message', "Leave a message");
+      map.set('format', "Links Format");
+      map.set('site-name', "Name: ");
+      map.set('site-link', "Link: ");
+      map.set('site-desc', "Desc: ");
+      map.set('stat', " related results, taking ");
+      map.set('stat-time', " ms");
+      map.set('site-img', "Image: ");
+    }
+
+    if (map.size > 0) {
+      let lanElems = document.querySelectorAll('.language');
+      lanElems.forEach(elem => {
+        let lan = elem.dataset.lan, text = map.get(lan);
+        if (elem.__proto__ === HTMLInputElement.prototype) {
+          elem.placeholder = text
+        } else {
+          if (elem.dataset.count) {
+            text = elem.dataset.count + text;
+          }
+          elem.textContent = text;
+        }
+      })
+    }
+  }
+
+  window.Clipboard = (function (window, document, navigator) {
+    var textArea,
+      copy;
+
+    // 判断是不是ios端
+    function isOS() {
+      return navigator.userAgent.match(/ipad|iphone/i);
+    }
+    //创建文本元素
+    function createTextArea(text) {
+      textArea = document.createElement('textArea');
+      textArea.value = text;
+      textArea.style.width = 0;
+      textArea.style.height = 0;
+      textArea.clientHeight = 0;
+      textArea.clientWidth = 0;
+      document.body.appendChild(textArea);
+    }
+    //选择内容
+    function selectText() {
+      var range,
+        selection;
+
+      if (isOS()) {
+        range = document.createRange();
+        range.selectNodeContents(textArea);
+        selection = window.getSelection();
+        selection.removeAllRanges();
+        selection.addRange(range);
+        textArea.setSelectionRange(0, 999999);
+      } else {
+        textArea.select();
+      }
+    }
+
+    //复制到剪贴板
+    function copyToClipboard() {
+      try {
+        document.execCommand("Copy")
+      } catch (err) {
+        alert("复制错误！请手动复制！")
+      }
+      document.body.removeChild(textArea);
+    }
+
+    copy = function (text) {
+      createTextArea(text);
+      selectText();
+      copyToClipboard();
+    };
+
+    return {
+      copy: copy
+    };
+  })(window, document, navigator);
+
+  function copyCode(e) {
+    if (e.srcElement.tagName === 'SPAN' && e.srcElement.classList.contains('copy-code')) {
+      let code = e.currentTarget.querySelector('code');
+      var text = code.innerText;
+      if (e.srcElement.textContent === '复制成功') {
+        return;
+      }
+      e.srcElement.textContent = '复制成功';
+      (function (elem) {
+        setTimeout(() => {
+          if (elem.textContent === '复制成功') {
+            elem.textContent = '复制代码'
+          }
+        }, 1000);
+      })(e.srcElement)
+      Clipboard.copy(text);
+    }
+  }
+
+  let pres = document.querySelectorAll('pre');
+  pres.forEach(pre => {
+    let code = pre.querySelector('code');
+    let copyElem = document.createElement('span');
+    copyElem.classList.add('copy-code');
+    copyElem.textContent = '复制代码';
+    pre.appendChild(copyElem);
+    pre.onclick = copyCode
+  })
+
+</script>
+<script src="/media/js/motion.js"></script>
+
+
+  <script
+    src="https://cdn.jsdelivr.net/gh/cferdinandi/smooth-scroll/dist/smooth-scroll.polyfills.min.js"></script>
+  <script>
+    var scroll = new SmoothScroll('a[href*="#"]', {
+      speed: 200
+    });
+  </script>
+
+
+
+<script src="/media/js/mouse/peace.js"></script>
+
+
+
+
+
+</html>
